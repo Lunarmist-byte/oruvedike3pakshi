@@ -167,7 +167,7 @@ body {
    ========================================================================== */
 .scroll-story-track {
   position: relative;
-  height: 320vh; /* Smooth, natural scrolling distance for 3 distinct phases */
+  height: 480vh; /* Smooth, expansive scrolling distance for 4 distinct stages */
 }
 
 .sticky-story-viewport {
@@ -1075,13 +1075,7 @@ body {
   height: 6px;
   border-radius: 50%;
   background: #22c55e;
-  box-shadow: 0 0 6px #22c55e;
-  animation: liveDotPulse 1.2s infinite;
-}
-
-@keyframes liveDotPulse {
-  0%, 100% { opacity: 1; transform: scale(1); }
-  50% { opacity: 0.35; transform: scale(0.75); }
+  box-shadow: 0 0 4px rgba(34, 197, 94, 0.6);
 }
 
 .voice-fallback-form {
@@ -1128,7 +1122,7 @@ body {
 }
 
 /* ==========================================================================
-   Clean Site Footer (Made by Lunarmist-byte Rule)
+   Clean Site Footer
    ========================================================================== */
 .site-footer {
   position: relative;
@@ -1159,4 +1153,940 @@ body {
 
 .credit-text a:hover {
   color: var(--accent-green);
+}
+
+/* ==========================================================================
+   STAGE 4: Big Authentic Scrapped & Broken TV Layer (Only It)
+   ========================================================================== */
+.tv-overlay-layer {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, calc(-50% + 220px)) scale(0.68);
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  z-index: 40;
+  transition: opacity 0.2s cubic-bezier(0.16, 1, 0.3, 1), transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: opacity, transform;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.tv-overlay-layer.active-interact {
+  pointer-events: auto;
+  visibility: visible;
+}
+
+/* --------------------------------------------------------------------------
+   Scrap Antenna Rig
+   -------------------------------------------------------------------------- */
+.tv-antenna-rig {
+  position: absolute;
+  top: -64px;
+  left: 120px;
+  width: 140px;
+  height: 70px;
+  pointer-events: none;
+  z-index: 5;
+}
+
+.antenna-base {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 28px;
+  height: 12px;
+  background: linear-gradient(180deg, #4b5563 0%, #1f2937 100%);
+  border-radius: 4px 4px 1px 1px;
+  border: 1px solid #6b7280;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.6);
+}
+
+.antenna-rod {
+  position: absolute;
+  bottom: 10px;
+  width: 4px;
+  background: linear-gradient(90deg, #9ca3af 0%, #f3f4f6 50%, #4b5563 100%);
+  border-radius: 2px;
+  box-shadow: -1px 2px 4px rgba(0, 0, 0, 0.4);
+}
+
+.antenna-left {
+  left: 60px;
+  height: 65px;
+  transform-origin: bottom center;
+  transform: rotate(-28deg);
+}
+
+.antenna-right.bent-scrap {
+  left: 72px;
+  height: 70px;
+  transform-origin: bottom center;
+  transform: rotate(35deg);
+}
+
+/* Scrap repair on broken antenna */
+.antenna-right.bent-scrap::after {
+  content: '';
+  position: absolute;
+  top: 14px;
+  left: -2px;
+  width: 8px;
+  height: 14px;
+  background: #f59e0b;
+  border-radius: 2px;
+  box-shadow: 0 0 3px rgba(0,0,0,0.5);
+}
+
+.antenna-coil {
+  position: absolute;
+  top: 26px;
+  left: -3px;
+  width: 10px;
+  height: 18px;
+  background: repeating-linear-gradient(
+    180deg,
+    #b45309 0px,
+    #b45309 2px,
+    #d97706 2px,
+    #d97706 4px
+  );
+  border-radius: 3px;
+}
+
+/* --------------------------------------------------------------------------
+   Scrapped TV Cabinet
+   -------------------------------------------------------------------------- */
+.scrapped-tv {
+  width: min(860px, 94vw);
+  max-height: min(620px, 86vh);
+  background: linear-gradient(145deg, #282c35 0%, #171920 60%, #111317 100%);
+  border-radius: 30px;
+  border: 2px solid #3d4352;
+  box-shadow: 
+    0 36px 72px -12px rgba(0, 0, 0, 0.65),
+    0 14px 28px -6px rgba(0, 0, 0, 0.45),
+    inset 0 2px 3px rgba(255, 255, 255, 0.16),
+    inset 0 -4px 8px rgba(0, 0, 0, 0.8);
+  position: relative;
+  user-select: none;
+  overflow: visible;
+}
+
+/* Weathered Duct Tape Repair */
+.tv-duct-tape {
+  position: absolute;
+  width: 72px;
+  height: 24px;
+  background: linear-gradient(135deg, rgba(234, 179, 8, 0.88) 0%, rgba(202, 138, 4, 0.82) 100%);
+  border-radius: 2px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.35);
+  z-index: 25;
+  pointer-events: none;
+  opacity: 0.92;
+}
+
+.tape-top-left {
+  top: 10px;
+  left: -14px;
+  transform: rotate(-35deg);
+  border-left: 2px dashed rgba(0, 0, 0, 0.2);
+}
+
+.tape-bottom-right {
+  bottom: 12px;
+  right: -12px;
+  transform: rotate(38deg);
+  background: linear-gradient(135deg, rgba(148, 163, 184, 0.85) 0%, rgba(100, 116, 139, 0.8) 100%);
+}
+
+/* Danger / Aakri Scrap Sticker */
+.tv-hazard-sticker {
+  position: absolute;
+  top: -12px;
+  right: 60px;
+  background: #facc15;
+  color: #0f172a;
+  padding: 3px 10px;
+  border-radius: 3px;
+  font-family: var(--font-display);
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  transform: rotate(2.5deg);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.35);
+  display: flex;
+  flex-direction: column;
+  line-height: 1.15;
+  pointer-events: none;
+  z-index: 20;
+  border: 1px dashed rgba(0, 0, 0, 0.3);
+}
+
+.sticker-line1 {
+  color: #b91c1c;
+  font-size: 0.62rem;
+}
+
+.sticker-line2 {
+  font-size: 0.65rem;
+}
+
+/* Chassis Layout: Screen on left, Hardware controls on right */
+.tv-chassis {
+  display: grid;
+  grid-template-columns: 1fr 148px;
+  gap: 18px;
+  padding: 22px 20px 24px;
+  align-items: stretch;
+}
+
+@media (max-width: 720px) {
+  .tv-chassis {
+    grid-template-columns: 1fr;
+    padding: 16px 14px 18px;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   CRT Screen Frame & Curved Glass
+   -------------------------------------------------------------------------- */
+.tv-screen-bezel {
+  background: #0f1217;
+  border-radius: 20px;
+  padding: 14px;
+  box-shadow: 
+    inset 0 4px 14px rgba(0, 0, 0, 0.95),
+    inset 0 -2px 6px rgba(255, 255, 255, 0.06),
+    0 1px 1px rgba(255, 255, 255, 0.1);
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+.tv-screen-glass {
+  position: relative;
+  height: 440px;
+  border-radius: 16px;
+  background: radial-gradient(ellipse at 50% 50%, #0c1a14 0%, #08110d 60%, #030605 100%);
+  overflow: hidden;
+  box-shadow: inset 0 0 35px rgba(0, 0, 0, 0.95);
+  display: flex;
+  flex-direction: column;
+  border: 1px solid rgba(16, 185, 129, 0.15);
+}
+
+@media (max-height: 750px) {
+  .tv-screen-glass {
+    height: 390px;
+  }
+}
+
+/* Realistic Glass Crack Overlay */
+.tv-glass-crack-svg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 18;
+  opacity: 0.85;
+}
+
+/* CRT Scanlines Effect */
+.crt-scanlines {
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    to bottom,
+    transparent 0px,
+    transparent 2px,
+    rgba(0, 0, 0, 0.3) 2px,
+    rgba(0, 0, 0, 0.3) 4px
+  );
+  pointer-events: none;
+  z-index: 15;
+}
+
+/* Convex CRT Glass Reflection */
+.crt-glass-specular {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 50%;
+  background: linear-gradient(
+    170deg,
+    rgba(255, 255, 255, 0.08) 0%,
+    rgba(255, 255, 255, 0.02) 40%,
+    transparent 80%
+  );
+  border-radius: 16px 16px 50% 50%;
+  pointer-events: none;
+  z-index: 16;
+}
+
+.crt-vignette {
+  position: absolute;
+  inset: 0;
+  box-shadow: inset 0 0 50px rgba(0, 0, 0, 0.85);
+  pointer-events: none;
+  z-index: 17;
+}
+
+/* CRT Screen Active Area */
+.tv-screen-content {
+  position: relative;
+  z-index: 25;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: 12px 16px;
+  color: #6ee7b7;
+  font-family: var(--font-body);
+  overflow: hidden;
+}
+
+/* Top Broadcast HUD */
+.crt-top-hud {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 8px;
+  margin-bottom: 8px;
+  border-bottom: 1px dashed rgba(52, 211, 153, 0.25);
+  font-family: var(--font-display);
+  font-size: 0.75rem;
+  letter-spacing: 0.05em;
+  color: #34d399;
+  flex-shrink: 0;
+}
+
+.hud-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+
+.hud-ch {
+  font-weight: 700;
+  text-shadow: 0 0 8px rgba(52, 211, 153, 0.5);
+}
+
+.hud-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.hud-telemetry {
+  font-family: var(--font-display);
+  font-size: 0.68rem;
+  letter-spacing: 0.08em;
+  color: #34d399;
+  font-weight: 700;
+  text-shadow: 0 0 6px rgba(52, 211, 153, 0.5);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.hud-badge-tag {
+  background: rgba(6, 78, 59, 0.45);
+  border: 1px solid rgba(52, 211, 153, 0.4);
+  border-radius: 4px;
+  color: #a7f3d0;
+  font-family: var(--font-display);
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  padding: 2px 7px;
+}
+
+/* --------------------------------------------------------------------------
+   VIEW 1: "Do you know Malayalam?" Prompt View (With Heavy CRT Glitch Feel)
+   -------------------------------------------------------------------------- */
+.tv-prompt-view {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  text-align: center;
+  padding: 10px 14px;
+  position: relative;
+  overflow: hidden;
+}
+
+.tv-prompt-view.glitch-active {
+  animation: promptSignalGlitch 3.8s infinite steps(1);
+}
+
+@keyframes promptSignalGlitch {
+  0%, 93%, 97%, 100% {
+    transform: translate(0, 0);
+    filter: none;
+  }
+  94% {
+    transform: translate(-3px, 1px) skewX(-1.5deg);
+    filter: hue-rotate(40deg) contrast(1.3) brightness(1.1);
+  }
+  95% {
+    transform: translate(3px, -1px) skewX(2deg);
+    filter: hue-rotate(-60deg) contrast(1.5);
+  }
+  96% {
+    transform: translate(-1px, 2px);
+    filter: contrast(1.2) saturate(1.8);
+  }
+}
+
+/* CRT Glitch Scanline Rolling Bar */
+.crt-glitch-roll {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 18px;
+  background: linear-gradient(
+    180deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.15) 30%,
+    rgba(52, 211, 153, 0.3) 60%,
+    transparent 100%
+  );
+  box-shadow: 0 0 12px rgba(52, 211, 153, 0.4);
+  pointer-events: none;
+  z-index: 20;
+  opacity: 0.7;
+  animation: crtGlitchRoll 3.6s infinite linear;
+}
+
+@keyframes crtGlitchRoll {
+  0% { top: -25px; opacity: 0; }
+  8% { opacity: 0.85; }
+  92% { opacity: 0.85; }
+  100% { top: 105%; opacity: 0; }
+}
+
+.prompt-terminal-header {
+  font-family: var(--font-display);
+  font-size: 0.72rem;
+  letter-spacing: 0.12em;
+  color: #059669;
+  margin-bottom: 12px;
+  text-transform: uppercase;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.terminal-sym {
+  color: #10b981;
+  font-weight: 800;
+}
+
+.glitch-signal-tag {
+  background: rgba(239, 68, 68, 0.2);
+  border: 1px dashed #ef4444;
+  color: #fca5a5;
+  font-size: 0.62rem;
+  font-weight: 700;
+  padding: 1px 6px;
+  border-radius: 3px;
+  animation: tagFlicker 2.4s infinite;
+}
+
+@keyframes tagFlicker {
+  0%, 100% { opacity: 1; }
+  45% { opacity: 1; }
+  48% { opacity: 0.3; }
+  52% { opacity: 1; }
+  85% { opacity: 0.6; }
+  87% { opacity: 1; }
+}
+
+/* Authentic CRT Text Glitch with Chromatic Aberration */
+.glitch-text {
+  position: relative;
+  display: inline-block;
+  user-select: none;
+}
+
+.glitch-text::before,
+.glitch-text::after {
+  content: attr(data-text);
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.glitch-text::before {
+  left: 2px;
+  text-shadow: -2.5px 0 #ef4444;
+  clip-path: polygon(0 15%, 100% 15%, 100% 35%, 0 35%);
+  animation: crtGlitchRed 2.8s infinite linear alternate-reverse;
+}
+
+.glitch-text::after {
+  left: -2px;
+  text-shadow: 2.5px 0 #06b6d4;
+  clip-path: polygon(0 55%, 100% 55%, 100% 80%, 0 80%);
+  animation: crtGlitchBlue 2.2s infinite linear alternate-reverse;
+}
+
+@keyframes crtGlitchRed {
+  0%, 100% {
+    clip-path: polygon(0 15%, 100% 15%, 100% 35%, 0 35%);
+    transform: translate(0, 0);
+  }
+  20% {
+    clip-path: polygon(0 40%, 100% 40%, 100% 60%, 0 60%);
+    transform: translate(-3px, -1px);
+  }
+  40% {
+    clip-path: polygon(0 70%, 100% 70%, 100% 85%, 0 85%);
+    transform: translate(2px, 1px);
+  }
+  60% {
+    clip-path: polygon(0 10%, 100% 10%, 100% 25%, 0 25%);
+    transform: translate(-2px, 0.5px);
+  }
+  80% {
+    clip-path: polygon(0 50%, 100% 50%, 100% 75%, 0 75%);
+    transform: translate(3px, -1px);
+  }
+}
+
+@keyframes crtGlitchBlue {
+  0%, 100% {
+    clip-path: polygon(0 60%, 100% 60%, 100% 85%, 0 85%);
+    transform: translate(0, 0);
+  }
+  25% {
+    clip-path: polygon(0 10%, 100% 10%, 100% 30%, 0 30%);
+    transform: translate(3px, 1px);
+  }
+  50% {
+    clip-path: polygon(0 75%, 100% 75%, 100% 95%, 0 95%);
+    transform: translate(-2px, -1px);
+  }
+  75% {
+    clip-path: polygon(0 35%, 100% 35%, 100% 55%, 0 55%);
+    transform: translate(2px, -0.5px);
+  }
+}
+
+.prompt-question-title {
+  font-family: var(--font-display);
+  font-size: clamp(1.2rem, 2.5vw, 1.65rem);
+  font-weight: 800;
+  color: #ecfdf5;
+  margin-bottom: 2px;
+  letter-spacing: -0.02em;
+  text-shadow: 0 0 16px rgba(52, 211, 153, 0.6);
+}
+
+.prompt-question-malayalam {
+  font-family: var(--font-serif);
+  font-size: clamp(1.1rem, 2.2vw, 1.45rem);
+  font-style: italic;
+  color: #a7f3d0;
+  margin-bottom: 6px;
+  text-shadow: 0 0 10px rgba(52, 211, 153, 0.4);
+}
+
+.prompt-hint {
+  font-size: 0.78rem;
+  color: #6ee7b7;
+  max-width: 440px;
+  margin-bottom: 14px;
+  line-height: 1.4;
+  opacity: 0.9;
+}
+
+.glitch-freq-indicator {
+  display: block;
+  font-family: var(--font-display);
+  font-size: 0.62rem;
+  color: #facc15;
+  letter-spacing: 0.08em;
+  margin-bottom: 2px;
+  text-shadow: 0 0 6px rgba(250, 204, 21, 0.4);
+}
+
+.prompt-options-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  width: 100%;
+  max-width: 470px;
+  margin-bottom: 12px;
+}
+
+@media (max-width: 520px) {
+  .prompt-options-row {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+}
+
+.tv-choice-btn {
+  background: rgba(6, 78, 59, 0.35);
+  border: 1.5px solid rgba(52, 211, 153, 0.45);
+  border-radius: 14px;
+  padding: 14px 14px 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  pointer-events: auto;
+  z-index: 30;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.4), inset 0 1px 1px rgba(255, 255, 255, 0.1);
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-glitch-fx::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    rgba(255, 255, 255, 0.03) 0px,
+    rgba(255, 255, 255, 0.03) 1px,
+    transparent 1px,
+    transparent 2px
+  );
+  pointer-events: none;
+}
+
+.choice-active-indicator {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-display);
+  font-size: 0.62rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  color: #34d399;
+  background: rgba(16, 185, 129, 0.2);
+  border: 1px solid rgba(52, 211, 153, 0.4);
+  padding: 2px 8px;
+  border-radius: 9999px;
+  margin-bottom: 2px;
+  opacity: 0;
+  transform: translateY(-4px);
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.tv-choice-btn.selected-choice .choice-active-indicator {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.tv-choice-btn.selected-choice {
+  background: rgba(16, 185, 129, 0.28);
+  border-color: #34d399;
+  box-shadow: 
+    0 0 24px rgba(16, 185, 129, 0.45),
+    0 6px 18px rgba(0, 0, 0, 0.55),
+    inset 0 1px 2px rgba(255, 255, 255, 0.25);
+  transform: scale(1.025);
+}
+
+.tv-choice-btn:hover {
+  background: rgba(16, 185, 129, 0.35);
+  border-color: #34d399;
+  transform: translateY(-2px) scale(1.035);
+  box-shadow: 0 8px 26px rgba(16, 185, 129, 0.5), inset 0 1px 2px rgba(255, 255, 255, 0.25);
+  animation: btnHoverGlitch 0.3s steps(2) infinite;
+}
+
+@keyframes btnHoverGlitch {
+  0% { transform: translateY(-2px) scale(1.035); }
+  50% { transform: translateY(-2px) scale(1.035) translateX(1px); }
+  100% { transform: translateY(-2px) scale(1.035) translateX(-1px); }
+}
+
+.tv-choice-btn:active {
+  transform: translateY(1px) scale(0.97);
+}
+
+.choice-tag {
+  font-family: var(--font-display);
+  font-size: 0.65rem;
+  letter-spacing: 0.12em;
+  font-weight: 700;
+  color: #34d399;
+  text-transform: uppercase;
+}
+
+.choice-primary {
+  font-family: var(--font-display);
+  font-size: 1.18rem;
+  font-weight: 700;
+  color: #ffffff;
+  text-shadow: 0 0 10px rgba(52, 211, 153, 0.7);
+}
+
+.btn-malayalam .choice-primary {
+  font-family: var(--font-body);
+  font-size: 1.25rem;
+  font-weight: 800;
+}
+
+.choice-sub {
+  font-size: 0.76rem;
+  color: #a7f3d0;
+  opacity: 0.9;
+}
+
+.prompt-bottom-tip {
+  font-size: 0.72rem;
+  color: #059669;
+  font-family: var(--font-display);
+  letter-spacing: 0.03em;
+}
+
+/* CRT Static Glitch Overlay */
+.crt-static-overlay {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle, rgba(255,255,255,0.08) 0%, transparent 80%);
+  pointer-events: none;
+  opacity: 0;
+  z-index: 30;
+  transition: opacity 0.1s ease;
+}
+
+.crt-static-overlay.flash {
+  opacity: 1;
+  background-image: repeating-radial-gradient(
+    circle at 50% 50%,
+    rgba(255, 255, 255, 0.3) 0,
+    rgba(0, 0, 0, 0.4) 1px,
+    transparent 2px,
+    transparent 4px
+  );
+}
+
+/* CRT Turn Off Collapse Animation */
+.tv-screen-glass.tv-off .tv-screen-content {
+  display: none !important;
+}
+
+.tv-screen-glass.tv-off {
+  background: #020303 !important;
+  box-shadow: inset 0 0 60px rgba(0, 0, 0, 1) !important;
+}
+
+/* --------------------------------------------------------------------------
+   TV Right Hardware Control Column
+   -------------------------------------------------------------------------- */
+.tv-hardware-panel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 6px 12px;
+  background: linear-gradient(180deg, #1e222b 0%, #151820 100%);
+  border-radius: 16px;
+  border: 1px solid #303744;
+  box-shadow: 
+    inset 0 1px 2px rgba(255, 255, 255, 0.1),
+    0 4px 12px rgba(0, 0, 0, 0.4);
+}
+
+.tv-brand-plate {
+  text-align: center;
+  padding: 6px 10px;
+  background: #0d0f14;
+  border-radius: 4px;
+  border: 1px solid #3d4654;
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.8);
+  width: 100%;
+}
+
+.plate-brand {
+  display: block;
+  font-family: var(--font-display);
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  color: #cbd5e1;
+}
+
+.plate-model {
+  display: block;
+  font-family: var(--font-display);
+  font-size: 0.58rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  color: #64748b;
+}
+
+/* Rotary Knobs */
+.rotary-control-group {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  width: 100%;
+}
+
+.knob-label {
+  font-family: var(--font-display);
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: #94a3b8;
+  text-transform: uppercase;
+}
+
+.rotary-knob {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 35%, #475569 0%, #1e293b 70%, #0f172a 100%);
+  border: 2px solid #64748b;
+  box-shadow: 
+    0 4px 8px rgba(0, 0, 0, 0.5),
+    inset 0 2px 3px rgba(255, 255, 255, 0.25),
+    inset 0 -2px 4px rgba(0, 0, 0, 0.8);
+  position: relative;
+  cursor: pointer;
+  transition: transform 0.15s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.rotary-knob:hover {
+  border-color: #94a3b8;
+}
+
+.rotary-knob:active {
+  transform: scale(0.96);
+}
+
+.knob-pointer {
+  position: absolute;
+  top: 4px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 3px;
+  height: 12px;
+  background: #ffffff;
+  border-radius: 1px;
+  box-shadow: 0 0 4px rgba(255, 255, 255, 0.8);
+}
+
+.pointer-vol {
+  background: #38bdf8;
+  box-shadow: 0 0 4px #38bdf8;
+}
+
+/* Power Switch & Pilot Indicator */
+.power-control-group {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+}
+
+.pilot-lamp-housing {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.pilot-lamp {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #3a1515;
+  border: 1px solid #1a0808;
+  transition: all 0.2s ease;
+}
+
+.pilot-lamp.lit {
+  background: #ef4444;
+  box-shadow: 0 0 10px 3px rgba(239, 68, 68, 0.6);
+  border-color: #fca5a5;
+}
+
+.pilot-text {
+  font-family: var(--font-display);
+  font-size: 0.58rem;
+  font-weight: 800;
+  color: #94a3b8;
+  letter-spacing: 0.05em;
+}
+
+.tv-power-switch {
+  width: 44px;
+  height: 24px;
+  background: #0f1217;
+  border-radius: 12px;
+  border: 1px solid #334155;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.8);
+  position: relative;
+  cursor: pointer;
+  padding: 2px;
+  transition: all 0.2s ease;
+}
+
+.switch-toggle-knob {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #cbd5e1 0%, #64748b 100%);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), background 0.2s ease;
+  transform: translateX(0);
+}
+
+.tv-power-switch.active {
+  border-color: #ef4444;
+}
+
+.tv-power-switch.active .switch-toggle-knob {
+  transform: translateX(20px);
+  background: linear-gradient(135deg, #f87171 0%, #dc2626 100%);
+}
+
+/* Speaker Slits */
+.tv-speaker-slits {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  width: 70%;
+  padding: 4px 0;
+}
+
+.tv-speaker-slits span {
+  display: block;
+  height: 3px;
+  background: #090c10;
+  border-radius: 1.5px;
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.9), 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+.tv-chassis-stamp {
+  font-family: var(--font-display);
+  font-size: 0.52rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  color: #475569;
 }

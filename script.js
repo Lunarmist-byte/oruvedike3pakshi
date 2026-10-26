@@ -95,7 +95,11 @@
     currentIndex: 0,
     soundEnabled: true,
     isListening: false,
-    powerOn: true
+    powerOn: true,
+    tvPowerOn: true,
+    tvSelectedChoice: 'malayalam', // 'malayalam' | 'english'
+    tvKnobAngle: 0,
+    tvContrastLevel: 1.0
   };
 
   // DOM Elements
@@ -135,6 +139,21 @@
   const nextChBtn = document.getElementById('nextChBtn');
   const homeBtn = document.getElementById('homeBtn');
   const flagButtonsGrid = document.getElementById('flagButtonsGrid');
+
+  // Stage 4 Scrapped TV Elements (Dedicated Language Choice Terminal)
+  const tvOverlayLayer = document.getElementById('tvOverlayLayer');
+  const scrappedTv = document.getElementById('scrappedTv');
+  const tvScreenGlass = document.getElementById('tvScreenGlass');
+  const tvPromptView = document.getElementById('tvPromptView');
+  const choiceMalayalamBtn = document.getElementById('choiceMalayalamBtn');
+  const choiceEnglishBtn = document.getElementById('choiceEnglishBtn');
+  const crtStaticOverlay = document.getElementById('crtStaticOverlay');
+  const tvChannelKnob = document.getElementById('tvChannelKnob');
+  const tvVolumeKnob = document.getElementById('tvVolumeKnob');
+  const tvPowerSwitch = document.getElementById('tvPowerSwitch');
+  const tvPilotLamp = document.getElementById('tvPilotLamp');
+  const tvHudCh = document.getElementById('tvHudCh');
+  const hudTelemetry = document.getElementById('hudTelemetry');
 
   // ==========================================================================
   // Clock Dial Precision Tick Generation
@@ -333,136 +352,417 @@
 
   renderFlagButtons();
 
-  // Ensure fresh page load starts at the top (Clock alone in center)
+  // Scroll restoration: If coming back with #tv hash, scroll to TV stage, else top
   if ('scrollRestoration' in history) {
     history.scrollRestoration = 'manual';
   }
-  window.scrollTo(0, 0);
+  if (window.location.hash === '#tv') {
+    setTimeout(() => {
+      const maxScroll = Math.max(scrollStoryTrack ? scrollStoryTrack.offsetHeight - window.innerHeight : 1, 1);
+      window.scrollTo({ top: maxScroll * 0.9, behavior: 'smooth' });
+    }, 120);
+  } else {
+    window.scrollTo(0, 0);
+  }
 
   // ==========================================================================
-  // Zero-Overlap Scroll Story Transition:
-  // 1. At Beginning (progress = 0): "samayam ethrayai" editorial typography alone.
-  // 2. Stage 1 (0 -> 0.35): Clock overlays into center as "samayam ethrayai" fades out.
-  // 3. Stage 2 (0.35 -> 0.68): Clock ascends smoothly to upside persistent position.
-  // 4. Stage 3 (0.68 -> 1.00): Remote glides in below it with massive clearance (>140px).
-  // Clock remains 100% persistent upside and replicates all time changes.
+  // Web Audio TV Synthesizer (Rotary click, CRT static burst)
+  // ==========================================================================
+  function playTvKnobClick() {
+    if (!state.soundEnabled) return;
+    try {
+      const AudioCtx = window.AudioContext || window.webkitAudioContext;
+      if (!AudioCtx) return;
+      if (!audioCtx) audioCtx = new AudioCtx();
+      if (audioCtx.state === 'suspended') audioCtx.resume();
+
+      const t = audioCtx.currentTime;
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+
+      osc.type = 'square';
+      osc.frequency.setValueAtTime(440, t);
+      osc.frequency.exponentialRampToValueAtTime(110, t + 0.025);
+
+      gain.gain.setValueAtTime(0.2, t);
+      gain.gain.exponentialRampToValueAtTime(0.001, t + 0.025);
+
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+      osc.start(t);
+      osc.stop(t + 0.03);
+    } catch (e) {}
+  }
+
+  function playCrtStaticSound() {
+    if (!state.soundEnabled) return;
+    try {
+      const AudioCtx = window.AudioContext || window.webkitAudioContext;
+      if (!AudioCtx) return;
+      if (!audioCtx) audioCtx = new AudioCtx();
+      if (audioCtx.state === 'suspended') audioCtx.resume();
+
+      const bufferSize = audioCtx.sampleRate * 0.12;
+      const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+      const output = buffer.getChannelData(0);
+      for (let i = 0; i < bufferSize; i++) {
+        output[i] = Math.random() * 2 - 1;
+      }
+
+      const whiteNoise = audioCtx.createBufferSource();
+      whiteNoise.buffer = buffer;
+
+      const filter = audioCtx.createBiquadFilter();
+      filter.type = 'bandpass';
+      filter.frequency.value = 1600;
+      filter.Q.value = 2.0;
+
+      const gain = audioCtx.createGain();
+      gain.gain.setValueAtTime(0.16, audioCtx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.11);
+
+      whiteNoise.connect(filter);
+      filter.connect(gain);
+      gain.connect(audioCtx.destination);
+      whiteNoise.start();
+    } catch (e) {}
+  }
+
+  function triggerCrtStatic() {
+    playCrtStaticSound();
+    if (crtStaticOverlay) {
+      crtStaticOverlay.classList.add('flash');
+      setTimeout(() => {
+        crtStaticOverlay.classList.remove('flash');
+      }, 160);
+    }
+  }
+
+  // ==========================================================================
+  // TV Choice Selection Terminal Engine
+  // The TV screen exclusively hosts the choice selection; the story is in story.html
+  // ==========================================================================
+  function setTvChoice(lang) {
+    state.tvSelectedChoice = lang;
+    if (lang === 'malayalam') {
+      if (choiceMalayalamBtn) choiceMalayalamBtn.classList.add('selected-choice');
+      if (choiceEnglishBtn) choiceEnglishBtn.classList.remove('selected-choice');
+      if (tvHudCh) tvHudCh.textContent = 'VHF CH 01 · മലയാളം';
+      if (hudTelemetry) hudTelemetry.textContent = 'CH 01 ACTIVE';
+    } else {
+      if (choiceEnglishBtn) choiceEnglishBtn.classList.add('selected-choice');
+      if (choiceMalayalamBtn) choiceMalayalamBtn.classList.remove('selected-choice');
+      if (tvHudCh) tvHudCh.textContent = 'VHF CH 02 · ENGLISH';
+      if (hudTelemetry) hudTelemetry.textContent = 'CH 02 ACTIVE';
+    }
+  }
+
+  function launchStory(lang) {
+    triggerCrtStatic();
+    const btn = lang === 'malayalam' ? choiceMalayalamBtn : choiceEnglishBtn;
+    if (btn) {
+      btn.style.transform = 'scale(0.96)';
+      btn.innerHTML = `
+        <div class="choice-active-indicator" style="opacity: 1;">TUNING SIGNAL</div>
+        <span class="choice-tag">TUNING CHANNEL...</span>
+        <span class="choice-primary">${lang === 'malayalam' ? 'ലോഡിംഗ്...' : 'Loading Story...'}</span>
+        <span class="choice-sub">Opening Story Page &rarr;</span>
+      `;
+    }
+    const targetUrl = lang === 'malayalam' ? 'story.html?lang=ml' : 'story.html?lang=en';
+    setTimeout(() => {
+      window.location.href = targetUrl;
+    }, 280);
+  }
+
+  if (choiceMalayalamBtn) {
+    choiceMalayalamBtn.addEventListener('click', () => {
+      setTvChoice('malayalam');
+      launchStory('malayalam');
+    });
+    choiceMalayalamBtn.addEventListener('mouseenter', () => {
+      setTvChoice('malayalam');
+    });
+  }
+
+  if (choiceEnglishBtn) {
+    choiceEnglishBtn.addEventListener('click', () => {
+      setTvChoice('english');
+      launchStory('english');
+    });
+    choiceEnglishBtn.addEventListener('mouseenter', () => {
+      setTvChoice('english');
+    });
+  }
+
+  // TV Channel Rotary Knob: Rotates and switches between Malayalam and English
+  if (tvChannelKnob) {
+    tvChannelKnob.addEventListener('click', () => {
+      state.tvKnobAngle = (state.tvKnobAngle + 45) % 360;
+      tvChannelKnob.style.transform = `rotate(${state.tvKnobAngle}deg)`;
+      playTvKnobClick();
+      triggerCrtStatic();
+      const nextChoice = state.tvSelectedChoice === 'malayalam' ? 'english' : 'malayalam';
+      setTvChoice(nextChoice);
+    });
+  }
+
+  // Ambient subtle CRT glitch flicker
+  setInterval(() => {
+    if (state.tvPowerOn && tvPromptView && Math.random() > 0.45 && crtStaticOverlay) {
+      crtStaticOverlay.classList.add('flash');
+      setTimeout(() => {
+        if (crtStaticOverlay) crtStaticOverlay.classList.remove('flash');
+      }, 90);
+    }
+  }, 4200);
+
+  // Keyboard navigation for TV choices
+  window.addEventListener('keydown', (e) => {
+    const scrollTop = window.scrollY || window.pageYOffset;
+    const maxScroll = Math.max(scrollStoryTrack ? scrollStoryTrack.offsetHeight - window.innerHeight : 1, 1);
+    const progress = Math.min(Math.max(scrollTop / maxScroll, 0), 1);
+    if (progress < 0.65) return;
+
+    if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+      setTvChoice('malayalam');
+      playTvKnobClick();
+    } else if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+      setTvChoice('english');
+      playTvKnobClick();
+    } else if (e.key === 'Enter') {
+      launchStory(state.tvSelectedChoice);
+    }
+  });
+
+  if (tvChannelKnob) {
+    tvChannelKnob.addEventListener('click', () => {
+      state.tvKnobAngle = (state.tvKnobAngle + 45) % 360;
+      tvChannelKnob.style.transform = `rotate(${state.tvKnobAngle}deg)`;
+      playTvKnobClick();
+      if (state.tvScreenMode === 'movie') {
+        const nextLang = state.tvLang === 'malayalam' ? 'english' : 'malayalam';
+        renderStory(nextLang);
+      }
+      triggerCrtStatic();
+    });
+  }
+
+  if (tvVolumeKnob) {
+    tvVolumeKnob.addEventListener('click', () => {
+      playTvKnobClick();
+      state.tvContrastLevel = state.tvContrastLevel >= 1.3 ? 0.85 : state.tvContrastLevel + 0.15;
+      if (tvScreenGlass) {
+        tvScreenGlass.style.filter = `contrast(${state.tvContrastLevel}) brightness(${state.tvContrastLevel * 0.95})`;
+      }
+      triggerCrtStatic();
+    });
+  }
+
+  if (tvPowerSwitch) {
+    tvPowerSwitch.addEventListener('click', () => {
+      playTvKnobClick();
+      state.tvPowerOn = !state.tvPowerOn;
+      if (state.tvPowerOn) {
+        tvPowerSwitch.classList.add('active');
+        if (tvPilotLamp) tvPilotLamp.classList.add('lit');
+        if (tvScreenGlass) tvScreenGlass.classList.remove('tv-off');
+        triggerCrtStatic();
+      } else {
+        tvPowerSwitch.classList.remove('active');
+        if (tvPilotLamp) tvPilotLamp.classList.remove('lit');
+        if (tvScreenGlass) tvScreenGlass.classList.add('tv-off');
+      }
+    });
+  }
+
+  // ==========================================================================
+  // Zero-Overlap 4-Stage Scroll Experience:
+  // Stage 1 (0.00 -> 0.16): "samayam ethrayai" editorial typography alone.
+  // Stage 2 (0.16 -> 0.42): Authentic Kerala Clock ALONE in center (Only It).
+  // Stage 3 (0.42 -> 0.70): Authentic TV Remote ALONE in center (Only It).
+  // Stage 4 (0.70 -> 1.00): Scrapped & Broken Retro TV ALONE in center (Only It).
   // ==========================================================================
   function onScroll() {
-    if (!scrollStoryTrack || !heroTextContainer || !clockOverlayLayer || !remoteOverlayLayer) return;
+    if (!scrollStoryTrack || !heroTextContainer || !clockOverlayLayer || !remoteOverlayLayer || !tvOverlayLayer) return;
 
     const scrollTop = window.scrollY || window.pageYOffset;
     const maxScroll = Math.max(scrollStoryTrack.offsetHeight - window.innerHeight, 1);
     const progress = Math.min(Math.max(scrollTop / maxScroll, 0), 1);
-    const vh = window.innerHeight;
 
     // ------------------------------------------------------------------------
-    // STAGE 1: Beginning -> "samayam ethrayai" overlays into Kerala Clock (0.00 to 0.35)
+    // STAGE 1: Hero Typography alone (0.00 to 0.16)
     // ------------------------------------------------------------------------
-    if (progress <= 0.35) {
-      // 1. "samayam ethrayai" Text Layer
-      // Visible at progress 0, dissolves upward as scroll begins
-      if (progress <= 0.18) {
-        const textP = progress / 0.18;
-        const textOpacity = Math.max(1 - textP, 0);
-        const textY = -textP * 40;
-        heroTextContainer.style.visibility = 'visible';
-        heroTextContainer.style.opacity = textOpacity.toFixed(3);
-        heroTextContainer.style.transform = `translate(-50%, calc(-50% + ${textY.toFixed(1)}px)) scale(${1 - textP * 0.05})`;
-        heroTextContainer.style.pointerEvents = textOpacity < 0.2 ? 'none' : 'auto';
-      } else {
-        heroTextContainer.style.opacity = '0';
-        heroTextContainer.style.visibility = 'hidden';
-        heroTextContainer.style.pointerEvents = 'none';
-      }
+    if (progress <= 0.16) {
+      // 1. Text Layer
+      const textP = progress / 0.14;
+      const textOpacity = Math.max(1 - textP, 0);
+      const textY = -textP * 40;
+      heroTextContainer.style.visibility = textOpacity > 0.01 ? 'visible' : 'hidden';
+      heroTextContainer.style.opacity = textOpacity.toFixed(3);
+      heroTextContainer.style.transform = `translate(-50%, calc(-50% + ${textY.toFixed(1)}px)) scale(${1 - textP * 0.05})`;
+      heroTextContainer.style.pointerEvents = textOpacity < 0.2 ? 'none' : 'auto';
 
-      // 2. Wall Clock Layer
-      // At progress = 0: completely hidden so only "samayam ethrayai" shows at beginning
-      if (progress < 0.05) {
-        clockOverlayLayer.style.opacity = '0';
-        clockOverlayLayer.style.visibility = 'hidden';
-        clockOverlayLayer.style.pointerEvents = 'none';
-        clockOverlayLayer.style.transform = 'translate(-50%, -50%) scale(0.72)';
-      } else {
-        const clockP = Math.min((progress - 0.05) / 0.22, 1);
-        const easeClock = clockP * clockP * (3 - 2 * clockP);
-        const clockScale = 0.72 + (0.28 * easeClock); // scales 0.72 -> 1.0 (hero center)
-        clockOverlayLayer.style.visibility = 'visible';
-        clockOverlayLayer.style.opacity = easeClock.toFixed(3);
-        clockOverlayLayer.style.transform = `translate(-50%, -50%) scale(${clockScale.toFixed(3)})`;
-        clockOverlayLayer.style.pointerEvents = easeClock > 0.5 ? 'auto' : 'none';
-      }
+      // 2. Clock: Hidden
+      clockOverlayLayer.style.opacity = '0';
+      clockOverlayLayer.style.visibility = 'hidden';
+      clockOverlayLayer.style.pointerEvents = 'none';
+      clockOverlayLayer.style.transform = 'translate(-50%, -50%) scale(0.75)';
 
-      // 3. Remote Layer: hidden during Stage 1
+      // 3. Remote: Hidden
       remoteOverlayLayer.style.opacity = '0';
       remoteOverlayLayer.style.visibility = 'hidden';
       remoteOverlayLayer.style.pointerEvents = 'none';
-      remoteOverlayLayer.style.transform = 'translate(-50%, calc(-50% + 220px)) scale(0.65)';
+      remoteOverlayLayer.style.transform = 'translate(-50%, calc(-50% + 180px)) scale(0.65)';
       remoteOverlayLayer.classList.remove('active-interact');
+
+      // 4. TV: Hidden
+      tvOverlayLayer.style.opacity = '0';
+      tvOverlayLayer.style.visibility = 'hidden';
+      tvOverlayLayer.style.pointerEvents = 'none';
+      tvOverlayLayer.style.transform = 'translate(-50%, calc(-50% + 220px)) scale(0.68)';
+      tvOverlayLayer.classList.remove('active-interact');
     }
     // ------------------------------------------------------------------------
-    // STAGE 2: Clock ascends to Upside Persistent position (0.35 to 0.68)
+    // STAGE 2: Clock alone in center (0.16 to 0.42)
     // ------------------------------------------------------------------------
-    else if (progress <= 0.68) {
-      // Text gone
+    else if (progress <= 0.42) {
+      // Text: Hidden
       heroTextContainer.style.opacity = '0';
       heroTextContainer.style.visibility = 'hidden';
       heroTextContainer.style.pointerEvents = 'none';
 
-      // Clock is fully persistent (opacity: 1), ascends upside
-      clockOverlayLayer.style.visibility = 'visible';
-      clockOverlayLayer.style.opacity = '1';
-      clockOverlayLayer.style.pointerEvents = 'auto';
+      // Clock: Only It in Center!
+      let clockOpacity = 1;
+      let clockScale = 1.0;
 
-      const pAscend = (progress - 0.35) / 0.33;
-      const easeAscend = pAscend * pAscend * (3 - 2 * pAscend);
+      if (progress < 0.24) {
+        const pIn = (progress - 0.16) / 0.08;
+        const easeIn = pIn * pIn * (3 - 2 * pIn);
+        clockOpacity = easeIn;
+        clockScale = 0.75 + (0.25 * easeIn);
+      } else if (progress > 0.35) {
+        const pOut = (progress - 0.35) / 0.07;
+        const easeOut = pOut * pOut * (3 - 2 * pOut);
+        clockOpacity = 1 - easeOut;
+        clockScale = 1.0 - (0.25 * easeOut);
+      }
 
-      const maxClockShiftY = Math.min(vh * 0.35, 275);
-      const clockShiftY = -easeAscend * maxClockShiftY;
-      const clockScale = 1.0 - (easeAscend * 0.56); // 1.0 -> 0.44
+      clockOverlayLayer.style.visibility = clockOpacity > 0.01 ? 'visible' : 'hidden';
+      clockOverlayLayer.style.opacity = clockOpacity.toFixed(3);
+      clockOverlayLayer.style.transform = `translate(-50%, -50%) scale(${clockScale.toFixed(3)})`;
+      clockOverlayLayer.style.pointerEvents = clockOpacity > 0.5 ? 'auto' : 'none';
 
-      clockOverlayLayer.style.transform = `translate(-50%, calc(-50% + ${clockShiftY.toFixed(1)}px)) scale(${clockScale.toFixed(3)})`;
-
-      // Remote still hidden while clock is ascending to prevent collision
+      // Remote: Hidden
       remoteOverlayLayer.style.opacity = '0';
       remoteOverlayLayer.style.visibility = 'hidden';
       remoteOverlayLayer.style.pointerEvents = 'none';
-      remoteOverlayLayer.style.transform = 'translate(-50%, calc(-50% + 220px)) scale(0.65)';
+      remoteOverlayLayer.style.transform = 'translate(-50%, calc(-50% + 180px)) scale(0.65)';
       remoteOverlayLayer.classList.remove('active-interact');
+
+      // TV: Hidden
+      tvOverlayLayer.style.opacity = '0';
+      tvOverlayLayer.style.visibility = 'hidden';
+      tvOverlayLayer.style.pointerEvents = 'none';
+      tvOverlayLayer.style.transform = 'translate(-50%, calc(-50% + 220px)) scale(0.68)';
+      tvOverlayLayer.classList.remove('active-interact');
     }
     // ------------------------------------------------------------------------
-    // STAGE 3: Clock persistent upside + Remote glides in below it (0.68 to 1.00)
+    // STAGE 3: Physical Remote alone in center (0.42 to 0.70)
     // ------------------------------------------------------------------------
-    else {
-      // Text gone
+    else if (progress <= 0.70) {
+      // Text: Hidden
       heroTextContainer.style.opacity = '0';
       heroTextContainer.style.visibility = 'hidden';
       heroTextContainer.style.pointerEvents = 'none';
 
-      // Clock stays persistent upside at top
-      const maxClockShiftY = Math.min(vh * 0.35, 275);
-      clockOverlayLayer.style.visibility = 'visible';
-      clockOverlayLayer.style.opacity = '1';
-      clockOverlayLayer.style.pointerEvents = 'auto';
-      clockOverlayLayer.style.transform = `translate(-50%, calc(-50% - ${maxClockShiftY.toFixed(1)}px)) scale(0.44)`;
+      // Clock: Hidden
+      clockOverlayLayer.style.opacity = '0';
+      clockOverlayLayer.style.visibility = 'hidden';
+      clockOverlayLayer.style.pointerEvents = 'none';
+      clockOverlayLayer.style.transform = 'translate(-50%, -50%) scale(0.75)';
 
-      // Remote glides into view below the clock with generous clearance (>140px)
-      const pRemote = (progress - 0.68) / 0.32;
-      const easeRemote = pRemote * pRemote * (3 - 2 * pRemote);
+      // Remote: Only It in Center!
+      let remoteOpacity = 1;
+      let remoteScale = 1.0;
+      let remoteY = 0;
 
-      const remoteOpacity = Math.min(pRemote / 0.45, 1);
-      const maxRemoteShiftY = Math.min(vh * 0.18, 145);
-      const remoteY = maxRemoteShiftY + ((1 - easeRemote) * 55);
-      const remoteScale = 0.65 + (0.05 * easeRemote); // 0.65 -> 0.70
+      if (progress < 0.50) {
+        const pIn = (progress - 0.42) / 0.08;
+        const easeIn = pIn * pIn * (3 - 2 * pIn);
+        remoteOpacity = easeIn;
+        remoteScale = 0.68 + (0.32 * easeIn);
+        remoteY = (1 - easeIn) * 140;
+      } else if (progress > 0.63) {
+        const pOut = (progress - 0.63) / 0.07;
+        const easeOut = pOut * pOut * (3 - 2 * pOut);
+        remoteOpacity = 1 - easeOut;
+        remoteScale = 1.0 - (0.32 * easeOut);
+        remoteY = -easeOut * 80;
+      }
 
-      remoteOverlayLayer.style.visibility = 'visible';
-      remoteOverlayLayer.style.pointerEvents = 'auto';
+      remoteOverlayLayer.style.visibility = remoteOpacity > 0.01 ? 'visible' : 'hidden';
       remoteOverlayLayer.style.opacity = remoteOpacity.toFixed(3);
       remoteOverlayLayer.style.transform = `translate(-50%, calc(-50% + ${remoteY.toFixed(1)}px)) scale(${remoteScale.toFixed(3)})`;
+      remoteOverlayLayer.style.pointerEvents = remoteOpacity > 0.5 ? 'auto' : 'none';
 
-      if (remoteOpacity >= 0.7) {
+      if (remoteOpacity >= 0.6) {
         remoteOverlayLayer.classList.add('active-interact');
       } else {
         remoteOverlayLayer.classList.remove('active-interact');
+      }
+
+      // TV: Hidden
+      tvOverlayLayer.style.opacity = '0';
+      tvOverlayLayer.style.visibility = 'hidden';
+      tvOverlayLayer.style.pointerEvents = 'none';
+      tvOverlayLayer.style.transform = 'translate(-50%, calc(-50% + 220px)) scale(0.68)';
+      tvOverlayLayer.classList.remove('active-interact');
+    }
+    // ------------------------------------------------------------------------
+    // STAGE 4: Scrapped / Broken TV alone in center (0.70 to 1.00)
+    // ------------------------------------------------------------------------
+    else {
+      // Text: Hidden
+      heroTextContainer.style.opacity = '0';
+      heroTextContainer.style.visibility = 'hidden';
+      heroTextContainer.style.pointerEvents = 'none';
+
+      // Clock: Hidden
+      clockOverlayLayer.style.opacity = '0';
+      clockOverlayLayer.style.visibility = 'hidden';
+      clockOverlayLayer.style.pointerEvents = 'none';
+      clockOverlayLayer.style.transform = 'translate(-50%, -50%) scale(0.75)';
+
+      // Remote: Hidden
+      remoteOverlayLayer.style.opacity = '0';
+      remoteOverlayLayer.style.visibility = 'hidden';
+      remoteOverlayLayer.style.pointerEvents = 'none';
+      remoteOverlayLayer.style.transform = 'translate(-50%, calc(-50% - 80px)) scale(0.68)';
+      remoteOverlayLayer.classList.remove('active-interact');
+
+      // Scrapped TV: Only It in Center!
+      let tvOpacity = 1;
+      let tvScale = 1.0;
+      let tvY = 0;
+
+      if (progress < 0.78) {
+        const pIn = (progress - 0.70) / 0.08;
+        const easeIn = pIn * pIn * (3 - 2 * pIn);
+        tvOpacity = easeIn;
+        tvScale = 0.70 + (0.30 * easeIn);
+        tvY = (1 - easeIn) * 160;
+      }
+
+      tvOverlayLayer.style.visibility = tvOpacity > 0.01 ? 'visible' : 'hidden';
+      tvOverlayLayer.style.opacity = tvOpacity.toFixed(3);
+      tvOverlayLayer.style.transform = `translate(-50%, calc(-50% + ${tvY.toFixed(1)}px)) scale(${tvScale.toFixed(3)})`;
+      tvOverlayLayer.style.pointerEvents = tvOpacity > 0.5 ? 'auto' : 'none';
+
+      if (tvOpacity >= 0.6) {
+        tvOverlayLayer.classList.add('active-interact');
+      } else {
+        tvOverlayLayer.classList.remove('active-interact');
       }
     }
   }
@@ -486,7 +786,7 @@
   if (scrollCta) {
     scrollCta.addEventListener('click', () => {
       const maxScroll = Math.max(scrollStoryTrack.offsetHeight - window.innerHeight, 1);
-      window.scrollTo({ top: maxScroll * 0.90, behavior: 'smooth' });
+      window.scrollTo({ top: maxScroll * 0.28, behavior: 'smooth' });
     });
   }
 
@@ -539,10 +839,18 @@
   // Sound toggle
   function toggleSound() {
     state.soundEnabled = !state.soundEnabled;
-    const icon = state.soundEnabled ? '🔊' : '🔇';
-    if (soundIcon) soundIcon.textContent = icon;
+    updateSoundIcon(state.soundEnabled);
     triggerIrFlash();
     if (state.soundEnabled) playRemoteClickSound();
+  }
+
+  function updateSoundIcon(enabled) {
+    if (!soundIcon) return;
+    if (enabled) {
+      soundIcon.innerHTML = '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path></svg>';
+    } else {
+      soundIcon.innerHTML = '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><line x1="23" y1="9" x2="17" y2="15"></line><line x1="17" y1="9" x2="23" y2="15"></line></svg>';
+    }
   }
 
   if (soundToggleBtn) soundToggleBtn.addEventListener('click', toggleSound);
@@ -974,7 +1282,7 @@
 
     if (!micGranted) {
       if (voiceBannerTitle) voiceBannerTitle.textContent = 'Microphone Blocked';
-      if (voiceBannerTranscript) voiceBannerTranscript.textContent = 'Allow microphone in address bar (🔒 icon), or type country name below:';
+      if (voiceBannerTranscript) voiceBannerTranscript.textContent = 'Allow microphone in browser address bar (lock icon), or type country name below:';
       if (voiceTextInput) voiceTextInput.focus();
     } else {
       if (voiceBannerTitle) voiceBannerTitle.textContent = 'Microphone Live · Listening...';
@@ -1033,7 +1341,7 @@
         console.warn('SpeechRecognition error:', err.error);
         if (err.error === 'not-allowed') {
           if (voiceBannerTitle) voiceBannerTitle.textContent = 'Microphone Blocked';
-          if (voiceBannerTranscript) voiceBannerTranscript.textContent = 'Allow microphone in address bar (🔒 icon), or type country name below:';
+          if (voiceBannerTranscript) voiceBannerTranscript.textContent = 'Allow microphone in browser address bar (lock icon), or type country name below:';
         } else if (err.error === 'no-speech') {
           if (state.isListening && activeRecognizer) {
             try { activeRecognizer.start(); } catch (e) {}

@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Scraphack 2026 — Photo Admin & Media Manager</title>
+  <meta name="description" content="Add and manage standardized documentary photos for the Scraphack 2026 story carousel.">
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700;800&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="admin.css?v=1">
+</head>
+<body class="admin-page">
+
+  <!-- Top Sticky Navigation Bar -->
+  <header class="admin-nav" id="adminNav">
+    <div class="nav-inner">
+      <div class="nav-left">
+        <a href="story.html" class="brand-logo" id="brandLogo" title="Back to Story Page">
+          <span class="logo-text">samayam.</span>
+          <span class="logo-malayalam">സമയം എത്രയായി?</span>
+        </a>
+        <span class="admin-status-badge">ADMIN // NO PASSWORD</span>
+      </div>
+
+      <div class="nav-right">
+        <a href="story.html" class="nav-cta-btn" title="View Story Page">
+          <span class="btn-text">View Story Page</span>
+          <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Admin Workspace Container -->
+  <main class="admin-main">
+    <div class="admin-container">
+      
+      <!-- Page Title & Header -->
+      <section class="admin-header-card">
+        <div class="header-tag-row">
+          <span class="admin-chip">DOCUMENTARY MEDIA MANAGER</span>
+          <span class="storage-mode-chip" id="storageStatusChip">IndexedDB Persistent</span>
+        </div>
+        <h1 class="admin-title">Add & Manage Story Photos</h1>
+        <p class="admin-subtitle">
+          Upload and attach documentary photos to story sets. Photos are automatically standardized to a 16:9 carousel format and stored locally in persistent browser storage.
+        </p>
+      </section>
+
+      <!-- Grid: Left side upload form, Right side live preview -->
+      <div class="admin-split-grid">
+
+        <!-- Form Card -->
+        <section class="admin-card upload-card">
+          <div class="card-head">
+            <h2 class="card-title">Upload New Photo</h2>
+            <span class="card-hint">No password needed</span>
+          </div>
+
+          <form id="photoUploadForm" class="upload-form">
+
+            <!-- Target Story Set Selector -->
+            <div class="form-group">
+              <label for="sceneSelector" class="form-label">
+                Target Story Set / Location
+                <span class="label-desc">Choose where this photo will be displayed in the story</span>
+              </label>
+              <select id="sceneSelector" class="form-select" required>
+                <option value="scene-1" selected>Scene 01 · Origin (TinkerHub Scraphack)</option>
+                <option value="scene-2">Scene 02 · Strategy (Planning calls)</option>
+                <option value="scene-3">Scene 03 · Blueprint (The Idea)</option>
+                <option value="scene-4">Scene 04 · Day One (Hackathon day)</option>
+                <option value="scene-5">Scene 05 · The Scrap Hunt (Visit Aakrikada)</option>
+                <option value="scene-6">Scene 06 · Execution (Initial plan)</option>
+                <option value="scene-7">Scene 07 · The Struggle (Failures & dead motors)</option>
+                <option value="scene-8">Scene 08 · Side Quests (Absolute Torch & Violin)</option>
+                <option value="scene-9">Scene 09 · Relief (Chaya Break)</option>
+                <option value="scene-10">Scene 10 · The Miracle Fix (Breaking Clocks)</option>
+              </select>
+            </div>
+
+            <!-- Drag & Drop Zone -->
+            <div class="form-group">
+              <label class="form-label">
+                Photo File
+                <span class="label-desc">Select an image from your device or drag and drop</span>
+              </label>
+              <div class="file-dropzone" id="fileDropzone">
+                <input type="file" id="photoFileInput" class="file-input-hidden" accept="image/*">
+                <div class="dropzone-inner">
+                  <div class="dropzone-icon-circle">
+                    <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+                  </div>
+                  <div class="dropzone-text">
+                    <strong>Click to choose an image</strong> or drag and drop here
+                  </div>
+                  <span class="dropzone-sub">PNG, JPG, WEBP, or GIF (Auto-standardized)</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Alternative URL Input -->
+            <div class="form-group">
+              <label for="photoUrlInput" class="form-label">
+                Or Paste Image Web URL
+                <span class="label-desc">Direct link to an existing image</span>
+              </label>
+              <input type="url" id="photoUrlInput" class="form-input" placeholder="https://example.com/hackathon-photo.jpg">
+            </div>
+
+            <!-- Optional Title -->
+            <div class="form-group">
+              <label for="photoTitleInput" class="form-label">
+                Photo Title (Optional)
+              </label>
+              <input type="text" id="photoTitleInput" class="form-input" placeholder="e.g. Solder Station & ESP32 Wiring" maxlength="80">
+            </div>
+
+            <!-- Caption / Description -->
+            <div class="form-group">
+              <label for="photoCaptionInput" class="form-label">
+                Caption / Description (Optional)
+                <span class="label-desc">Appears beneath the photo in the carousel</span>
+              </label>
+              <textarea id="photoCaptionInput" class="form-textarea" rows="2" placeholder="e.g. Navaneeth and Christy testing the potentiometer rack mechanism with the speaker at 2 AM..." maxlength="300"></textarea>
+            </div>
+
+            <!-- Submit Button -->
+            <div class="form-actions">
+              <button type="submit" class="submit-btn" id="submitPhotoBtn" disabled>
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                <span>Add Photo to Story Carousel</span>
+              </button>
+            </div>
+
+            <div class="form-status" id="formStatusMsg" aria-live="polite"></div>
+
+          </form>
+        </section>
+
+        <!-- Live Standardized Preview Card -->
+        <section class="admin-card preview-card">
+          <div class="card-head">
+            <h2 class="card-title">Standardized Carousel Preview</h2>
+            <span class="aspect-badge">16:9 Standardized</span>
+          </div>
+
+          <div class="standardized-preview-viewport" id="previewViewport">
+            <!-- Empty state or loaded image preview -->
+            <div class="preview-empty-state" id="previewEmptyState">
+              <svg viewBox="0 0 24 24" width="36" height="36" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>
+              <span>No image selected</span>
+              <p>Choose an image file or enter a URL on the left to see the standardized carousel preview</p>
+            </div>
+
+            <img id="previewImg" class="preview-img" alt="Standardized carousel preview" style="display: none;">
+
+            <!-- Preview Caption Overlay -->
+            <div class="preview-caption-bar" id="previewCaptionBar" style="display: none;">
+              <span class="preview-caption-tag" id="previewCaptionTag">SCENE 01</span>
+              <span class="preview-caption-text" id="previewCaptionText">Caption will appear here...</span>
+            </div>
+          </div>
+
+          <div class="preview-specs-box">
+            <div class="spec-row">
+              <span class="spec-label">Container Aspect Ratio:</span>
+              <span class="spec-val">16:9 Widescreen</span>
+            </div>
+            <div class="spec-row">
+              <span class="spec-label">Display Mode:</span>
+              <span class="spec-val">High-definition Cover (Auto-scaled)</span>
+            </div>
+            <div class="spec-row">
+              <span class="spec-label">Target Placement:</span>
+              <span class="spec-val" id="previewTargetPlacement">Scene 01 · Origin</span>
+            </div>
+          </div>
+        </section>
+
+      </div>
+
+      <!-- Saved Photos Management Section -->
+      <section class="admin-card saved-photos-card">
+        <div class="card-head-row">
+          <div>
+            <h2 class="card-title">Saved Story Photos</h2>
+            <p class="card-subtitle">All photos currently active and stored in the persistent database.</p>
+          </div>
+          <div class="saved-actions">
+            <span class="count-badge" id="photoCountBadge">0 Photos</span>
+            <button type="button" class="tool-btn" id="exportJsonBtn" title="Export JSON backup">
+              <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+              <span>Export Backup</span>
+            </button>
+            <label class="tool-btn" id="importJsonLabel" title="Import JSON backup">
+              <input type="file" id="importJsonInput" accept=".json" style="display: none;">
+              <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+              <span>Import Backup</span>
+            </label>
+            <button type="button" class="tool-btn danger-btn" id="clearAllBtn" title="Delete all photos">
+              <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+              <span>Clear All</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Photos Grid or Empty State -->
+        <div class="photos-grid" id="photosGrid">
+          <!-- Dynamically populated -->
+        </div>
+
+        <div class="photos-empty-state" id="photosEmptyState" style="display: none;">
+          <div class="empty-icon-wrap">
+            <svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>
+          </div>
+          <h3>No Photos Added Yet</h3>
+          <p>Use the upload form above to add your first documentary photo to the story sets!</p>
+        </div>
+      </section>
+
+      <!-- Return / Quick Links Footer -->
+      <section class="admin-footer-bar">
+        <div class="footer-links">
+          <a href="story.html" class="footer-cta-link">
+            <span>&larr; Return to Documentary Story Page</span>
+          </a>
+          <a href="index.html#tv" class="footer-cta-link">
+            <span>Return to Clock & TV Remote</span>
+          </a>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <!-- Site Footer -->
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <p class="credit-text">
+        Scraphack 2026 Documentary · TinkerHub Space, Kochi
+      </p>
+    </div>
+  </footer>
+
+  <script src="photo-store.js?v=1"></script>
+  <script src="admin.js?v=1"></script>
+</body>
+</html>

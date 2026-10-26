@@ -11,7 +11,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700;800&display=swap" rel="stylesheet">
 
-  <link rel="stylesheet" href="style.css?v=16">
+  <link rel="stylesheet" href="style.css?v=20">
 </head>
 <body>
 
@@ -29,7 +29,9 @@
         </div>
 
         <button class="icon-toggle-btn" id="soundToggleBtn" type="button" aria-label="Toggle Sound" title="Toggle Sound">
-          <span id="soundIcon">🔊</span>
+          <span class="sound-icon-wrap" id="soundIcon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path></svg>
+          </span>
         </button>
       </div>
     </div>
@@ -164,7 +166,9 @@
               <button class="rubber-mini-btn" id="prevChBtn" type="button" aria-label="Previous Channel">‹</button>
             </div>
             <div class="rocker-pair">
-              <button class="rubber-mini-btn home-btn" id="homeBtn" type="button" title="Home (Kerala / India)" aria-label="Home">🏠</button>
+              <button class="rubber-mini-btn home-btn" id="homeBtn" type="button" title="Home (Kerala / India)" aria-label="Home">
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+              </button>
             </div>
             <div class="rocker-pair">
               <button class="rubber-mini-btn next-ch" id="nextChBtn" type="button" aria-label="Next Channel">›</button>
@@ -185,19 +189,185 @@
         </div>
       </div>
 
+      <!-- STAGE 4: Big Authentic Scrapped & Broken TV Layer (Only It) -->
+      <div class="tv-overlay-layer" id="tvOverlayLayer" role="region" aria-label="Scrapped Retro CRT TV">
+        
+        <!-- Retro Scrap Antenna Mounted on TV -->
+        <div class="tv-antenna-rig">
+          <div class="antenna-base"></div>
+          <div class="antenna-rod antenna-left"></div>
+          <div class="antenna-rod antenna-right bent-scrap">
+            <span class="antenna-coil"></span>
+            <span class="antenna-tape"></span>
+          </div>
+        </div>
+
+        <!-- The Broken & Scrapped TV Cabinet -->
+        <div class="scrapped-tv" id="scrappedTv">
+          
+          <!-- Emergency Scrap Repairs & Warning Tape -->
+          <div class="tv-duct-tape tape-top-left"></div>
+          <div class="tv-duct-tape tape-bottom-right"></div>
+          <div class="tv-hazard-sticker">
+            <span class="sticker-line1">DANGER 230V</span>
+            <span class="sticker-line2">AAKRI SPECIAL // KOCHI</span>
+          </div>
+
+          <!-- Main TV Chassis: Left CRT Screen, Right Control Column -->
+          <div class="tv-chassis">
+            
+            <!-- Heavy CRT Bezel & Curved Glass -->
+            <div class="tv-screen-bezel">
+              <div class="tv-screen-glass" id="tvScreenGlass">
+                
+                <!-- Realistic Fractured Glass Cracks -->
+                <svg class="tv-glass-crack-svg" viewBox="0 0 520 370" preserveAspectRatio="none" aria-hidden="true">
+                  <!-- Main impact crack top-right -->
+                  <path d="M 515 8 L 440 68 L 380 50 L 330 105 M 440 68 L 460 135 L 415 178 M 380 50 L 360 18 M 440 68 L 498 102 M 330 105 L 295 98 L 265 138 M 330 105 L 345 165" 
+                        stroke="rgba(255,255,255,0.78)" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round" />
+                  <path d="M 517 10 L 442 70 L 382 52 L 332 107 M 442 70 L 462 137 L 417 180" 
+                        stroke="rgba(0,0,0,0.55)" stroke-width="1.2" fill="none" stroke-linecap="round" stroke-linejoin="round" />
+                  <!-- Secondary hairline fissure bottom-left -->
+                  <path d="M 8 362 L 78 305 L 125 322 L 165 285 M 78 305 L 62 255 M 125 322 L 152 358" 
+                        stroke="rgba(255,255,255,0.55)" stroke-width="1.8" fill="none" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+
+                <!-- CRT Scanlines, Phosphor Vignette & Specular Glare -->
+                <div class="crt-scanlines"></div>
+                <div class="crt-glass-specular"></div>
+                <div class="crt-vignette"></div>
+
+                <!-- CRT Screen Content Display: Dedicated Language Choice Selection -->
+                <div class="tv-screen-content" id="tvScreenContent">
+                  
+                  <!-- Top Broadcast HUD -->
+                  <div class="crt-top-hud">
+                    <div class="hud-left">
+                      <span class="hud-ch" id="tvHudCh">VHF CH 01 · മലയാളം</span>
+                    </div>
+                    <div class="hud-right">
+                      <span class="hud-telemetry" id="hudTelemetry">BROADCAST READY</span>
+                      <span class="hud-badge-tag">STORY ACCESS</span>
+                    </div>
+                  </div>
+
+                  <!-- SCREEN VIEW: "Do you know Malayalam?" Interactive Choice Selection -->
+                  <div class="tv-view tv-prompt-view glitch-active" id="tvPromptView">
+                    
+                    <!-- CRT Glitch Scanline Rolling Bar -->
+                    <div class="crt-glitch-roll"></div>
+
+                    <div class="prompt-terminal-header">
+                      <span class="terminal-sym">&gt;</span> LANGUAGE PROTOCOL // TINKERHUB SCRAPHACK 2026
+                      <span class="glitch-signal-tag">LIVE FEED</span>
+                    </div>
+
+                    <h2 class="prompt-question-title glitch-text" data-text="Do you know Malayalam?">Do you know Malayalam?</h2>
+                    <p class="prompt-question-malayalam glitch-text" data-text="മലയാളം അറിയാമോ?">മലയാളം അറിയാമോ?</p>
+                    <p class="prompt-hint"><span class="glitch-freq-indicator">VHF 42.4 MHz [TUNER LOCKED]</span>Select your language to launch the full hardware hackathon story on the next page:</p>
+                    
+                    <div class="prompt-options-row">
+                      <button class="tv-choice-btn btn-malayalam btn-glitch-fx selected-choice" id="choiceMalayalamBtn" type="button" aria-label="Open Malayalam story on next page">
+                        <div class="choice-active-indicator">SELECTED</div>
+                        <span class="choice-tag">CH 01 // മലയാളം</span>
+                        <span class="choice-primary">അതെ, അറിയാം</span>
+                        <span class="choice-sub">Open Malayalam Story in Next Page &rarr;</span>
+                      </button>
+
+                      <button class="tv-choice-btn btn-english btn-glitch-fx" id="choiceEnglishBtn" type="button" aria-label="Open English story on next page">
+                        <div class="choice-active-indicator">SELECTED</div>
+                        <span class="choice-tag">CH 02 // ENGLISH</span>
+                        <span class="choice-primary">No, English</span>
+                        <span class="choice-sub">Open English Story in Next Page &rarr;</span>
+                      </button>
+                    </div>
+
+                    <div class="prompt-bottom-tip">
+                      <span>Click either option · Or rotate CH TUNE knob on TV hardware panel</span>
+                    </div>
+                  </div>
+
+                </div> <!-- End tv-screen-content -->
+
+                <!-- CRT Power-off collapse & static overlay -->
+                <div class="crt-static-overlay" id="crtStaticOverlay"></div>
+
+              </div> <!-- End tv-screen-glass -->
+            </div> <!-- End tv-screen-bezel -->
+
+            <!-- TV Right Side Controls Column -->
+            <div class="tv-hardware-panel">
+              
+              <!-- Brand Plate -->
+              <div class="tv-brand-plate">
+                <span class="plate-brand">SAMAYAM</span>
+                <span class="plate-model">AAKRI-VISION</span>
+              </div>
+
+              <!-- Channel Rotary Knob -->
+              <div class="rotary-control-group">
+                <span class="knob-label">CH TUNE</span>
+                <button class="rotary-knob channel-knob" id="tvChannelKnob" type="button" title="Rotate Channel (Click to cycle language / static)">
+                  <div class="knob-pointer"></div>
+                  <div class="knob-flutes"></div>
+                </button>
+              </div>
+
+              <!-- Contrast / Brightness Rotary Knob -->
+              <div class="rotary-control-group">
+                <span class="knob-label">CONTRAST</span>
+                <button class="rotary-knob volume-knob" id="tvVolumeKnob" type="button" title="Adjust CRT Contrast / Brightness">
+                  <div class="knob-pointer pointer-vol"></div>
+                  <div class="knob-flutes"></div>
+                </button>
+              </div>
+
+              <!-- Power Mechanical Toggle & Pilot Lamp -->
+              <div class="power-control-group">
+                <div class="pilot-lamp-housing">
+                  <div class="pilot-lamp lit" id="tvPilotLamp" title="Filament Power Indicator"></div>
+                  <span class="pilot-text">POWER</span>
+                </div>
+                <button class="tv-power-switch active" id="tvPowerSwitch" type="button" title="Toggle TV Power On/Off">
+                  <div class="switch-toggle-knob"></div>
+                </button>
+              </div>
+
+              <!-- Speaker Slits -->
+              <div class="tv-speaker-slits" aria-hidden="true">
+                <span></span><span></span><span></span><span></span><span></span>
+              </div>
+
+              <!-- TinkerHub Scraphack Badge -->
+              <div class="tv-chassis-stamp">
+                <span>TH-2026 // AAKRI</span>
+              </div>
+
+            </div> <!-- End tv-hardware-panel -->
+
+          </div> <!-- End tv-chassis -->
+
+        </div> <!-- End scrapped-tv -->
+
+      </div> <!-- End tv-overlay-layer -->
+
       <!-- Floating Voice Assistant Banner -->
       <div class="voice-assistant-banner" id="voiceAssistantBanner" aria-live="polite">
         <div class="voice-banner-header">
           <div class="voice-mic-indicator">
             <span class="mic-wave-ring"></span>
             <span class="mic-wave-ring"></span>
-            <span class="mic-symbol">🎙️</span>
+            <span class="mic-symbol">
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path><path d="M19 10v2a7 7 0 0 1-14 0v-2"></path><line x1="12" y1="19" x2="12" y2="23"></line><line x1="8" y1="23" x2="16" y2="23"></line></svg>
+            </span>
           </div>
           <div class="voice-banner-info">
             <div class="voice-banner-title" id="voiceBannerTitle">Listening for Country...</div>
             <div class="voice-banner-transcript" id="voiceBannerTranscript">Say any country (e.g. "Japan", "USA", "Dubai", "London", "Kerala")</div>
           </div>
-          <button class="voice-close-btn" id="voiceCloseBtn" type="button" aria-label="Close Voice Assistant">✕</button>
+          <button class="voice-close-btn" id="voiceCloseBtn" type="button" aria-label="Close Voice Assistant">
+            <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+          </button>
         </div>
         <!-- Live Real-Time Microphone Visualizer -->
         <div class="voice-live-visualizer" id="voiceLiveVisualizer">
@@ -228,17 +398,15 @@
     </div>
   </div>
 
-  <!-- Clean Footer with User Credit -->
+  <!-- Site Footer -->
   <footer class="site-footer">
     <div class="footer-inner">
       <p class="credit-text">
-        Made by <a href="https://github.com/Lunarmist-byte" target="_blank" rel="noopener noreferrer">Lunarmist-byte</a>
-        · <a href="https://www.linkedin.com/in/amal-s-kumar-ba69a1290/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
-        · <a href="https://github.com/Lunarmist-byte" target="_blank" rel="noopener noreferrer">GitHub</a>
+        samayam ethrayai · Scraphack 2026 · TinkerHub
       </p>
     </div>
   </footer>
 
-  <script src="script.js?v=16"></script>
+  <script src="script.js?v=20"></script>
 </body>
 </html>

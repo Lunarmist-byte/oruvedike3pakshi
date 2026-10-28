@@ -69,65 +69,6 @@
   const reelCreatorInput = document.getElementById('reelCreatorInput');
 
   // --------------------------------------------------------------------------
-  // Storage Helpers
-  // --------------------------------------------------------------------------
-  function loadVlogs() {
-    try {
-      const raw = localStorage.getItem(STORAGE_KEY);
-      if (raw) {
-        vlogsList = JSON.parse(raw);
-        if (!Array.isArray(vlogsList)) vlogsList = [...DEFAULT_VLOGS];
-
-        // Purge old seed placeholder reels
-        const oldReels = ['c8rm1y4sl6e', 'c41ox4oi_5x', 'c32sp4xl_8y', 'c29wq1_m77z'];
-        vlogsList = vlogsList.filter(v => !oldReels.some(code => (v.url || '').toLowerCase().includes(code)));
-
-        // Deduplicate vlogs by URL to ensure each reel only appears once
-        const seenUrls = new Set();
-        vlogsList = vlogsList.filter(v => {
-          const urlNorm = (v.url || '').trim().toLowerCase();
-          if (seenUrls.has(urlNorm)) return false;
-          seenUrls.add(urlNorm);
-          return true;
-        });
-
-        // Merge default vlogs if missing
-        DEFAULT_VLOGS.forEach(dv => {
-          const dvUrlNorm = dv.url.trim().toLowerCase();
-          if (!seenUrls.has(dvUrlNorm)) {
-            vlogsList.push(dv);
-            seenUrls.add(dvUrlNorm);
-          }
-        });
-
-        // Sync default titles
-        vlogsList.forEach(v => {
-          const match = DEFAULT_VLOGS.find(dv => dv.url.trim().toLowerCase() === (v.url || '').trim().toLowerCase());
-          if (match) {
-            v.title = match.title;
-            v.category = match.category;
-          }
-        });
-        saveVlogs();
-      } else {
-        vlogsList = [...DEFAULT_VLOGS];
-        saveVlogs();
-      }
-    } catch (e) {
-      console.warn('LocalStorage error reading vlogs:', e);
-      vlogsList = [...DEFAULT_VLOGS];
-    }
-  }
-
-  function saveVlogs() {
-    try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(vlogsList));
-    } catch (e) {
-      console.warn('LocalStorage save failed:', e);
-    }
-  }
-
-  // --------------------------------------------------------------------------
   // Instagram URL / Embed Helper
   // Extracts shortcode from /reel/SHORTCODE/ or /p/SHORTCODE/
   // --------------------------------------------------------------------------
@@ -161,6 +102,73 @@
   function getCleanInstaUrl(code, isReel = true) {
     const type = isReel ? 'reel' : 'p';
     return `https://www.instagram.com/${type}/${code}/`;
+  }
+
+  // --------------------------------------------------------------------------
+  // Storage Helpers (Strictly Deduplicated by Canonical Instagram Shortcode)
+  // --------------------------------------------------------------------------
+  function loadVlogs() {
+    // Map keyed by canonical lowercase shortcode (or normalized URL)
+    const vlogsMap = new Map();
+
+    // 1. Prime map with canonical static defaults
+    DEFAULT_VLOGS.forEach(dv => {
+      const parsed = extractInstaCode(dv.url);
+      const key = parsed ? parsed.code.toLowerCase() : dv.url.trim().toLowerCase();
+      const cleanUrl = parsed ? getCleanInstaUrl(parsed.code, parsed.isReel) : dv.url.trim();
+      vlogsMap.set(key, {
+        ...dv,
+        url: cleanUrl
+      });
+    });
+
+    // 2. Merge stored user items without duplicating default reels
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (raw) {
+        const stored = JSON.parse(raw);
+        if (Array.isArray(stored)) {
+          const oldReels = ['c8rm1y4sl6e', 'c41ox4oi_5x', 'c32sp4xl_8y', 'c29wq1_m77z'];
+          
+          stored.forEach(item => {
+            if (!item || !item.url) return;
+            const parsed = extractInstaCode(item.url);
+            const key = parsed ? parsed.code.toLowerCase() : item.url.trim().toLowerCase();
+            
+            // Skip old removed placeholder reels
+            if (oldReels.some(code => key.includes(code))) return;
+
+            const cleanUrl = parsed ? getCleanInstaUrl(parsed.code, parsed.isReel) : item.url.trim();
+
+            if (vlogsMap.has(key)) {
+              // Known canonical reel: keep canonical data & clean URL
+              const existing = vlogsMap.get(key);
+              if (item.title && !existing.title) existing.title = item.title;
+              if (item.creator && !existing.creator) existing.creator = item.creator;
+            } else {
+              // Brand new distinct user reel
+              vlogsMap.set(key, {
+                ...item,
+                url: cleanUrl
+              });
+            }
+          });
+        }
+      }
+    } catch (e) {
+      console.warn('LocalStorage error reading vlogs:', e);
+    }
+
+    vlogsList = Array.from(vlogsMap.values());
+    saveVlogs(); // Persist the cleaned, strictly deduplicated array
+  }
+
+  function saveVlogs() {
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(vlogsList));
+    } catch (e) {
+      console.warn('LocalStorage save failed:', e);
+    }
   }
 
   function getInstaEmbedHtml(code, isReel = true) {

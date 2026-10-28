@@ -182,28 +182,20 @@
   const hudTelemetry = document.getElementById('hudTelemetry');
 
   // ==========================================================================
-  // Clock Dial Precision Tick Generation
+  // Clock Dial Precision Tick Generation - Pure radial 50% 50% rotation
   // ==========================================================================
   function generateClockTicks(container) {
     if (!container) return;
     container.innerHTML = '';
-    const rect = container.getBoundingClientRect();
-    const radius = (rect.width > 0 ? rect.width : 360) / 2;
-    const originY = Math.max(radius - 6, 20);
-
     for (let i = 0; i < 60; i++) {
       const tick = document.createElement('span');
       tick.className = (i % 5 === 0) ? 'tick tick-hour' : 'tick tick-min';
-      tick.style.transformOrigin = `50% ${originY}px`;
       tick.style.transform = `rotate(${i * 6}deg)`;
       container.appendChild(tick);
     }
   }
 
   generateClockTicks(clockTicksContainer);
-  window.addEventListener('resize', () => {
-    generateClockTicks(clockTicksContainer);
-  });
 
   // ==========================================================================
   // Web Audio API Tactile Mechanical Click Sound
@@ -1800,26 +1792,31 @@
         return true;
       });
 
-      // Merge any default links that aren't yet in the list by url
-      const existingUrls = new Set(links.map(l => (l.url || '').trim()));
-      let updated = false;
+      // Normalize URL (strip query string for comparison)
+      const normalizeUrl = (u) => {
+        if (!u) return '';
+        const trimmed = u.trim().toLowerCase();
+        return trimmed.split('?')[0].replace(/\/+$/, '');
+      };
+
+      // Merge defaults with strict normalized deduplication
+      const linksMap = new Map();
       DEFAULT_PROJECT_LINKS.forEach(dl => {
-        if (!existingUrls.has(dl.url.trim())) {
-          links.push(dl);
-          existingUrls.add(dl.url.trim());
-          updated = true;
-        }
+        linksMap.set(normalizeUrl(dl.url), { ...dl });
       });
 
-      // Sync no-fluff captions to default items
       links.forEach(item => {
-        const matchingDefault = DEFAULT_PROJECT_LINKS.find(dl => dl.url.trim() === (item.url || '').trim());
-        if (matchingDefault) {
-          item.title = matchingDefault.title;
-          item.description = matchingDefault.description;
+        const key = normalizeUrl(item.url);
+        if (linksMap.has(key)) {
+          const def = linksMap.get(key);
+          if (item.title && !def.title) def.title = item.title;
+          if (item.description && !def.description) def.description = item.description;
+        } else {
+          linksMap.set(key, item);
         }
       });
 
+      links = Array.from(linksMap.values());
       localStorage.setItem(LINKS_STORAGE_KEY, JSON.stringify(links));
     } catch (e) {
       links = DEFAULT_PROJECT_LINKS;

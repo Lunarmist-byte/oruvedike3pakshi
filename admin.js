@@ -709,54 +709,84 @@
     }
   ];
 
+  // Instagram URL / Embed Helper for Admin
+  function extractInstaCode(rawInput) {
+    if (!rawInput) return null;
+    const trimmed = rawInput.trim();
+    const match = trimmed.match(/instagram\.com\/(p|reel|tv)\/([a-zA-Z0-9_-]+)/i);
+    if (match && match[2]) {
+      return {
+        type: match[1].toLowerCase() === 'p' ? 'p' : 'reel',
+        code: match[2],
+        isReel: match[1].toLowerCase() !== 'p'
+      };
+    }
+    const directMatch = trimmed.match(/^([a-zA-Z0-9_-]{8,15})$/);
+    if (directMatch) {
+      return { type: 'reel', code: directMatch[1], isReel: true };
+    }
+    return null;
+  }
+
+  function getCleanInstaUrl(code, isReel = true) {
+    const type = isReel ? 'reel' : 'p';
+    return `https://www.instagram.com/${type}/${code}/`;
+  }
+
   function getStoredVlogs() {
+    const vlogsMap = new Map();
+
+    // 1. Prime map with canonical static defaults
+    DEFAULT_VLOGS.forEach(dv => {
+      const parsed = extractInstaCode(dv.url);
+      const key = parsed ? parsed.code.toLowerCase() : dv.url.trim().toLowerCase();
+      const cleanUrl = parsed ? getCleanInstaUrl(parsed.code, parsed.isReel) : dv.url.trim();
+      vlogsMap.set(key, {
+        ...dv,
+        url: cleanUrl
+      });
+    });
+
+    // 2. Merge stored user items without duplicating default reels
     try {
       const raw = localStorage.getItem(VLOGS_STORAGE_KEY);
-      let list = [];
-      if (!raw) {
-        list = [...DEFAULT_VLOGS];
-      } else {
-        list = JSON.parse(raw);
-        if (!Array.isArray(list)) list = [...DEFAULT_VLOGS];
+      if (raw) {
+        const stored = JSON.parse(raw);
+        if (Array.isArray(stored)) {
+          const oldReels = ['c8rm1y4sl6e', 'c41ox4oi_5x', 'c32sp4xl_8y', 'c29wq1_m77z'];
+          
+          stored.forEach(item => {
+            if (!item || !item.url) return;
+            const parsed = extractInstaCode(item.url);
+            const key = parsed ? parsed.code.toLowerCase() : item.url.trim().toLowerCase();
+            
+            // Skip old removed placeholder reels
+            if (oldReels.some(code => key.includes(code))) return;
+
+            const cleanUrl = parsed ? getCleanInstaUrl(parsed.code, parsed.isReel) : item.url.trim();
+
+            if (vlogsMap.has(key)) {
+              const existing = vlogsMap.get(key);
+              if (item.title && !existing.title) existing.title = item.title;
+              if (item.creator && !existing.creator) existing.creator = item.creator;
+            } else {
+              vlogsMap.set(key, {
+                ...item,
+                url: cleanUrl
+              });
+            }
+          });
+        }
       }
-
-      // Purge old seed placeholder reels
-      const oldReels = ['c8rm1y4sl6e', 'c41ox4oi_5x', 'c32sp4xl_8y', 'c29wq1_m77z'];
-      list = list.filter(v => !oldReels.some(code => (v.url || '').toLowerCase().includes(code)));
-
-      // Deduplicate by URL
-      const seenUrls = new Set();
-      list = list.filter(v => {
-        const u = (v.url || '').trim().toLowerCase();
-        if (seenUrls.has(u)) return false;
-        seenUrls.add(u);
-        return true;
-      });
-
-      // Merge defaults if not present
-      DEFAULT_VLOGS.forEach(dv => {
-        const dvU = dv.url.trim().toLowerCase();
-        if (!seenUrls.has(dvU)) {
-          list.push(dv);
-          seenUrls.add(dvU);
-        }
-      });
-
-      // Sync default titles
-      list.forEach(v => {
-        const match = DEFAULT_VLOGS.find(dv => dv.url.trim().toLowerCase() === (v.url || '').trim().toLowerCase());
-        if (match) {
-          v.title = match.title;
-          v.category = match.category;
-        }
-      });
-
-      localStorage.setItem(VLOGS_STORAGE_KEY, JSON.stringify(list));
-      return list;
     } catch (e) {
       console.warn('LocalStorage error reading vlogs in admin:', e);
-      return DEFAULT_VLOGS;
     }
+
+    const list = Array.from(vlogsMap.values());
+    try {
+      localStorage.setItem(VLOGS_STORAGE_KEY, JSON.stringify(list));
+    } catch (e) {}
+    return list;
   }
 
   function saveStoredVlogs(vlogs) {

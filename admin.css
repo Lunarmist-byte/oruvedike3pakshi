@@ -195,6 +195,66 @@ body.admin-page {
   line-height: 1.6;
 }
 
+/* Navigation Tabs Bar */
+.admin-tab-nav {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin: 0 auto 32px;
+  background: rgba(255, 255, 255, 0.95);
+  padding: 6px;
+  border-radius: 9999px;
+  border: 1px solid var(--card-border);
+  box-shadow: 0 4px 16px rgba(15, 23, 42, 0.04);
+  max-width: fit-content;
+  flex-wrap: wrap;
+}
+
+.admin-tab-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 18px;
+  border-radius: 9999px;
+  font-family: var(--font-display);
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--ink-secondary);
+  text-decoration: none;
+  border: 1px solid transparent;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  background: transparent;
+  cursor: pointer;
+}
+
+.admin-tab-btn:hover {
+  color: var(--ink-primary);
+  background: rgba(15, 23, 42, 0.04);
+}
+
+.admin-tab-btn.active {
+  color: var(--ink-primary);
+  background: #ffffff;
+  border-color: var(--card-border);
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.08);
+}
+
+.admin-tab-btn .tab-badge {
+  font-size: 0.7rem;
+  font-weight: 800;
+  padding: 2px 7px;
+  border-radius: 9999px;
+  background: rgba(15, 23, 42, 0.08);
+  color: var(--ink-secondary);
+  line-height: 1;
+}
+
+.admin-tab-btn.active .tab-badge {
+  background: var(--ink-primary);
+  color: #ffffff;
+}
+
 /* Split Grid */
 .admin-split-grid {
   display: grid;

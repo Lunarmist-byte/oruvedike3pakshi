@@ -13,7 +13,7 @@
     {
       id: 'vlog_seed_1',
       url: 'https://www.instagram.com/reel/C8rM1y4SL6e/',
-      title: 'Scraphack 2026 Kickoff & Hardware Junk Hunt',
+      title: 'Scrap Hunt in Kochi',
       category: 'bts',
       creator: '@tinkerhub',
       createdAt: Date.now() - 86400000 * 2
@@ -21,7 +21,7 @@
     {
       id: 'vlog_seed_2',
       url: 'https://www.instagram.com/reel/C41oX4oI_5x/',
-      title: 'Resurrecting the Quartz Wall Clock Hands',
+      title: 'Supergluing Clock Hands',
       category: 'clock',
       creator: '@amal',
       createdAt: Date.now() - 86400000
@@ -29,7 +29,7 @@
     {
       id: 'vlog_seed_3',
       url: 'https://www.instagram.com/reel/C32sP4xL_8y/',
-      title: 'Making Screeching Sounds on the Scrap Violin',
+      title: 'Testing Scrap Violin Audio',
       category: 'violin',
       creator: '@navaneeth',
       createdAt: Date.now() - 43200000
@@ -37,7 +37,7 @@
     {
       id: 'vlog_seed_4',
       url: 'https://www.instagram.com/reel/C29wQ1_M77z/',
-      title: 'Captive Portal RGB LED Torch Beam Cycle',
+      title: 'RGB LED Torch Color Cycle',
       category: 'torch',
       creator: '@christy',
       createdAt: Date.now() - 21600000
@@ -76,6 +76,13 @@
       const raw = localStorage.getItem(STORAGE_KEY);
       if (raw) {
         vlogsList = JSON.parse(raw);
+        if (!Array.isArray(vlogsList)) vlogsList = [...DEFAULT_VLOGS];
+        // Sync default titles
+        vlogsList.forEach(v => {
+          const match = DEFAULT_VLOGS.find(dv => dv.url.trim() === (v.url || '').trim());
+          if (match) v.title = match.title;
+        });
+        saveVlogs();
       } else {
         vlogsList = [...DEFAULT_VLOGS];
         saveVlogs();
@@ -102,21 +109,23 @@
     if (!rawInput) return null;
     const trimmed = rawInput.trim();
     
-    // Check if it's already an iframe or blockquote
-    const iframeMatch = trimmed.match(/instagram\.com\/(?:p|reel|tv)\/([a-zA-Z0-9_-]+)/i);
-    if (iframeMatch && iframeMatch[1]) {
+    // Check if it's already an iframe or blockquote or full URL
+    const match = trimmed.match(/instagram\.com\/(p|reel|tv)\/([a-zA-Z0-9_-]+)/i);
+    if (match && match[2]) {
       return {
-        code: iframeMatch[1],
-        isReel: trimmed.includes('/reel/')
+        type: match[1].toLowerCase() === 'p' ? 'p' : 'reel',
+        code: match[2],
+        isReel: match[1].toLowerCase() !== 'p'
       };
     }
 
-    // Direct shortcode or simple path
-    const match = trimmed.match(/(?:p|reel|tv)\/([a-zA-Z0-9_-]+)/i);
-    if (match && match[1]) {
+    // Direct shortcode fallback
+    const directMatch = trimmed.match(/^([a-zA-Z0-9_-]{8,15})$/);
+    if (directMatch) {
       return {
-        code: match[1],
-        isReel: trimmed.includes('reel')
+        type: 'reel',
+        code: directMatch[1],
+        isReel: true
       };
     }
 
@@ -128,15 +137,18 @@
     return `https://www.instagram.com/${type}/${code}/`;
   }
 
-  function getInstaEmbedHtml(code) {
+  function getInstaEmbedHtml(code, isReel = true) {
+    const type = isReel ? 'reel' : 'p';
     return `<iframe 
-      src="https://www.instagram.com/p/${code}/embed" 
+      src="https://www.instagram.com/${type}/${code}/embed/" 
       class="instagram-media" 
       frameborder="0" 
       scrolling="no" 
       allowtransparency="true" 
-      allow="encrypted-media"
-      style="min-height: 480px; width: 100%;">
+      allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"
+      allowfullscreen="true"
+      loading="lazy"
+      style="min-height: 540px; width: 100%; border: none; border-radius: 12px; background: #080c14;">
     </iframe>`;
   }
 
@@ -174,7 +186,7 @@
           </div>
 
           <div class="vlog-embed-wrap">
-            ${code ? getInstaEmbedHtml(code) : `
+            ${code ? getInstaEmbedHtml(code, parsed ? parsed.isReel : true) : `
               <div class="vlog-fallback-preview">
                 <svg viewBox="0 0 24 24" width="36" height="36" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path></svg>
                 <span>Instagram Post / Reel</span>
@@ -186,9 +198,9 @@
           </div>
 
           <div class="vlog-info">
-            <h3 class="vlog-card-title">${vlog.title || 'Scraphack 2026 Reel'}</h3>
+            <h3 class="vlog-card-title">${vlog.title || 'Reel'}</h3>
             <div class="vlog-card-meta">
-              <span>${vlog.creator ? vlog.creator : 'Scraphack Lab'}</span>
+              ${vlog.creator ? `<span>${vlog.creator}</span>` : ''}
               <a href="${cleanUrl}" target="_blank" rel="noopener noreferrer" class="vlog-insta-link" title="Open on Instagram">
                 <span>View on Instagram</span>
                 <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>

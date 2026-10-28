@@ -459,39 +459,103 @@
       title: 'Clock GitHub Repository',
       url: 'https://github.com/nvaneed/scrap_hackthon',
       category: 'clock',
-      description: 'samayam ethrayai: firmware and web socket control for the quartz clock.'
+      description: 'Firmware and web control code for the quartz clock.'
     },
     {
       id: 'default-violin-repo',
       title: 'Absolute Violin Repository',
       url: 'https://github.com/Lunarmist-byte/absoluteviolin',
       category: 'violin',
-      description: 'Salvaged rack and pinion gear paired with a rotary potentiometer.'
+      description: 'Potentiometer rack and pinion synth code.'
     },
     {
       id: 'default-torch-repo',
-      title: 'Absolute Torch Firmware',
-      url: 'https://github.com/christy-basil-anil/absolute-torch/blob/main/absolute_torch.ino',
+      title: 'Absolute Torch Repository',
+      url: 'https://github.com/christy-basil-anil/absolute-torch',
       category: 'torch',
-      description: 'ESP32 captive portal and rainbow RGB lighting code.'
+      description: 'Absolute Torch project repository.'
     },
     {
-      id: 'default-tinkerhub',
-      title: 'TinkerHub Foundation',
-      url: 'https://tinkerhub.org',
+      id: 'default-samayamethrayi-repo',
+      title: 'Main Site Repository',
+      url: 'https://github.com/Lunarmist-byte/samayamethrayi',
+      category: 'clock',
+      description: 'Web project and clock interface repository.'
+    },
+    {
+      id: 'default-insta-vlog-1',
+      title: 'Scrap Hunt Reel',
+      url: 'https://www.instagram.com/reel/C8rM1y4SL6e/',
       category: 'general',
-      description: 'Official TinkerHub website and maker community.'
+      description: 'Searching scrap shops in Kochi.'
+    },
+    {
+      id: 'default-insta-vlog-2',
+      title: 'Clock Hands Fix Reel',
+      url: 'https://www.instagram.com/reel/C41oX4oI_5x/',
+      category: 'clock',
+      description: 'Supergluing broken quartz clock hands.'
+    },
+    {
+      id: 'default-insta-vlog-3',
+      title: 'Scrap Violin Audio Reel',
+      url: 'https://www.instagram.com/reel/C32sP4xL_8y/',
+      category: 'violin',
+      description: 'Testing potentiometer violin synthesizer audio.'
+    },
+    {
+      id: 'default-insta-vlog-4',
+      title: 'RGB Torch Beam Reel',
+      url: 'https://www.instagram.com/reel/C29wQ1_M77z/',
+      category: 'torch',
+      description: 'Switching torch colors on phone captive portal.'
     }
   ];
 
   function getStoredLinks() {
     try {
       const raw = localStorage.getItem(LINKS_STORAGE_KEY);
+      let list = [];
       if (!raw) {
-        localStorage.setItem(LINKS_STORAGE_KEY, JSON.stringify(DEFAULT_PROJECT_LINKS));
-        return DEFAULT_PROJECT_LINKS;
+        list = [...DEFAULT_PROJECT_LINKS];
+      } else {
+        list = JSON.parse(raw);
+        if (!Array.isArray(list)) list = [...DEFAULT_PROJECT_LINKS];
       }
-      return JSON.parse(raw);
+
+      // Remove any non-project/vlog links, .html links, and firmware direct code link
+      list = list.filter(l => {
+        const u = (l.url || '').toLowerCase();
+        if (u.includes('.html')) return false;
+        if (u.includes('absolute_torch.ino')) return false;
+        if (u.includes('tinkerhub.org')) return false;
+        if (u.includes('linkedin.com')) return false;
+        if (u === 'https://github.com/lunarmist-byte' || u === 'https://github.com/lunarmist-byte/') return false;
+        return true;
+      });
+
+      // Merge any default links that aren't yet in the list by url
+      const existingUrls = new Set(list.map(l => (l.url || '').trim()));
+      let updated = false;
+      DEFAULT_PROJECT_LINKS.forEach(dl => {
+        if (!existingUrls.has(dl.url.trim())) {
+          list.push(dl);
+          existingUrls.add(dl.url.trim());
+          updated = true;
+        }
+      });
+
+      // Sync no-fluff captions to default items
+      list.forEach(item => {
+        const matchingDefault = DEFAULT_PROJECT_LINKS.find(dl => dl.url.trim() === (item.url || '').trim());
+        if (matchingDefault) {
+          item.title = matchingDefault.title;
+          item.description = matchingDefault.description;
+        }
+      });
+
+      localStorage.setItem(LINKS_STORAGE_KEY, JSON.stringify(list));
+      return list;
     } catch (e) {
       console.warn('Could not read custom links, returning defaults', e);
       return DEFAULT_PROJECT_LINKS;

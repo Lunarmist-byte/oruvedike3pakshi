@@ -647,18 +647,16 @@
       violinOverlayLayer.style.pointerEvents = opacity > 0.5 ? 'auto' : 'none';
 
       // subProgress goes 0.0 -> 1.0
-      // PHASE 1: 0.00 -> 0.48: RACK & PINION ALONE IN CENTER (Mechanical gear & potentiometer rig)
-      // TRANSITION: 0.48 -> 0.52: Rack & Pinion exits
-      // PHASE 2: 0.52 -> 1.00: VIOLIN ALONE IN CENTER (The completed electronic instrument with strings, bridge, sound)
+      // PHASE 1: 0.00 -> 0.45: RACK & PINION ALONE IN CENTER (Mechanical gear & potentiometer rig)
+      // TRANSITION: 0.45 -> 0.52: Rack & Pinion morphs smoothly into Violin
+      // PHASE 2: 0.52 -> 1.00: VIOLIN ALONE IN CENTER (Completed electronic instrument floating in center, just like clock)
       
-      if (subProgress < 0.48) {
+      if (subProgress < 0.45) {
         // === PHASE 1: RACK & PINION ALONE ===
-        const rackPhaseP = subProgress / 0.48; // 0 to 1
-        const gearAngle = rackPhaseP * 1080; // 3 full 360 rotations!
+        const rackPhaseP = subProgress / 0.45; // 0 to 1
+        const gearAngle = rackPhaseP * 1080; // 3 full 360 rotations
         const rackShift = Math.sin(rackPhaseP * Math.PI * 4) * 65; // linear rack sliding back & forth
-        const potResistance = (rackPhaseP * 10).toFixed(1);
 
-        // Rack & Pinion fully visible and active
         if (salvagePinionGear) {
           salvagePinionGear.style.opacity = '1';
           salvagePinionGear.style.transform = `rotate(${gearAngle}deg)`;
@@ -671,47 +669,30 @@
           potShaft.style.transform = `translate(-50%, -50%) rotate(${gearAngle * 0.75}deg)`;
         }
 
-        // Violin Body strictly hidden
+        // Violin Body strictly hidden in Phase 1
         if (salvagedViolinBody) {
           salvagedViolinBody.style.opacity = '0';
           salvagedViolinBody.style.visibility = 'hidden';
-          salvagedViolinBody.style.transform = 'translate(-50%, calc(-50% + 120px)) scale(0.65)';
-        }
-
-        // Telemetry HUD for Rack & Pinion
-        if (violinStatusTag) {
-          violinStatusTag.textContent = 'STAGE 01: SALVAGED RACK & PINION GEAR';
-        }
-        if (violinPercentBadge) {
-          violinPercentBadge.textContent = `GEAR ROTATION: ${Math.round(rackPhaseP * 100)}%`;
-        }
-        if (violinPotValue) {
-          violinPotValue.textContent = `${potResistance} kΩ (SLIDING)`;
-        }
-        if (violinAudioValue) {
-          violinAudioValue.textContent = 'MECHANICAL INPUT';
+          salvagedViolinBody.style.transform = 'translate(-50%, calc(-50% + 80px)) scale(0.7)';
         }
 
       } else if (subProgress < 0.52) {
-        // === TRANSITION GAP: Rack & Pinion fades out, Violin prepares to enter (Zero overlap) ===
-        const t = (subProgress - 0.48) / 0.04; // 0 to 1
+        // === TRANSITION GAP: Rack & Pinion smoothly transforms into Violin ===
+        const t = (subProgress - 0.45) / 0.07; // 0 to 1
         const easeOut = t * t * (3 - 2 * t);
 
         if (salvagePinionGear) {
           salvagePinionGear.style.opacity = (1 - easeOut).toFixed(2);
-          salvagePinionGear.style.transform = `rotate(${1080 + t * 90}deg) scale(${(1 - easeOut * 0.2).toFixed(2)})`;
+          salvagePinionGear.style.transform = `rotate(${1080 + t * 90}deg) scale(${(1 - easeOut * 0.25).toFixed(2)})`;
         }
         if (salvageLinearRack) {
           salvageLinearRack.style.opacity = (1 - easeOut).toFixed(2);
         }
 
         if (salvagedViolinBody) {
-          salvagedViolinBody.style.opacity = '0';
-          salvagedViolinBody.style.visibility = 'hidden';
-        }
-
-        if (violinStatusTag) {
-          violinStatusTag.textContent = 'TRANSITION: TRANSFORMING TO VIOLIN';
+          salvagedViolinBody.style.visibility = 'visible';
+          salvagedViolinBody.style.opacity = easeOut.toFixed(2);
+          salvagedViolinBody.style.transform = `translate(-50%, calc(-50% + ${(1 - easeOut) * 50}px)) scale(${(0.75 + easeOut * 0.25).toFixed(2)})`;
         }
 
       } else {
@@ -733,24 +714,9 @@
         if (salvagedViolinBody) {
           salvagedViolinBody.style.visibility = 'visible';
           salvagedViolinBody.style.opacity = smoothViolinP.toFixed(3);
-          const vScale = 0.82 + (0.18 * smoothViolinP);
-          const vY = (1 - smoothViolinP) * 80;
+          const vScale = 0.85 + (0.15 * smoothViolinP);
+          const vY = (1 - smoothViolinP) * 40;
           salvagedViolinBody.style.transform = `translate(-50%, calc(-50% + ${vY.toFixed(1)}px)) scale(${vScale.toFixed(3)})`;
-        }
-
-        // Telemetry HUD for Violin
-        const freq = Math.round(220 + violinPhaseP * 660);
-        if (violinStatusTag) {
-          violinStatusTag.textContent = 'STAGE 02: ABSOLUTE VIOLIN SYNTHESIZER';
-        }
-        if (violinPercentBadge) {
-          violinPercentBadge.textContent = 'SYNTH ASSEMBLED';
-        }
-        if (violinPotValue) {
-          violinPotValue.textContent = '10.0 kΩ (BOW ENGAGED)';
-        }
-        if (violinAudioValue) {
-          violinAudioValue.textContent = `${freq} Hz (AUDIO SYNTH)`;
         }
       }
     }
@@ -763,25 +729,21 @@
 
       // subProgress:
       // 0.00 -> 0.12: Torch is OFF (no beam, black emitter, rocker switch in off position)
-      // 0.12 -> 0.85: Torch clicks ON, cycling through vibrant rainbow hues (Red -> Orange -> Yellow -> Green -> Cyan -> Blue -> Purple -> Magenta)
-      // 0.85 -> 1.00: Transitions smoothly to intense brilliant PURE WHITE BEAM (#FFFFFF, 6500K daylight white)
+      // 0.12 -> 0.85: Torch clicks ON, cycling through vibrant rainbow hues
+      // 0.85 -> 1.00: Transitions smoothly to intense brilliant PURE WHITE BEAM (#FFFFFF)
       if (subProgress <= 0.12) {
         // OFF STATE
         if (torchBeamCone) torchBeamCone.style.opacity = '0';
         if (torchSwitchRocker) torchSwitchRocker.classList.remove('switched-on');
-        if (emitterGlow) emitterGlow.style.opacity = '0';
-        if (emitterGlow) emitterGlow.style.background = '#000000';
-        if (torchStatusTag) torchStatusTag.textContent = 'BEAM STATE: POWER OFF';
-        if (torchKelvinBadge) torchKelvinBadge.textContent = '0 LUMENS // OFF';
-        if (torchColorName) torchColorName.textContent = 'BLACK // OFF';
-        if (torchHexValue) torchHexValue.textContent = '#000000';
-        if (torchWavelength) torchWavelength.textContent = '0 nm (DARK)';
+        if (emitterGlow) {
+          emitterGlow.style.opacity = '0';
+          emitterGlow.style.background = '#000000';
+        }
       } else if (subProgress < 0.85) {
         // COLOR CYCLING SPECTRUM
         if (torchSwitchRocker) torchSwitchRocker.classList.add('switched-on');
         const colorProgress = (subProgress - 0.12) / 0.73; // 0 to 1
         const hue = Math.round(colorProgress * 360);
-        const colorRgb = `hsl(${hue}, 100%, 55%)`;
         const glowColor = `hsla(${hue}, 100%, 60%, 0.85)`;
         const beamColor = `radial-gradient(ellipse at 15% 50%, hsla(${hue}, 100%, 65%, 0.95) 0%, hsla(${hue}, 100%, 55%, 0.7) 40%, hsla(${hue}, 100%, 45%, 0.15) 80%, transparent 100%)`;
 
@@ -795,24 +757,9 @@
           emitterGlow.style.background = glowColor;
           emitterGlow.style.boxShadow = `0 0 35px 12px hsla(${hue}, 100%, 60%, 0.9)`;
         }
-
-        const colorNames = [
-          'NEON RED', 'ORANGE FLAME', 'AMBER GOLD', 'LIME GREEN', 'EMERALD JADE',
-          'CYAN BEACON', 'SKY BLUE', 'ROYAL INDIGO', 'VIOLET PULSE', 'DEEP MAGENTA'
-        ];
-        const nameIdx = Math.min(Math.floor(colorProgress * colorNames.length), colorNames.length - 1);
-        const lumens = Math.round(150 + colorProgress * 650);
-        const approxNm = Math.round(700 - colorProgress * 300);
-
-        if (torchStatusTag) torchStatusTag.textContent = 'BEAM STATE: RGB CYCLING SPECTRUM';
-        if (torchKelvinBadge) torchKelvinBadge.textContent = `${lumens} LUMENS // ACTIVE`;
-        if (torchColorName) torchColorName.textContent = colorNames[nameIdx];
-        if (torchHexValue) torchHexValue.textContent = colorRgb;
-        if (torchWavelength) torchWavelength.textContent = `${approxNm} nm SPECTRUM`;
       } else {
         // 0.85 -> 1.00: REACHES WHITE AT SCROLL END!
         if (torchSwitchRocker) torchSwitchRocker.classList.add('switched-on');
-        const whiteProgress = (subProgress - 0.85) / 0.15; // 0 to 1
         const whiteBeam = `radial-gradient(ellipse at 15% 50%, rgba(255, 255, 255, 0.98) 0%, rgba(240, 248, 255, 0.85) 45%, rgba(225, 240, 255, 0.25) 85%, transparent 100%)`;
 
         if (torchBeamCone) {
@@ -825,12 +772,6 @@
           emitterGlow.style.background = '#ffffff';
           emitterGlow.style.boxShadow = '0 0 50px 18px rgba(255, 255, 255, 1)';
         }
-
-        if (torchStatusTag) torchStatusTag.textContent = 'BEAM STATE: MAXIMUM WHITE OUTPUT';
-        if (torchKelvinBadge) torchKelvinBadge.textContent = '1200 LUMENS // 6500K';
-        if (torchColorName) torchColorName.textContent = 'PURE DAYLIGHT WHITE';
-        if (torchHexValue) torchHexValue.textContent = '#FFFFFF';
-        if (torchWavelength) torchWavelength.textContent = 'ALL WAVELENGTHS (WHITE)';
       }
     }
   }
@@ -1771,28 +1712,56 @@
       title: 'Clock GitHub Repository',
       url: 'https://github.com/nvaneed/scrap_hackthon',
       category: 'clock',
-      description: 'samayam ethrayai: firmware and web socket control for the quartz clock.'
+      description: 'Firmware and web control code for the quartz clock.'
     },
     {
       id: 'default-violin-repo',
       title: 'Absolute Violin Repository',
       url: 'https://github.com/Lunarmist-byte/absoluteviolin',
       category: 'violin',
-      description: 'Salvaged rack and pinion gear paired with a rotary potentiometer.'
+      description: 'Potentiometer rack and pinion synth code.'
     },
     {
       id: 'default-torch-repo',
-      title: 'Absolute Torch Firmware',
-      url: 'https://github.com/christy-basil-anil/absolute-torch/blob/main/absolute_torch.ino',
+      title: 'Absolute Torch Repository',
+      url: 'https://github.com/christy-basil-anil/absolute-torch',
       category: 'torch',
-      description: 'ESP32 captive portal and rainbow RGB lighting code.'
+      description: 'Absolute Torch project repository.'
     },
     {
-      id: 'default-tinkerhub',
-      title: 'TinkerHub Foundation',
-      url: 'https://tinkerhub.org',
+      id: 'default-samayamethrayi-repo',
+      title: 'Main Site Repository',
+      url: 'https://github.com/Lunarmist-byte/samayamethrayi',
+      category: 'clock',
+      description: 'Web project and clock interface repository.'
+    },
+    {
+      id: 'default-insta-vlog-1',
+      title: 'Scrap Hunt Reel',
+      url: 'https://www.instagram.com/reel/C8rM1y4SL6e/',
       category: 'general',
-      description: 'Official TinkerHub website and maker community.'
+      description: 'Searching scrap shops in Kochi.'
+    },
+    {
+      id: 'default-insta-vlog-2',
+      title: 'Clock Hands Fix Reel',
+      url: 'https://www.instagram.com/reel/C41oX4oI_5x/',
+      category: 'clock',
+      description: 'Supergluing broken quartz clock hands.'
+    },
+    {
+      id: 'default-insta-vlog-3',
+      title: 'Scrap Violin Audio Reel',
+      url: 'https://www.instagram.com/reel/C32sP4xL_8y/',
+      category: 'violin',
+      description: 'Testing potentiometer violin synthesizer audio.'
+    },
+    {
+      id: 'default-insta-vlog-4',
+      title: 'RGB Torch Beam Reel',
+      url: 'https://www.instagram.com/reel/C29wQ1_M77z/',
+      category: 'torch',
+      description: 'Switching torch colors on phone captive portal.'
     }
   ];
 
@@ -1800,14 +1769,48 @@
     const grid = document.getElementById('projectLinksGrid');
     if (!grid) return;
 
-    let links = DEFAULT_PROJECT_LINKS;
+    let links = [];
     try {
       const raw = localStorage.getItem(LINKS_STORAGE_KEY);
-      if (raw) {
-        links = JSON.parse(raw);
+      if (!raw) {
+        links = [...DEFAULT_PROJECT_LINKS];
       } else {
-        localStorage.setItem(LINKS_STORAGE_KEY, JSON.stringify(DEFAULT_PROJECT_LINKS));
+        links = JSON.parse(raw);
+        if (!Array.isArray(links)) links = [...DEFAULT_PROJECT_LINKS];
       }
+
+      // Remove any non-project/vlog links, .html links, and firmware direct code link
+      links = links.filter(l => {
+        const u = (l.url || '').toLowerCase();
+        if (u.includes('.html')) return false;
+        if (u.includes('absolute_torch.ino')) return false;
+        if (u.includes('tinkerhub.org')) return false;
+        if (u.includes('linkedin.com')) return false;
+        if (u === 'https://github.com/lunarmist-byte' || u === 'https://github.com/lunarmist-byte/') return false;
+        return true;
+      });
+
+      // Merge any default links that aren't yet in the list by url
+      const existingUrls = new Set(links.map(l => (l.url || '').trim()));
+      let updated = false;
+      DEFAULT_PROJECT_LINKS.forEach(dl => {
+        if (!existingUrls.has(dl.url.trim())) {
+          links.push(dl);
+          existingUrls.add(dl.url.trim());
+          updated = true;
+        }
+      });
+
+      // Sync no-fluff captions to default items
+      links.forEach(item => {
+        const matchingDefault = DEFAULT_PROJECT_LINKS.find(dl => dl.url.trim() === (item.url || '').trim());
+        if (matchingDefault) {
+          item.title = matchingDefault.title;
+          item.description = matchingDefault.description;
+        }
+      });
+
+      localStorage.setItem(LINKS_STORAGE_KEY, JSON.stringify(links));
     } catch (e) {
       links = DEFAULT_PROJECT_LINKS;
     }

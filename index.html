@@ -189,215 +189,142 @@
         </div>
       </div>
 
-      <!-- STAGE 2B: Interactive Morphing Violin Stage (Rack & Pinion Rotating to Become a Violin) -->
+      <!-- STAGE 2B: Authentic Salvaged Violin (Floating Hero directly on Canvas, like Clock) -->
       <div class="violin-overlay-layer stage2-layer" id="violinOverlayLayer" role="region" aria-label="Absolute Violin Transformation">
-        <div class="morphing-violin-chassis" id="violinChassis">
+        <div class="authentic-salvaged-violin" id="authenticViolinEl">
           
-          <!-- Top Telemetry Tag -->
-          <div class="morph-badge-row">
-            <span class="morph-status-tag" id="violinStatusTag">STAGE: SALVAGED RACK & PINION</span>
-            <span class="morph-percent-badge" id="violinPercentBadge">GEAR ROTATION 0%</span>
-          </div>
-
-          <!-- The Mechanical Transformation Rig -->
-          <div class="violin-rig-stage">
-            
-            <!-- Pinion Gear Salvage Unit (Rotates with scroll) -->
-            <div class="salvage-pinion-gear" id="salvagePinionGear">
-              <div class="gear-teeth-ring">
-                <span class="gear-tooth t-1"></span>
-                <span class="gear-tooth t-2"></span>
-                <span class="gear-tooth t-3"></span>
-                <span class="gear-tooth t-4"></span>
-                <span class="gear-tooth t-5"></span>
-                <span class="gear-tooth t-6"></span>
-                <span class="gear-tooth t-7"></span>
-                <span class="gear-tooth t-8"></span>
-                <span class="gear-tooth t-9"></span>
-                <span class="gear-tooth t-10"></span>
-                <span class="gear-tooth t-11"></span>
-                <span class="gear-tooth t-12"></span>
-              </div>
-              <div class="gear-spokes">
-                <div class="gear-spoke-line line-h"></div>
-                <div class="gear-spoke-line line-v"></div>
-                <div class="gear-spoke-line line-d1"></div>
-                <div class="gear-spoke-line line-d2"></div>
-              </div>
-              <div class="potentiometer-shaft" id="potShaft">
-                <div class="pot-wiper"></div>
-                <span class="pot-label">10kΩ POT</span>
-              </div>
+          <!-- Pinion Gear Salvage Unit (Rotates directly on canvas with scroll) -->
+          <div class="salvage-pinion-gear" id="salvagePinionGear">
+            <div class="gear-teeth-ring">
+              <span class="gear-tooth t-1"></span>
+              <span class="gear-tooth t-2"></span>
+              <span class="gear-tooth t-3"></span>
+              <span class="gear-tooth t-4"></span>
+              <span class="gear-tooth t-5"></span>
+              <span class="gear-tooth t-6"></span>
+              <span class="gear-tooth t-7"></span>
+              <span class="gear-tooth t-8"></span>
+              <span class="gear-tooth t-9"></span>
+              <span class="gear-tooth t-10"></span>
+              <span class="gear-tooth t-11"></span>
+              <span class="gear-tooth t-12"></span>
             </div>
-
-            <!-- Linear Rack Slider (Tracks linearly as pinion rotates) -->
-            <div class="salvage-linear-rack" id="salvageLinearRack">
-              <div class="rack-teeth-bar">
-                <span class="rack-notch"></span><span class="rack-notch"></span><span class="rack-notch"></span><span class="rack-notch"></span>
-                <span class="rack-notch"></span><span class="rack-notch"></span><span class="rack-notch"></span><span class="rack-notch"></span>
-                <span class="rack-notch"></span><span class="rack-notch"></span><span class="rack-notch"></span><span class="rack-notch"></span>
-                <span class="rack-notch"></span><span class="rack-notch"></span><span class="rack-notch"></span><span class="rack-notch"></span>
-              </div>
-              <div class="bow-hair-line" id="violinBowHair"></div>
+            <div class="gear-spokes">
+              <div class="gear-spoke-line line-h"></div>
+              <div class="gear-spoke-line line-v"></div>
+              <div class="gear-spoke-line line-d1"></div>
+              <div class="gear-spoke-line line-d2"></div>
             </div>
-
-            <!-- Morphing Violin Silhouette & Body (Blooms & Assembles) -->
-            <div class="salvaged-violin-body" id="salvagedViolinBody">
-              
-              <!-- Violin Upper & Lower Bouts (Salvaged Wood / Scrap Metal Construction) -->
-              <svg class="violin-body-svg" viewBox="0 0 320 540" fill="none" preserveAspectRatio="xMidYMid meet">
-                <!-- Violin Wooden Body Contours -->
-                <path class="violin-contour" d="M160 50 C120 50, 75 90, 75 160 C75 220, 105 245, 115 260 C90 280, 55 330, 55 410 C55 490, 105 520, 160 520 C215 520, 265 490, 265 410 C265 330, 230 280, 205 260 C215 245, 245 220, 245 160 C245 90, 200 50, 160 50 Z" 
-                      fill="url(#violinWoodGrad)" stroke="#d97706" stroke-width="4" stroke-linejoin="round"/>
-                
-                <!-- Authentic F-Holes -->
-                <path class="violin-f-hole f-left" d="M125 210 C120 230, 105 240, 108 260 C111 278, 126 295, 122 315 C118 335, 108 340, 112 355" stroke="#1c1917" stroke-width="5" stroke-linecap="round"/>
-                <circle cx="125" cy="210" r="4.5" fill="#1c1917"/>
-                <circle cx="112" cy="355" r="5" fill="#1c1917"/>
-                
-                <path class="violin-f-hole f-right" d="M195 210 C200 230, 215 240, 212 260 C209 278, 194 295, 198 315 C202 335, 212 340, 208 355" stroke="#1c1917" stroke-width="5" stroke-linecap="round"/>
-                <circle cx="195" cy="210" r="4.5" fill="#1c1917"/>
-                <circle cx="208" cy="355" r="5" fill="#1c1917"/>
-
-                <!-- Violin Neck & Fingerboard -->
-                <rect x="146" y="2" width="28" height="230" rx="3" fill="#1c1917" stroke="#44403c" stroke-width="2"/>
-                
-                <!-- Violin Bridge -->
-                <path d="M135 305 Q160 300 185 305 L182 322 Q160 318 138 322 Z" fill="#fde68a" stroke="#78350f" stroke-width="2"/>
-
-                <!-- Tailpiece & Tuners -->
-                <polygon points="144,450 176,450 166,515 154,515" fill="#1c1917" stroke="#44403c" stroke-width="2"/>
-                <circle cx="150" cy="460" r="2.5" fill="#f59e0b"/>
-                <circle cx="157" cy="460" r="2.5" fill="#f59e0b"/>
-                <circle cx="163" cy="460" r="2.5" fill="#f59e0b"/>
-                <circle cx="170" cy="460" r="2.5" fill="#f59e0b"/>
-
-                <!-- 4 Resonant Metal Strings -->
-                <line x1="150" y1="15" x2="150" y2="455" stroke="#e2e8f0" stroke-width="2" class="v-string str-1"/>
-                <line x1="156" y1="15" x2="156" y2="455" stroke="#cbd5e1" stroke-width="1.8" class="v-string str-2"/>
-                <line x1="164" y1="15" x2="164" y2="455" stroke="#cbd5e1" stroke-width="1.5" class="v-string str-3"/>
-                <line x1="170" y1="15" x2="170" y2="455" stroke="#f1f5f9" stroke-width="1.2" class="v-string str-4"/>
-
-                <!-- Gradients -->
-                <defs>
-                  <linearGradient id="violinWoodGrad" x1="0" y1="0" x2="1" y2="1">
-                    <stop offset="0%" stop-color="#451a03"/>
-                    <stop offset="45%" stop-color="#78350f"/>
-                    <stop offset="70%" stop-color="#b45309"/>
-                    <stop offset="100%" stop-color="#451a03"/>
-                  </linearGradient>
-                </defs>
-              </svg>
-
-              <!-- Salvaged Bluetooth Audio Circuit connected to Violin -->
-              <div class="salvaged-bt-circuit" id="salvagedBtCircuit">
-                <span class="circuit-wire wire-red"></span>
-                <span class="circuit-wire wire-black"></span>
-                <span class="bt-module-chip">
-                  <span class="bt-chip-name">BT-AUDIO 5.0</span>
-                  <span class="bt-freq-tag" id="btFreqTag">440 Hz · A4 NOTE</span>
-                </span>
-              </div>
-
-            </div>
-
-          </div>
-
-          <!-- Bottom Telemetry HUD Bar -->
-          <div class="violin-hud-bottom">
-            <div class="hud-item">
-              <span class="hud-label">MECHANISM</span>
-              <span class="hud-value" id="violinMechValue">GEAR RATIO 1:4.8</span>
-            </div>
-            <div class="hud-item">
-              <span class="hud-label">POTENTIOMETER</span>
-              <span class="hud-value" id="violinPotValue">0.0 kΩ (IDLE)</span>
-            </div>
-            <div class="hud-item">
-              <span class="hud-label">AUDIO STATUS</span>
-              <span class="hud-value" id="violinAudioValue">SYNTH STANDBY</span>
+            <div class="potentiometer-shaft" id="potShaft">
+              <div class="pot-wiper"></div>
+              <span class="pot-label">10kΩ POT</span>
             </div>
           </div>
 
+          <!-- Linear Rack Slider (Tracks linearly as pinion rotates) -->
+          <div class="salvage-linear-rack" id="salvageLinearRack">
+            <div class="rack-teeth-bar">
+              <span class="rack-notch"></span><span class="rack-notch"></span><span class="rack-notch"></span><span class="rack-notch"></span>
+              <span class="rack-notch"></span><span class="rack-notch"></span><span class="rack-notch"></span><span class="rack-notch"></span>
+              <span class="rack-notch"></span><span class="rack-notch"></span><span class="rack-notch"></span><span class="rack-notch"></span>
+              <span class="rack-notch"></span><span class="rack-notch"></span><span class="rack-notch"></span><span class="rack-notch"></span>
+            </div>
+            <div class="bow-hair-line" id="violinBowHair"></div>
+          </div>
+
+          <!-- Morphing Violin Silhouette & Body (Blooms & Assembles in Center) -->
+          <div class="salvaged-violin-body" id="salvagedViolinBody">
+            <svg class="violin-body-svg" viewBox="0 0 320 540" fill="none" preserveAspectRatio="xMidYMid meet">
+              <path class="violin-contour" d="M160 50 C120 50, 75 90, 75 160 C75 220, 105 245, 115 260 C90 280, 55 330, 55 410 C55 490, 105 520, 160 520 C215 520, 265 490, 265 410 C265 330, 230 280, 205 260 C215 245, 245 220, 245 160 C245 90, 200 50, 160 50 Z" 
+                    fill="url(#violinWoodGrad)" stroke="#d97706" stroke-width="4" stroke-linejoin="round"/>
+              <path class="violin-f-hole f-left" d="M125 210 C120 230, 105 240, 108 260 C111 278, 126 295, 122 315 C118 335, 108 340, 112 355" stroke="#1c1917" stroke-width="5" stroke-linecap="round"/>
+              <circle cx="125" cy="210" r="4.5" fill="#1c1917"/>
+              <circle cx="112" cy="355" r="5" fill="#1c1917"/>
+              <path class="violin-f-hole f-right" d="M195 210 C200 230, 215 240, 212 260 C209 278, 194 295, 198 315 C202 335, 212 340, 208 355" stroke="#1c1917" stroke-width="5" stroke-linecap="round"/>
+              <circle cx="195" cy="210" r="4.5" fill="#1c1917"/>
+              <circle cx="208" cy="355" r="5" fill="#1c1917"/>
+              <rect x="146" y="2" width="28" height="230" rx="3" fill="#1c1917" stroke="#44403c" stroke-width="2"/>
+              <path d="M135 305 Q160 300 185 305 L182 322 Q160 318 138 322 Z" fill="#fde68a" stroke="#78350f" stroke-width="2"/>
+              <polygon points="144,450 176,450 166,515 154,515" fill="#1c1917" stroke="#44403c" stroke-width="2"/>
+              <circle cx="150" cy="460" r="2.5" fill="#f59e0b"/>
+              <circle cx="157" cy="460" r="2.5" fill="#f59e0b"/>
+              <circle cx="163" cy="460" r="2.5" fill="#f59e0b"/>
+              <circle cx="170" cy="460" r="2.5" fill="#f59e0b"/>
+              <line x1="150" y1="15" x2="150" y2="455" stroke="#e2e8f0" stroke-width="2" class="v-string str-1"/>
+              <line x1="156" y1="15" x2="156" y2="455" stroke="#cbd5e1" stroke-width="1.8" class="v-string str-2"/>
+              <line x1="164" y1="15" x2="164" y2="455" stroke="#cbd5e1" stroke-width="1.5" class="v-string str-3"/>
+              <line x1="170" y1="15" x2="170" y2="455" stroke="#f1f5f9" stroke-width="1.2" class="v-string str-4"/>
+              <defs>
+                <linearGradient id="violinWoodGrad" x1="0" y1="0" x2="1" y2="1">
+                  <stop offset="0%" stop-color="#451a03"/>
+                  <stop offset="45%" stop-color="#78350f"/>
+                  <stop offset="70%" stop-color="#b45309"/>
+                  <stop offset="100%" stop-color="#451a03"/>
+                </linearGradient>
+              </defs>
+            </svg>
+            <div class="salvaged-bt-circuit" id="salvagedBtCircuit">
+              <span class="circuit-wire wire-red"></span>
+              <span class="circuit-wire wire-black"></span>
+              <span class="bt-module-chip">
+                <span class="bt-chip-name">BT-AUDIO 5.0</span>
+                <span class="bt-freq-tag" id="btFreqTag">440 Hz · A4 NOTE</span>
+              </span>
+            </div>
+          </div>
+
+          <div class="violin-shadow"></div>
         </div>
       </div>
 
-      <!-- STAGE 2C: Interactive RGB Light Stage (Torch Off -> Cycling Colors -> White at Scroll End) -->
+      <!-- STAGE 2C: Authentic Hardware RGB Torch (Floating Hero directly on Canvas, like Clock) -->
       <div class="torch-overlay-layer stage2-layer" id="torchOverlayLayer" role="region" aria-label="Absolute Torch Color Spectrum Cycle">
-        <div class="torch-spectrum-chassis" id="torchChassis">
+        <div class="authentic-hardware-torch" id="authenticTorchEl">
           
-          <!-- Top Beam Telemetry Tag -->
-          <div class="torch-badge-row">
-            <span class="torch-status-tag" id="torchStatusTag">BEAM STATE: POWER OFF</span>
-            <span class="torch-kelvin-badge" id="torchKelvinBadge">0 LUMENS // OFF</span>
+          <!-- Dynamic Giant Light Projection Beam -->
+          <div class="torch-beam-cone" id="torchBeamCone">
+            <div class="beam-light-core" id="beamLightCore"></div>
+            <div class="beam-dust-particles" id="beamDustParticles">
+              <span></span><span></span><span></span><span></span><span></span><span></span>
+            </div>
           </div>
 
-          <!-- The Physical Torch & Dynamic Beam Projection Stage -->
-          <div class="torch-viewport-stage" id="torchViewportStage">
-            
-            <!-- Dynamic Giant Light Projection Beam -->
-            <div class="torch-beam-cone" id="torchBeamCone">
-              <div class="beam-light-core" id="beamLightCore"></div>
-              <div class="beam-dust-particles" id="beamDustParticles">
+          <!-- Authentic Hardware Torch Unit -->
+          <div class="hardware-torch-unit" id="hardwareTorchUnit">
+            <!-- Lens Bezel & Reflector Cup -->
+            <div class="torch-reflector-head">
+              <div class="torch-lens-glass">
+                <div class="torch-led-emitter" id="torchLedEmitter">
+                  <div class="emitter-core" id="emitterCore"></div>
+                  <div class="emitter-glow" id="emitterGlow"></div>
+                </div>
+              </div>
+              <div class="torch-bezel-rim"></div>
+            </div>
+
+            <!-- Main Metal Ribbed Torch Barrel -->
+            <div class="torch-barrel">
+              <div class="torch-ribs">
                 <span></span><span></span><span></span><span></span><span></span><span></span>
               </div>
-            </div>
-
-            <!-- The Authentic Salvaged Hardware Torch Body -->
-            <div class="hardware-torch-unit" id="hardwareTorchUnit">
-              
-              <!-- Lens Bezel & Reflector Cup -->
-              <div class="torch-reflector-head">
-                <div class="torch-lens-glass">
-                  <div class="torch-led-emitter" id="torchLedEmitter">
-                    <div class="emitter-core" id="emitterCore"></div>
-                    <div class="emitter-glow" id="emitterGlow"></div>
-                  </div>
-                </div>
-                <div class="torch-bezel-rim"></div>
+              <!-- Mechanical Rocker Toggle Switch on Torch Handle -->
+              <div class="torch-rocker-housing">
+                <span class="switch-slot"></span>
+                <div class="torch-switch-rocker" id="torchSwitchRocker"></div>
               </div>
-
-              <!-- Main Metal Ribbed Torch Barrel -->
-              <div class="torch-barrel">
-                <div class="torch-ribs">
-                  <span></span><span></span><span></span><span></span><span></span><span></span>
-                </div>
-                <!-- Mechanical Rocker Toggle Switch on Torch Handle -->
-                <div class="torch-rocker-housing">
-                  <span class="switch-slot"></span>
-                  <div class="torch-switch-rocker" id="torchSwitchRocker"></div>
-                </div>
-                <!-- ESP32 Label on Barrel -->
-                <div class="torch-stencil">
-                  <span class="stencil-txt">ESP32 · CAPTIVE PORTAL</span>
-                </div>
+              <!-- ESP32 Label on Barrel -->
+              <div class="torch-stencil">
+                <span class="stencil-txt">ESP32 · CAPTIVE PORTAL</span>
               </div>
-
-              <!-- Tail Cap & Lanyard Ring -->
-              <div class="torch-tail-cap">
-                <div class="lanyard-loop"></div>
-              </div>
-
             </div>
 
-          </div>
-
-          <!-- Bottom Color Slider / Telemetry Bar -->
-          <div class="torch-hud-bottom">
-            <div class="hud-item">
-              <span class="hud-label">BEAM COLOR</span>
-              <span class="hud-value" id="torchColorName">BLACK // OFF</span>
-            </div>
-            <div class="hud-item">
-              <span class="hud-label">HEX VALUE</span>
-              <span class="hud-value" id="torchHexValue">#000000</span>
-            </div>
-            <div class="hud-item">
-              <span class="hud-label">WAVELENGTH</span>
-              <span class="hud-value" id="torchWavelength">0 nm (DARK)</span>
+            <!-- Tail Cap & Lanyard Ring -->
+            <div class="torch-tail-cap">
+              <div class="lanyard-loop"></div>
             </div>
           </div>
 
+          <div class="torch-shadow"></div>
         </div>
       </div>
 

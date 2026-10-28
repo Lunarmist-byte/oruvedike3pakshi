@@ -839,6 +839,32 @@ body.lang-ml .scene-body p {
   color: var(--ink-secondary);
 }
 
+.creator-credits {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  font-size: 0.85rem;
+  color: var(--ink-secondary);
+  margin-top: 0.4rem;
+}
+
+.creator-credits a {
+  color: var(--color-orange, #ff6b35);
+  font-weight: 600;
+  text-decoration: none;
+  transition: color 0.15s ease;
+}
+
+.creator-credits a:hover {
+  text-decoration: underline;
+  color: var(--ink-primary);
+}
+
+.creator-credits .credit-sep {
+  opacity: 0.4;
+}
+
 .credit-text a {
   color: var(--ink-primary);
   font-weight: 600;

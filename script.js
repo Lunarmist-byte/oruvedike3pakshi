@@ -1745,21 +1745,21 @@
     },
     {
       id: 'default-insta-vlog-1',
-      title: 'Akri Vlog',
+      title: 'Whole Vlog',
       url: 'https://www.instagram.com/reel/De6-Be7stNJ/',
       category: 'general',
       description: 'Akri vlog from the scrap hunt.'
     },
     {
       id: 'default-insta-vlog-2',
-      title: 'Solpam Music Ayalo',
+      title: 'Swalpam Music Ayalo',
       url: 'https://www.instagram.com/reel/De9SWTEBSEf/',
       category: 'violin',
       description: 'Violin audio testing session.'
     },
     {
       id: 'default-insta-vlog-3',
-      title: 'Ganna Bushanan Neyatinkara Christy',
+      title: 'Ganna bushanan Neyatinkara Christy',
       url: 'https://www.instagram.com/reel/De_lyOjTQR2/',
       category: 'torch',
       description: 'Hardware building with Christy.'

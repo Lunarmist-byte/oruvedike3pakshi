@@ -20,8 +20,8 @@
         {
           badge: "Scene 01 · Origin",
           title: "Tinker Hub organised Scraphack",
-          image: "", // Add image src here (e.g. "images/scene-01.jpg" or URL)
-          imageCaption: "",
+          image: "images/scene-01.jpg",
+          imageCaption: "TinkerHub സംഘടിപ്പിച്ച Scraphack",
           paragraphs: [
             "കൊല്ലവർഷം 2026-ൽ TinkerHub ഒരു പരിപാടി സംഘടിപ്പിച്ചു — Scraphack. ഉപേക്ഷിക്കപ്പെട്ട ഇലക്ട്രോണിക് ഉപകരണങ്ങൾ പരിശോധിച്ച്, അവയിൽ നിന്ന് ഉപയോഗപ്രദമായ ഘടകങ്ങൾ കണ്ടെത്തി, അവ ഉപയോഗിച്ച് പുതിയ എന്തെങ്കിലും നിർമ്മിക്കാൻ പങ്കാളികളെ വെല്ലുവിളിക്കുന്ന ഒരു ഹാർഡ്വെയർ ഹാക്കത്തോണാണ് Scraphack.",
             "സാധാരണ ഹാക്കത്തോണുകളിൽ ഒരു ആശയം കണ്ടെത്തിയശേഷം അതിനാവശ്യമായ ഘടകങ്ങൾ ശേഖരിക്കുകയാണ് ചെയ്യുന്നതെങ്കിൽ, Scraphack-ൽ ഈ പ്രക്രിയ നേരെ തിരിച്ചാണ്. ആദ്യം ലഭ്യമായ ഉപകരണങ്ങൾ പരിശോധിക്കുകയും അവയിൽ നിന്ന് എന്ത് നിർമ്മിക്കാമെന്ന് കണ്ടെത്തുകയുമാണ് ചെയ്യുന്നത്.",
@@ -31,8 +31,8 @@
         {
           badge: "Scene 02 · Strategy",
           title: "Planning calls (പ്ലാനിങ് കോളുകൾ)",
-          image: "", // Add image src here (e.g. "images/scene-02.jpg" or URL)
-          imageCaption: "",
+          image: "images/scene-02.jpg",
+          imageCaption: "Planning calls (പ്ലാനിങ് കോളുകൾ)",
           paragraphs: [
             "കേരളത്തിന്റെ നാല് കോണുകളിലായി ഇരുന്നുകൊണ്ട് നാലുപേരും ഗ്രൂപ്പ് കോളിലൂടെ ആശയങ്ങൾ ചർച്ച ചെയ്തു. അമൽ ആക്രിക്കടയിൽ നിന്ന് കിട്ടുന്ന സാധനങ്ങൾ ഉപയോഗിച്ച് Elon Musk-ന്റെ പറക്കും കാറിനെയും Tony Stark-ന്റെ സ്യൂട്ടിനെയും വെല്ലുന്ന ഒരു പ്രോജക്ട് നിർമ്മിക്കാനുള്ള പ്ലാനിട്ടു.",
             "ഇത് കേട്ട ബാക്കിയുള്ള മൂന്നുപേരുടെയും കിളി പോയി! അവസാനം വീട്ടിലുള്ള TV, Fan, Fridge തുടങ്ങിയ സാധനങ്ങൾ ഉപയോഗിച്ച് എന്തെങ്കിലും ചെയ്യാമെന്ന് തീരുമാനിച്ചു. അങ്ങനെ ചർച്ചകൾ മുന്നോട്ട് പോയി. ഒടുവിൽ അവരുടെ ശ്രദ്ധ ഒരു ക്ലോക്കിൽ എത്തിച്ചേർന്നു. ആ ക്ലോക്കിൽ എന്തെങ്കിലും വ്യത്യസ്തമായി ചെയ്യാമെന്ന് തീരുമാനിച്ചപ്പോഴാണ് ഒരു ആശയം തെളിഞ്ഞുവന്നത്."
@@ -41,8 +41,8 @@
         {
           badge: "Scene 03 · Blueprint",
           title: "The Idea (ആശയം)",
-          image: "", // Add image src here (e.g. "images/scene-03.jpg" or URL)
-          imageCaption: "",
+          image: "images/scene-03.jpg",
+          imageCaption: "The Idea (ആശയം)",
           paragraphs: [
             "കേടായ ഒരു ക്ലോക്ക് മോട്ടോർ ഉപയോഗിച്ച് പ്രവർത്തിപ്പിച്ച് നന്നാക്കുക. അതിനുശേഷം TV റിമോട്ട് ഉപയോഗിച്ച് ക്ലോക്ക് നിയന്ത്രിക്കാനുള്ള സംവിധാനം ഒരുക്കുക. റിമോട്ടിലെ ഓരോ രാജ്യത്തിന്റെയും ബട്ടൺ അമർത്തുമ്പോൾ ആ രാജ്യത്തെ സമയം ക്ലോക്കിൽ കാണിക്കുന്ന രീതിയിലായിരുന്നു പദ്ധതി.",
             "കൂടാതെ, റിമോട്ടിലെ വോയ്സ് ബട്ടൺ ഉപയോഗിച്ച് ഒരു രാജ്യത്തിന്റെ പേര് പറഞ്ഞാൽ ആ രാജ്യത്തെ സമയം ക്ലോക്കിൽ കാണിക്കാൻ കഴിയുന്ന രീതിയിലും സംവിധാനം ഒരുക്കാൻ തീരുമാനിച്ചു."
@@ -51,8 +51,8 @@
         {
           badge: "Scene 04 · Day One",
           title: "Hackathon day (ഹാക്കത്തോൺ ദിനം)",
-          image: "", // Add image src here (e.g. "images/scene-04.jpg" or URL)
-          imageCaption: "",
+          image: "images/scene-04.jpg",
+          imageCaption: "Hackathon day (ഹാക്കത്തോൺ ദിനം)",
           paragraphs: [
             "രാവിലെ 9:30 ആയപ്പോഴേക്കും അമലും കോർ ടീം അംഗങ്ങളും Tinker Space-ൽ എത്തിച്ചേർന്നു. എത്തിയ ഉടനെ തന്നെ അടുത്തുള്ള ആക്രിക്കട തിരഞ്ഞുപിടിക്കാൻ ഇറങ്ങി. പക്ഷേ, അവർക്ക് ആദ്യം കണ്ടെത്താനായത് പ്രതീക്ഷിച്ച തരത്തിലുള്ള കടയായിരുന്നില്ല. ആദ്യമായി കണ്ട ആക്രിക്കടയിൽ ലോഹങ്ങളായിരുന്നു കൂടുതലും.",
             "അങ്ങനെ ഒരു ഷേക്ക് കുടിച്ചും ബിരിയാണി കഴിച്ചും സമയം ചെലവഴിച്ചപ്പോഴേക്കും ഏകദേശം 1:30 ആയി. അപ്പോഴാണ് Christy-യും ബാക്കിയുള്ളവരും എത്തിച്ചേർന്നത്."
@@ -61,8 +61,8 @@
         {
           badge: "Scene 05 · The Scrap Hunt",
           title: "Visit Aakrikada (ആക്രിക്കട സന്ദർശനം)",
-          image: "", // Add image src here (e.g. "images/scene-05.jpg" or URL)
-          imageCaption: "",
+          image: "images/scene-05.jpg",
+          imageCaption: "Visit Aakrikada (ആക്രിക്കട സന്ദർശനം)",
           paragraphs: [
             "എല്ലാവരും എത്തിയശേഷം ഒരുമിച്ച് അടുത്തുള്ള ആക്രിക്കടയിലേക്ക് പോയി. അവിടെ കുറേനേരം ഉപേക്ഷിക്കപ്പെട്ട സാധനങ്ങൾക്കിടയിൽ ഉപയോഗപ്രദമായ ഇലക്ട്രോണിക് ഘടകങ്ങൾ തിരഞ്ഞു.",
             "അവിടെ ധാരാളം കേടായ ഇലക്ട്രോണിക് ഉപകരണങ്ങളുണ്ടായിരുന്നു. ഓരോരുത്തരും അവർക്കാവശ്യമായ സാധനങ്ങൾ തിരഞ്ഞെടുത്തു. ഒടുവിൽ ഞങ്ങൾ ഒരു കേടായ Bluetooth സ്പീക്കർ കണ്ടെത്തി.",
@@ -72,8 +72,8 @@
         {
           badge: "Scene 06 · Execution",
           title: "Initial plan (ആദ്യ പ്ലാൻ)",
-          image: "", // Add image src here (e.g. "images/scene-06.jpg" or URL)
-          imageCaption: "",
+          image: "images/scene-06.jpg",
+          imageCaption: "Initial plan (ആദ്യ പ്ലാൻ)",
           paragraphs: [
             "ഒരു വശത്ത് റിമോട്ട് പൊളിച്ച് അതിനെ റീപ്രോഗ്രാം ചെയ്യാനുള്ള ശ്രമം തുടങ്ങി. മറുവശത്ത് സെർവോ മോട്ടോറും ഗിയറും ഉപയോഗിച്ച് ക്ലോക്ക് നിയന്ത്രിക്കാനുള്ള ശ്രമവും നടന്നു.",
             "നമ്മുടെ ഇനിഷ്യൽ പ്ലാൻ റിമോട്ടിന്റെ IR വെച്ചിട്ട് കൺട്രോൾ ചെയ്യാമെന്നായിരുന്നു. എന്നാൽ IR സെൻസർ വർക്കാവാതിരുന്നതോടെ പ്ലാനിൽ മാറ്റം വരുത്തി — ഒരു വെബ് ഇന്റർഫേസ് വെച്ച് മോണിറ്റർ ചെയ്യാനും കൺട്രോൾ ചെയ്യാനുമായി തീരുമാനിച്ചു!"
@@ -82,8 +82,8 @@
         {
           badge: "Scene 07 · The Struggle",
           title: "Failures (പരാജയങ്ങളും തിരിച്ചടികളും)",
-          image: "", // Add image src here (e.g. "images/scene-07.jpg" or URL)
-          imageCaption: "",
+          image: "images/scene-07.jpg",
+          imageCaption: "Failures (പരാജയങ്ങളും തിരിച്ചടികളും)",
           paragraphs: [
             "ആദ്യമായി ഉപയോഗിക്കാൻ ശ്രമിച്ചത് SG90 മൈക്രോ സെർവോ മോട്ടോറായിരുന്നു. എന്നാൽ അതിന് 180 ഡിഗ്രി മാത്രമേ തിരിയാൻ കഴിയുമായിരുന്നുള്ളൂ. ക്ലോക്ക് നിയന്ത്രിക്കാൻ 360 ഡിഗ്രി തുടർച്ചയായി കറങ്ങുന്ന മോട്ടോർ ആവശ്യമായിരുന്നു.",
             "അതുകൊണ്ട് SG90 മൈക്രോ സെർവോ മോട്ടോർ മോഡിഫൈ ചെയ്യാൻ ശ്രമിച്ചു. പക്ഷേ ആ പദ്ധതി പരാജയപ്പെട്ടു.",
@@ -95,8 +95,8 @@
         {
           badge: "Scene 08 · Side Quests",
           title: "Side Quest (സൈഡ് ക്വസ്റ്റ്)",
-          image: "", // Add image src here (e.g. "images/scene-08.jpg" or URL)
-          imageCaption: "",
+          image: "images/scene-08.jpg",
+          imageCaption: "Side Quest (സൈഡ് ക്വസ്റ്റ്)",
           sideQuests: [
             {
               title: "Absolute Torch",
@@ -113,8 +113,8 @@
         {
           badge: "Scene 09 · Relief",
           title: "Chaya Break (ചായ ബ്രേക്ക്)",
-          image: "", // Add image src here (e.g. "images/scene-09.jpg" or URL)
-          imageCaption: "",
+          image: "images/scene-09.jpg",
+          imageCaption: "Chaya Break (ചായ ബ്രേക്ക്)",
           paragraphs: [
             "നിരന്തരമായ പരീക്ഷണങ്ങളും പരാജയങ്ങളും തലക്ക് ഭ്രാന്തുപിടിപ്പിച്ചുതുടങ്ങിയപ്പോൾ എല്ലാവരും ഒരു ചായ കുടിക്കാനായി ഇറങ്ങി."
           ]
@@ -122,8 +122,8 @@
         {
           badge: "Scene 10 · The Miracle Fix",
           title: "Breaking Clocks (ഒടിഞ്ഞ ക്ലോക്ക്)",
-          image: "", // Add primary image src here (e.g. "images/scene-10.jpg" or URL)
-          imageCaption: "",
+          image: "images/scene-10.jpg",
+          imageCaption: "Breaking Clocks (ഒടിഞ്ഞ ക്ലോക്ക്)",
           carouselImages: [
             // Add multiple photo URLs or relative paths for Final Scene Carousel here:
             // e.g. "images/final-clock-1.jpg", "images/final-clock-2.jpg"
@@ -180,8 +180,8 @@
         {
           badge: "Scene 01 · Origin",
           title: "Tinker Hub organised scraphack",
-          image: "", // Add image src here (e.g. "images/scene-01.jpg" or URL)
-          imageCaption: "",
+          image: "images/scene-01.jpg",
+          imageCaption: "TinkerHub organised Scraphack kickoff",
           paragraphs: [
             "Kollavarsham 2026, TinkerHub organised an event called Scraphack. Scraphack is a hardware hackathon that challenges participants to explore discarded electronics, identify useful components, and build something new using whatever they find. Unlike conventional hackathons, where teams start with an idea and acquire the components needed to build it, Scraphack reverses the process.",
             "Amal and core team members Navaneeth and Sivakami registered for the event. Unfortunately, the other members of Christy’s core team had exams, so Christy registered alone. When the team formation process began, they ended up forming a team together."
@@ -190,8 +190,8 @@
         {
           badge: "Scene 02 · Strategy",
           title: "Planning calls",
-          image: "", // Add image src here (e.g. "images/scene-02.jpg" or URL)
-          imageCaption: "",
+          image: "images/scene-02.jpg",
+          imageCaption: "Planning calls & ideation",
           paragraphs: [
             "The four of us were spread across four different corners of Kerala, so we connected through group calls to plan our project. Amal, inspired by the scrap he had found, came up with an idea for a project that could surpass Elon Musk’s flying car and Tony Stark’s suit. The other three were left completely speechless by his ambition!",
             "Eventually, we decided to work with things we already had at home, such as TVs, fans, and refrigerators. After exploring several possibilities, we finally settled on a clock. We started thinking about what we could do with it, and eventually, an idea struck us."
@@ -200,8 +200,8 @@
         {
           badge: "Scene 03 · Blueprint",
           title: "The Idea",
-          image: "", // Add image src here (e.g. "images/scene-03.jpg" or URL)
-          imageCaption: "",
+          image: "images/scene-03.jpg",
+          imageCaption: "The Idea & Initial Blueprint",
           paragraphs: [
             "We decided to repair a broken clock using a motor. Then, we planned to use a TV remote to control it, allowing the clock to display the corresponding time when we pressed the button for a particular country. We also planned to use the voice button on the remote so that we could simply say a country's name and have the clock display its local time."
           ]
@@ -209,8 +209,8 @@
         {
           badge: "Scene 04 · Day One",
           title: "Hackathon day",
-          image: "", // Add image src here (e.g. "images/scene-04.jpg" or URL)
-          imageCaption: "",
+          image: "images/scene-04.jpg",
+          imageCaption: "Hackathon Day at Tinker Space",
           paragraphs: [
             "By 9:30 AM, Amal and the other core team members had reached the TinkerHub space. As soon as they arrived, they started searching for nearby scrap shops. However, they couldn't find anything useful at first. The first scrap shop they came across mainly dealt with metal scrap.",
             "After having a milkshake and biryani, it was around 1:30 PM when Christy and the others finally arrived."
@@ -219,8 +219,8 @@
         {
           badge: "Scene 05 · The Scrap Hunt",
           title: "Visit Aakrikada",
-          image: "", // Add image src here (e.g. "images/scene-05.jpg" or URL)
-          imageCaption: "",
+          image: "images/scene-05.jpg",
+          imageCaption: "Visiting the local Aakrikada",
           paragraphs: [
             "Once everyone had arrived, we went together to a nearby scrap shop. We spent quite some time searching through the piles of scrap. There were plenty of broken electronic devices, and each of us started looking for useful components.",
             "We eventually picked up a broken Bluetooth speaker. Just then, we received a call from Feb. We immediately rushed back to the TinkerHub space."
@@ -229,8 +229,8 @@
         {
           badge: "Scene 06 · Execution",
           title: "Intial plan",
-          image: "", // Add image src here (e.g. "images/scene-06.jpg" or URL)
-          imageCaption: "",
+          image: "images/scene-06.jpg",
+          imageCaption: "Initial plan & remote teardown",
           paragraphs: [
             "We split the work into two parts. On one side, we dismantled the remote and tried to figure out how to reprogram it. On the other side, we experimented with servos and gears to control the clock.",
             "Our initial plan was to control the clock using the TV remote's IR. But the IR sensor didn't work, so there was a change in plans—we pivoted to monitoring and controlling it through a web interface instead!"
@@ -239,8 +239,8 @@
         {
           badge: "Scene 07 · The Struggle",
           title: "Failures",
-          image: "", // Add image src here (e.g. "images/scene-07.jpg" or URL)
-          imageCaption: "",
+          image: "images/scene-07.jpg",
+          imageCaption: "Motor failures & driver experiments",
           paragraphs: [
             "The Micro Servo SG90 can rotate only up to 180 degrees, whereas controlling the clock required a motor capable of continuous 360-degree rotation. So, we tried modifying the SG90 servo, but that plan failed.",
             "Next, we decided to upgrade to a 5V stepper motor. Unfortunately, we couldn't find a compatible motor driver. We then decided to use a 12V stepper motor instead and picked up two motor drivers. However, this setup required around 12 jumper wires, and even after connecting everything, it still didn't work.",
@@ -251,8 +251,8 @@
         {
           badge: "Scene 08 · Side Quests",
           title: "Side Quest",
-          image: "", // Add image src here (e.g. "images/scene-08.jpg" or URL)
-          imageCaption: "",
+          image: "images/scene-08.jpg",
+          imageCaption: "Side Quests: Absolute Torch & Absolute Violin",
           sideQuests: [
             {
               title: "Absolute Torch",
@@ -269,8 +269,8 @@
         {
           badge: "Scene 09 · Relief",
           title: "Chaya Break",
-          image: "", // Add image src here (e.g. "images/scene-09.jpg" or URL)
-          imageCaption: "",
+          image: "images/scene-09.jpg",
+          imageCaption: "Chaya break to reboot",
           paragraphs: [
             "After working continuously and feeling like our brains were about to explode, we decided to take a break and head out for some tea."
           ]
@@ -278,8 +278,8 @@
         {
           badge: "Scene 10 · The Miracle Fix",
           title: "Breaking Clocks",
-          image: "", // Add primary image src here (e.g. "images/scene-10.jpg" or URL)
-          imageCaption: "",
+          image: "images/scene-10.jpg",
+          imageCaption: "Broken clock hand glued back & working",
           carouselImages: [
             // Add multiple photo URLs or relative paths for Final Scene Carousel here:
             // e.g. "images/final-clock-1.jpg", "images/final-clock-2.jpg"
@@ -693,12 +693,19 @@
       if (Array.isArray(storedPhotos)) {
         const matchingUploads = storedPhotos.filter(p => p.sceneId === sceneKey);
         matchingUploads.forEach(p => {
-          scenePhotos.push({
-            id: p.id,
-            dataUrl: p.dataUrl,
-            title: p.title || '',
-            caption: p.caption || p.title || `Scene ${i} Photo`
-          });
+          // If scene already has the static image or exact matching URL, avoid duplicate cards
+          const isDuplicate = scenePhotos.some(existing => 
+            existing.dataUrl === p.dataUrl || 
+            (existing.id.startsWith('static_img_') && (!p.title && !p.caption))
+          );
+          if (!isDuplicate) {
+            scenePhotos.push({
+              id: p.id,
+              dataUrl: p.dataUrl,
+              title: p.title || '',
+              caption: p.caption || p.title || `Scene ${i} Photo`
+            });
+          }
         });
       }
 

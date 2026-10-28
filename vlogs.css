@@ -649,3 +649,52 @@
     height: 480px;
   }
 }
+
+/* ==========================================================================
+   Site Footer
+   ========================================================================== */
+.site-footer {
+  position: relative;
+  z-index: 50;
+  border-top: 1px solid rgba(0, 0, 0, 0.08);
+  background: rgba(255, 255, 255, 0.7);
+  padding: 24px 20px;
+  text-align: center;
+  margin-top: 40px;
+}
+
+.footer-inner {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.credit-text {
+  font-size: 0.85rem;
+  color: #666;
+}
+
+.creator-credits {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  font-size: 0.85rem;
+  color: #666;
+  margin-top: 0.4rem;
+}
+
+.creator-credits a {
+  color: #ff6b35;
+  font-weight: 600;
+  text-decoration: none;
+  transition: color 0.15s ease;
+}
+
+.creator-credits a:hover {
+  text-decoration: underline;
+  color: #111;
+}
+
+.creator-credits .credit-sep {
+  opacity: 0.4;
+}

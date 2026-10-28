@@ -524,8 +524,8 @@ body {
 
 .authentic-wall-clock {
   position: relative;
-  width: min(440px, 92vw);
-  height: min(440px, 92vw);
+  width: min(440px, 86vw, 65vh);
+  height: min(440px, 86vw, 65vh);
   aspect-ratio: 1 / 1;
 }
 
@@ -534,7 +534,7 @@ body {
   height: 100%;
   border-radius: 50%;
   background: linear-gradient(135deg, #3f4756 0%, #1e242f 50%, #2b3340 100%);
-  padding: 20px;
+  padding: 4.5%;
   box-shadow: 
     0 28px 56px -12px rgba(0, 0, 0, 0.3),
     0 12px 24px -4px rgba(0, 0, 0, 0.15),
@@ -555,7 +555,7 @@ body {
 /* Dial Header (Brand Logo) */
 .dial-header {
   position: absolute;
-  top: 86px;
+  top: 19%;
   left: 0;
   right: 0;
   display: flex;
@@ -568,7 +568,7 @@ body {
 
 .brand-name {
   font-family: var(--font-display);
-  font-size: 1rem;
+  font-size: clamp(0.72rem, 2.2cqi, 1rem);
   font-weight: 800;
   letter-spacing: 0.2em;
   color: var(--ink-primary);
@@ -576,7 +576,7 @@ body {
 
 .brand-quartz {
   font-family: var(--font-display);
-  font-size: 0.7rem;
+  font-size: clamp(0.52rem, 1.6cqi, 0.7rem);
   font-weight: 700;
   letter-spacing: 0.24em;
   color: var(--ink-muted);
@@ -585,7 +585,7 @@ body {
 
 .brand-origin {
   font-family: var(--font-body);
-  font-size: 0.56rem;
+  font-size: clamp(0.42rem, 1.3cqi, 0.56rem);
   font-weight: 600;
   letter-spacing: 0.18em;
   color: var(--ink-muted);
@@ -602,10 +602,10 @@ body {
   position: absolute;
   font-family: var(--font-display);
   font-weight: 700;
-  font-size: 1.65rem;
+  font-size: clamp(0.95rem, 3.8vw, 1.65rem);
   color: var(--ink-primary);
-  width: 44px;
-  height: 44px;
+  width: 12%;
+  height: 12%;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -613,18 +613,18 @@ body {
   line-height: 1;
 }
 
-.num.n-12 { top: 16px; left: 50%; transform: translateX(-50%); font-size: 1.95rem; }
-.num.n-1  { top: 36px; right: 70px; }
-.num.n-2  { top: 86px; right: 28px; }
-.num.n-3  { top: 50%; right: 12px; transform: translateY(-50%); font-size: 1.95rem; }
-.num.n-4  { bottom: 86px; right: 28px; }
-.num.n-5  { bottom: 36px; right: 70px; }
-.num.n-6  { bottom: 16px; left: 50%; transform: translateX(-50%); font-size: 1.95rem; }
-.num.n-7  { bottom: 36px; left: 70px; }
-.num.n-8  { bottom: 86px; left: 28px; }
-.num.n-9  { top: 50%; left: 12px; transform: translateY(-50%); font-size: 1.95rem; }
-.num.n-10 { top: 86px; left: 28px; }
-.num.n-11 { top: 36px; left: 70px; }
+.num.n-12 { top: 4%; left: 50%; transform: translateX(-50%); font-size: clamp(1.15rem, 4.4vw, 1.95rem); }
+.num.n-1  { top: 9%; right: 17%; }
+.num.n-2  { top: 22%; right: 7%; }
+.num.n-3  { top: 50%; right: 3%; transform: translateY(-50%); font-size: clamp(1.15rem, 4.4vw, 1.95rem); }
+.num.n-4  { bottom: 22%; right: 7%; }
+.num.n-5  { bottom: 9%; right: 17%; }
+.num.n-6  { bottom: 4%; left: 50%; transform: translateX(-50%); font-size: clamp(1.15rem, 4.4vw, 1.95rem); }
+.num.n-7  { bottom: 9%; left: 17%; }
+.num.n-8  { bottom: 22%; left: 7%; }
+.num.n-9  { top: 50%; left: 3%; transform: translateY(-50%); font-size: clamp(1.15rem, 4.4vw, 1.95rem); }
+.num.n-10 { top: 22%; left: 7%; }
+.num.n-11 { top: 9%; left: 17%; }
 
 /* 60 Minute / Hour Dial Ticks */
 .dial-ticks {
@@ -636,21 +636,21 @@ body {
 .tick {
   position: absolute;
   left: 50%;
-  top: 6px;
-  transform-origin: 50% 194px; /* Matches 400px inner dial radius (200px - 6px = 194px) */
+  top: 1.5%;
+  transform-origin: 50% calc(50cqw - 1.5%);
 }
 
 .tick-min {
   width: 1.5px;
-  height: 8px;
+  height: 2%;
   background-color: #cbd5e1;
 }
 
 .tick-hour {
-  width: 3.5px;
-  height: 14px;
+  width: 3px;
+  height: 3.5%;
   background-color: #334155;
-  margin-left: -1.75px;
+  margin-left: -1.5px;
 }
 
 /* Hands Assembly */
@@ -672,9 +672,9 @@ body {
 }
 
 .hour-hand {
-  width: 7px;
-  height: 105px;
-  margin-left: -3.5px;
+  width: clamp(4px, 1.6vw, 7px);
+  height: clamp(65px, 24vw, 105px);
+  margin-left: clamp(-3.5px, -0.8vw, -2px);
   background: var(--clock-hand);
   box-shadow: 0 3px 8px rgba(0, 0, 0, 0.25);
   z-index: 5;
@@ -682,9 +682,9 @@ body {
 }
 
 .minute-hand {
-  width: 5px;
-  height: 148px;
-  margin-left: -2.5px;
+  width: clamp(3px, 1.2vw, 5px);
+  height: clamp(90px, 34vw, 148px);
+  margin-left: clamp(-2.5px, -0.6vw, -1.5px);
   background: var(--clock-hand);
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
   z-index: 6;
@@ -692,26 +692,26 @@ body {
 }
 
 .second-hand {
-  width: 2px;
-  height: 172px;
+  width: clamp(1.5px, 0.5vw, 2px);
+  height: clamp(105px, 39vw, 172px);
   margin-left: -1px;
   background: var(--clock-second);
   z-index: 7;
-  transform-origin: 50% 142px; /* Offset for counterweight tail */
-  bottom: -30px;
+  transform-origin: 50% 82%;
+  bottom: clamp(-20px, -6vw, -30px);
   transition: transform 0.15s cubic-bezier(0.3, 1.8, 0.4, 1);
 }
 
 .second-rod {
   width: 100%;
-  height: 142px;
+  height: 82%;
   background: var(--clock-second);
 }
 
 .second-tail {
-  width: 4.5px;
-  height: 30px;
-  margin-left: -1.25px;
+  width: clamp(3px, 1vw, 4.5px);
+  height: 18%;
+  margin-left: clamp(-1px, -0.2vw, -1.25px);
   background: var(--clock-second);
   border-radius: 1px;
 }
@@ -721,8 +721,8 @@ body {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 16px;
-  height: 16px;
+  width: clamp(10px, 3.6vw, 16px);
+  height: clamp(10px, 3.6vw, 16px);
   border-radius: 50%;
   background: radial-gradient(circle at 35% 35%, #ffffff 0%, #cbd5e1 50%, #475569 100%);
   border: 1.5px solid #1e293b;
@@ -3694,24 +3694,15 @@ a.link-card:hover,
 
 @media (max-width: 480px) {
   .hero-main-banner-title {
-    font-size: 1.9rem;
+    font-size: 1.8rem;
   }
 
   .hero-side-heading {
-    font-size: 1.55rem;
+    font-size: 1.45rem;
   }
 
   .hero-malayalam-subtitle {
-    font-size: 1.15rem;
-  }
-
-  .authentic-wall-clock {
-    width: 270px;
-    height: 270px;
-  }
-
-  .clock-numerals .num {
-    font-size: 1.05rem;
+    font-size: 1.1rem;
   }
 
   .tv-screen-glass {

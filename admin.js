@@ -484,31 +484,31 @@
     },
     {
       id: 'default-insta-vlog-1',
-      title: 'Scrap Hunt Reel',
-      url: 'https://www.instagram.com/reel/C8rM1y4SL6e/',
+      title: 'Akri Vlog',
+      url: 'https://www.instagram.com/reel/De6-Be7stNJ/',
       category: 'general',
-      description: 'Searching scrap shops in Kochi.'
+      description: 'Akri vlog from the scrap hunt.'
     },
     {
       id: 'default-insta-vlog-2',
-      title: 'Clock Hands Fix Reel',
-      url: 'https://www.instagram.com/reel/C41oX4oI_5x/',
-      category: 'clock',
-      description: 'Supergluing broken quartz clock hands.'
+      title: 'Solpam Music Ayalo',
+      url: 'https://www.instagram.com/reel/De9SWTEBSEf/',
+      category: 'violin',
+      description: 'Violin audio testing session.'
     },
     {
       id: 'default-insta-vlog-3',
-      title: 'Scrap Violin Audio Reel',
-      url: 'https://www.instagram.com/reel/C32sP4xL_8y/',
-      category: 'violin',
-      description: 'Testing potentiometer violin synthesizer audio.'
+      title: 'Ganna Bushanan Neyatinkara Christy',
+      url: 'https://www.instagram.com/reel/De_lyOjTQR2/',
+      category: 'torch',
+      description: 'Hardware building with Christy.'
     },
     {
       id: 'default-insta-vlog-4',
-      title: 'RGB Torch Beam Reel',
-      url: 'https://www.instagram.com/reel/C29wQ1_M77z/',
+      title: 'Mazhavile Torch',
+      url: 'https://www.instagram.com/reel/DfCGZNuztU9/',
       category: 'torch',
-      description: 'Switching torch colors on phone captive portal.'
+      description: 'Rainbow RGB smart torch demo.'
     }
   ];
 
@@ -523,7 +523,8 @@
         if (!Array.isArray(list)) list = [...DEFAULT_PROJECT_LINKS];
       }
 
-      // Remove any non-project/vlog links, .html links, and firmware direct code link
+      // Remove any non-project/vlog links, .html links, firmware direct code link, and old placeholder reels
+      const oldReelCodes = ['c8rm1y4sl6e', 'c41ox4oi_5x', 'c32sp4xl_8y', 'c29wq1_m77z'];
       list = list.filter(l => {
         const u = (l.url || '').toLowerCase();
         if (u.includes('.html')) return false;
@@ -531,6 +532,7 @@
         if (u.includes('tinkerhub.org')) return false;
         if (u.includes('linkedin.com')) return false;
         if (u === 'https://github.com/lunarmist-byte' || u === 'https://github.com/lunarmist-byte/') return false;
+        if (oldReelCodes.some(code => u.includes(code))) return false;
         return true;
       });
 
@@ -675,34 +677,34 @@
   const DEFAULT_VLOGS = [
     {
       id: 'vlog_seed_1',
-      url: 'https://www.instagram.com/reel/C8rM1y4SL6e/',
-      title: 'Scraphack 2026 Kickoff & Hardware Junk Hunt',
+      url: 'https://www.instagram.com/reel/De6-Be7stNJ/',
+      title: 'Akri Vlog',
       category: 'bts',
-      creator: '@tinkerhub',
+      creator: '',
       createdAt: Date.now() - 86400000 * 2
     },
     {
       id: 'vlog_seed_2',
-      url: 'https://www.instagram.com/reel/C41oX4oI_5x/',
-      title: 'Resurrecting the Quartz Wall Clock Hands',
-      category: 'clock',
-      creator: '@amal',
+      url: 'https://www.instagram.com/reel/De9SWTEBSEf/',
+      title: 'Solpam Music Ayalo',
+      category: 'violin',
+      creator: '',
       createdAt: Date.now() - 86400000
     },
     {
       id: 'vlog_seed_3',
-      url: 'https://www.instagram.com/reel/C32sP4xL_8y/',
-      title: 'Making Screeching Sounds on the Scrap Violin',
-      category: 'violin',
-      creator: '@navaneeth',
+      url: 'https://www.instagram.com/reel/De_lyOjTQR2/',
+      title: 'Ganna Bushanan Neyatinkara Christy',
+      category: 'torch',
+      creator: '',
       createdAt: Date.now() - 43200000
     },
     {
       id: 'vlog_seed_4',
-      url: 'https://www.instagram.com/reel/C29wQ1_M77z/',
-      title: 'Captive Portal RGB LED Torch Beam Cycle',
+      url: 'https://www.instagram.com/reel/DfCGZNuztU9/',
+      title: 'Mazhavile Torch',
       category: 'torch',
-      creator: '@christy',
+      creator: '',
       createdAt: Date.now() - 21600000
     }
   ];
@@ -710,11 +712,47 @@
   function getStoredVlogs() {
     try {
       const raw = localStorage.getItem(VLOGS_STORAGE_KEY);
+      let list = [];
       if (!raw) {
-        localStorage.setItem(VLOGS_STORAGE_KEY, JSON.stringify(DEFAULT_VLOGS));
-        return DEFAULT_VLOGS;
+        list = [...DEFAULT_VLOGS];
+      } else {
+        list = JSON.parse(raw);
+        if (!Array.isArray(list)) list = [...DEFAULT_VLOGS];
       }
-      return JSON.parse(raw);
+
+      // Purge old seed placeholder reels
+      const oldReels = ['c8rm1y4sl6e', 'c41ox4oi_5x', 'c32sp4xl_8y', 'c29wq1_m77z'];
+      list = list.filter(v => !oldReels.some(code => (v.url || '').toLowerCase().includes(code)));
+
+      // Deduplicate by URL
+      const seenUrls = new Set();
+      list = list.filter(v => {
+        const u = (v.url || '').trim().toLowerCase();
+        if (seenUrls.has(u)) return false;
+        seenUrls.add(u);
+        return true;
+      });
+
+      // Merge defaults if not present
+      DEFAULT_VLOGS.forEach(dv => {
+        const dvU = dv.url.trim().toLowerCase();
+        if (!seenUrls.has(dvU)) {
+          list.push(dv);
+          seenUrls.add(dvU);
+        }
+      });
+
+      // Sync default titles
+      list.forEach(v => {
+        const match = DEFAULT_VLOGS.find(dv => dv.url.trim().toLowerCase() === (v.url || '').trim().toLowerCase());
+        if (match) {
+          v.title = match.title;
+          v.category = match.category;
+        }
+      });
+
+      localStorage.setItem(VLOGS_STORAGE_KEY, JSON.stringify(list));
+      return list;
     } catch (e) {
       console.warn('LocalStorage error reading vlogs in admin:', e);
       return DEFAULT_VLOGS;

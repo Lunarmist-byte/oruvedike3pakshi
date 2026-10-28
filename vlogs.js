@@ -8,38 +8,38 @@
 
   const STORAGE_KEY = 'scraphack_insta_vlogs_v1';
 
-  // Seed with curated default hackathon reels / highlights so the page looks stunning out-of-the-box
+  // Seed with curated hackathon reels
   const DEFAULT_VLOGS = [
     {
       id: 'vlog_seed_1',
-      url: 'https://www.instagram.com/reel/C8rM1y4SL6e/',
-      title: 'Scrap Hunt in Kochi',
+      url: 'https://www.instagram.com/reel/De6-Be7stNJ/',
+      title: 'Akri Vlog',
       category: 'bts',
-      creator: '@tinkerhub',
+      creator: '',
       createdAt: Date.now() - 86400000 * 2
     },
     {
       id: 'vlog_seed_2',
-      url: 'https://www.instagram.com/reel/C41oX4oI_5x/',
-      title: 'Supergluing Clock Hands',
-      category: 'clock',
-      creator: '@amal',
+      url: 'https://www.instagram.com/reel/De9SWTEBSEf/',
+      title: 'Solpam Music Ayalo',
+      category: 'violin',
+      creator: '',
       createdAt: Date.now() - 86400000
     },
     {
       id: 'vlog_seed_3',
-      url: 'https://www.instagram.com/reel/C32sP4xL_8y/',
-      title: 'Testing Scrap Violin Audio',
-      category: 'violin',
-      creator: '@navaneeth',
+      url: 'https://www.instagram.com/reel/De_lyOjTQR2/',
+      title: 'Ganna Bushanan Neyatinkara Christy',
+      category: 'torch',
+      creator: '',
       createdAt: Date.now() - 43200000
     },
     {
       id: 'vlog_seed_4',
-      url: 'https://www.instagram.com/reel/C29wQ1_M77z/',
-      title: 'RGB LED Torch Color Cycle',
+      url: 'https://www.instagram.com/reel/DfCGZNuztU9/',
+      title: 'Mazhavile Torch',
       category: 'torch',
-      creator: '@christy',
+      creator: '',
       createdAt: Date.now() - 21600000
     }
   ];
@@ -77,10 +77,36 @@
       if (raw) {
         vlogsList = JSON.parse(raw);
         if (!Array.isArray(vlogsList)) vlogsList = [...DEFAULT_VLOGS];
+
+        // Purge old seed placeholder reels
+        const oldReels = ['c8rm1y4sl6e', 'c41ox4oi_5x', 'c32sp4xl_8y', 'c29wq1_m77z'];
+        vlogsList = vlogsList.filter(v => !oldReels.some(code => (v.url || '').toLowerCase().includes(code)));
+
+        // Deduplicate vlogs by URL to ensure each reel only appears once
+        const seenUrls = new Set();
+        vlogsList = vlogsList.filter(v => {
+          const urlNorm = (v.url || '').trim().toLowerCase();
+          if (seenUrls.has(urlNorm)) return false;
+          seenUrls.add(urlNorm);
+          return true;
+        });
+
+        // Merge default vlogs if missing
+        DEFAULT_VLOGS.forEach(dv => {
+          const dvUrlNorm = dv.url.trim().toLowerCase();
+          if (!seenUrls.has(dvUrlNorm)) {
+            vlogsList.push(dv);
+            seenUrls.add(dvUrlNorm);
+          }
+        });
+
         // Sync default titles
         vlogsList.forEach(v => {
-          const match = DEFAULT_VLOGS.find(dv => dv.url.trim() === (v.url || '').trim());
-          if (match) v.title = match.title;
+          const match = DEFAULT_VLOGS.find(dv => dv.url.trim().toLowerCase() === (v.url || '').trim().toLowerCase());
+          if (match) {
+            v.title = match.title;
+            v.category = match.category;
+          }
         });
         saveVlogs();
       } else {

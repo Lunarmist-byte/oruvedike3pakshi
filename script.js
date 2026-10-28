@@ -187,15 +187,23 @@
   function generateClockTicks(container) {
     if (!container) return;
     container.innerHTML = '';
+    const rect = container.getBoundingClientRect();
+    const radius = (rect.width > 0 ? rect.width : 360) / 2;
+    const originY = Math.max(radius - 6, 20);
+
     for (let i = 0; i < 60; i++) {
       const tick = document.createElement('span');
       tick.className = (i % 5 === 0) ? 'tick tick-hour' : 'tick tick-min';
+      tick.style.transformOrigin = `50% ${originY}px`;
       tick.style.transform = `rotate(${i * 6}deg)`;
       container.appendChild(tick);
     }
   }
 
   generateClockTicks(clockTicksContainer);
+  window.addEventListener('resize', () => {
+    generateClockTicks(clockTicksContainer);
+  });
 
   // ==========================================================================
   // Web Audio API Tactile Mechanical Click Sound
@@ -1737,31 +1745,31 @@
     },
     {
       id: 'default-insta-vlog-1',
-      title: 'Scrap Hunt Reel',
-      url: 'https://www.instagram.com/reel/C8rM1y4SL6e/',
+      title: 'Akri Vlog',
+      url: 'https://www.instagram.com/reel/De6-Be7stNJ/',
       category: 'general',
-      description: 'Searching scrap shops in Kochi.'
+      description: 'Akri vlog from the scrap hunt.'
     },
     {
       id: 'default-insta-vlog-2',
-      title: 'Clock Hands Fix Reel',
-      url: 'https://www.instagram.com/reel/C41oX4oI_5x/',
-      category: 'clock',
-      description: 'Supergluing broken quartz clock hands.'
+      title: 'Solpam Music Ayalo',
+      url: 'https://www.instagram.com/reel/De9SWTEBSEf/',
+      category: 'violin',
+      description: 'Violin audio testing session.'
     },
     {
       id: 'default-insta-vlog-3',
-      title: 'Scrap Violin Audio Reel',
-      url: 'https://www.instagram.com/reel/C32sP4xL_8y/',
-      category: 'violin',
-      description: 'Testing potentiometer violin synthesizer audio.'
+      title: 'Ganna Bushanan Neyatinkara Christy',
+      url: 'https://www.instagram.com/reel/De_lyOjTQR2/',
+      category: 'torch',
+      description: 'Hardware building with Christy.'
     },
     {
       id: 'default-insta-vlog-4',
-      title: 'RGB Torch Beam Reel',
-      url: 'https://www.instagram.com/reel/C29wQ1_M77z/',
+      title: 'Mazhavile Torch',
+      url: 'https://www.instagram.com/reel/DfCGZNuztU9/',
       category: 'torch',
-      description: 'Switching torch colors on phone captive portal.'
+      description: 'Rainbow RGB smart torch demo.'
     }
   ];
 
@@ -1779,7 +1787,8 @@
         if (!Array.isArray(links)) links = [...DEFAULT_PROJECT_LINKS];
       }
 
-      // Remove any non-project/vlog links, .html links, and firmware direct code link
+      // Remove any non-project/vlog links, .html links, firmware direct code link, and old placeholder reels
+      const oldReelCodes = ['c8rm1y4sl6e', 'c41ox4oi_5x', 'c32sp4xl_8y', 'c29wq1_m77z'];
       links = links.filter(l => {
         const u = (l.url || '').toLowerCase();
         if (u.includes('.html')) return false;
@@ -1787,6 +1796,7 @@
         if (u.includes('tinkerhub.org')) return false;
         if (u.includes('linkedin.com')) return false;
         if (u === 'https://github.com/lunarmist-byte' || u === 'https://github.com/lunarmist-byte/') return false;
+        if (oldReelCodes.some(code => u.includes(code))) return false;
         return true;
       });
 

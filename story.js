@@ -66,7 +66,7 @@
           paragraphs: [
             "എല്ലാവരും എത്തിയശേഷം ഒരുമിച്ച് അടുത്തുള്ള ആക്രിക്കടയിലേക്ക് പോയി. അവിടെ കുറേനേരം ഉപേക്ഷിക്കപ്പെട്ട സാധനങ്ങൾക്കിടയിൽ ഉപയോഗപ്രദമായ ഇലക്ട്രോണിക് ഘടകങ്ങൾ തിരഞ്ഞു.",
             "അവിടെ ധാരാളം കേടായ ഇലക്ട്രോണിക് ഉപകരണങ്ങളുണ്ടായിരുന്നു. ഓരോരുത്തരും അവർക്കാവശ്യമായ സാധനങ്ങൾ തിരഞ്ഞെടുത്തു. ഒടുവിൽ ഞങ്ങൾ ഒരു കേടായ Bluetooth സ്പീക്കർ കണ്ടെത്തി.",
-            "അപ്പോഴേക്കും ഫെബിന്റെ കോൾ വന്നു. അതോടെ എല്ലാവരും പെട്ടെന്ന് Tinker Space-ലേക്ക് ഓടിയെത്തി."
+            "അപ്പോഴേക്കും ഫെമിന-ന്റെ കോൾ വന്നു. അതോടെ എല്ലാവരും പെട്ടെന്ന് Tinker Space-ലേക്ക് ഓടിയെത്തി."
           ]
         },
         {
@@ -223,7 +223,7 @@
           imageCaption: "Visiting the local Aakrikada",
           paragraphs: [
             "Once everyone had arrived, we went together to a nearby scrap shop. We spent quite some time searching through the piles of scrap. There were plenty of broken electronic devices, and each of us started looking for useful components.",
-            "We eventually picked up a broken Bluetooth speaker. Just then, we received a call from Feb. We immediately rushed back to the TinkerHub space."
+            "We eventually picked up a broken Bluetooth speaker. Just then, we received a call from Fem. We immediately rushed back to the TinkerHub space."
           ]
         },
         {

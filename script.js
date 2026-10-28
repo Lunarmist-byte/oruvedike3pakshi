@@ -99,16 +99,42 @@
     tvPowerOn: true,
     tvSelectedChoice: 'malayalam', // 'malayalam' | 'english'
     tvKnobAngle: 0,
-    tvContrastLevel: 1.0
+    tvContrastLevel: 1.0,
+    activeProject: 'clock' // 'clock' | 'violin' | 'torch'
   };
 
   // DOM Elements
   const heroTextContainer = document.getElementById('heroTextContainer');
   const clockOverlayLayer = document.getElementById('clockOverlayLayer');
+  const violinOverlayLayer = document.getElementById('violinOverlayLayer');
+  const torchOverlayLayer = document.getElementById('torchOverlayLayer');
   const remoteOverlayLayer = document.getElementById('remoteOverlayLayer');
   const scrollStoryTrack = document.getElementById('scrollStoryTrack');
   const scrollCta = document.getElementById('scrollCta');
   const brandLogo = document.getElementById('brandLogo');
+
+  // Violin Stage Elements
+  const salvagePinionGear = document.getElementById('salvagePinionGear');
+  const salvageLinearRack = document.getElementById('salvageLinearRack');
+  const potShaft = document.getElementById('potShaft');
+  const salvagedViolinBody = document.getElementById('salvagedViolinBody');
+  const violinStatusTag = document.getElementById('violinStatusTag');
+  const violinPercentBadge = document.getElementById('violinPercentBadge');
+  const violinPotValue = document.getElementById('violinPotValue');
+  const violinAudioValue = document.getElementById('violinAudioValue');
+  const violinMechValue = document.getElementById('violinMechValue');
+
+  // Torch Stage Elements
+  const torchBeamCone = document.getElementById('torchBeamCone');
+  const beamLightCore = document.getElementById('beamLightCore');
+  const torchLedEmitter = document.getElementById('torchLedEmitter');
+  const emitterGlow = document.getElementById('emitterGlow');
+  const torchSwitchRocker = document.getElementById('torchSwitchRocker');
+  const torchStatusTag = document.getElementById('torchStatusTag');
+  const torchKelvinBadge = document.getElementById('torchKelvinBadge');
+  const torchColorName = document.getElementById('torchColorName');
+  const torchHexValue = document.getElementById('torchHexValue');
+  const torchWavelength = document.getElementById('torchWavelength');
 
   // Clock Hands & Ticks
   const clockTicksContainer = document.getElementById('clockTicksContainer');
@@ -577,9 +603,242 @@
   }
 
   // ==========================================================================
+  // Stage 2 Multi-Project Animator Functions
+  // ==========================================================================
+  function hideAllStage2Layers() {
+    [clockOverlayLayer, violinOverlayLayer, torchOverlayLayer].forEach(layer => {
+      if (!layer) return;
+      layer.style.opacity = '0';
+      layer.style.visibility = 'hidden';
+      layer.style.pointerEvents = 'none';
+    });
+  }
+
+  function renderActiveStage2(projectKey, opacity, scale, subProgress) {
+    // Hide inactive layers
+    if (projectKey !== 'clock' && clockOverlayLayer) {
+      clockOverlayLayer.style.opacity = '0';
+      clockOverlayLayer.style.visibility = 'hidden';
+      clockOverlayLayer.style.pointerEvents = 'none';
+    }
+    if (projectKey !== 'violin' && violinOverlayLayer) {
+      violinOverlayLayer.style.opacity = '0';
+      violinOverlayLayer.style.visibility = 'hidden';
+      violinOverlayLayer.style.pointerEvents = 'none';
+    }
+    if (projectKey !== 'torch' && torchOverlayLayer) {
+      torchOverlayLayer.style.opacity = '0';
+      torchOverlayLayer.style.visibility = 'hidden';
+      torchOverlayLayer.style.pointerEvents = 'none';
+    }
+
+    // 1. CLOCK
+    if (projectKey === 'clock' && clockOverlayLayer) {
+      clockOverlayLayer.style.visibility = opacity > 0.01 ? 'visible' : 'hidden';
+      clockOverlayLayer.style.opacity = opacity.toFixed(3);
+      clockOverlayLayer.style.transform = `translate(-50%, -50%) scale(${scale.toFixed(3)})`;
+      clockOverlayLayer.style.pointerEvents = opacity > 0.5 ? 'auto' : 'none';
+    }
+    // 2. VIOLIN: First Rack & Pinion gear rotating ALONE, then transitions to Violin ALONE (Zero Overlap like Clock -> Remote)
+    else if (projectKey === 'violin' && violinOverlayLayer) {
+      violinOverlayLayer.style.visibility = opacity > 0.01 ? 'visible' : 'hidden';
+      violinOverlayLayer.style.opacity = opacity.toFixed(3);
+      violinOverlayLayer.style.transform = `translate(-50%, -50%) scale(${scale.toFixed(3)})`;
+      violinOverlayLayer.style.pointerEvents = opacity > 0.5 ? 'auto' : 'none';
+
+      // subProgress goes 0.0 -> 1.0
+      // PHASE 1: 0.00 -> 0.48: RACK & PINION ALONE IN CENTER (Mechanical gear & potentiometer rig)
+      // TRANSITION: 0.48 -> 0.52: Rack & Pinion exits
+      // PHASE 2: 0.52 -> 1.00: VIOLIN ALONE IN CENTER (The completed electronic instrument with strings, bridge, sound)
+      
+      if (subProgress < 0.48) {
+        // === PHASE 1: RACK & PINION ALONE ===
+        const rackPhaseP = subProgress / 0.48; // 0 to 1
+        const gearAngle = rackPhaseP * 1080; // 3 full 360 rotations!
+        const rackShift = Math.sin(rackPhaseP * Math.PI * 4) * 65; // linear rack sliding back & forth
+        const potResistance = (rackPhaseP * 10).toFixed(1);
+
+        // Rack & Pinion fully visible and active
+        if (salvagePinionGear) {
+          salvagePinionGear.style.opacity = '1';
+          salvagePinionGear.style.transform = `rotate(${gearAngle}deg)`;
+        }
+        if (salvageLinearRack) {
+          salvageLinearRack.style.opacity = '1';
+          salvageLinearRack.style.transform = `translateX(${rackShift}px)`;
+        }
+        if (potShaft) {
+          potShaft.style.transform = `translate(-50%, -50%) rotate(${gearAngle * 0.75}deg)`;
+        }
+
+        // Violin Body strictly hidden
+        if (salvagedViolinBody) {
+          salvagedViolinBody.style.opacity = '0';
+          salvagedViolinBody.style.visibility = 'hidden';
+          salvagedViolinBody.style.transform = 'translate(-50%, calc(-50% + 120px)) scale(0.65)';
+        }
+
+        // Telemetry HUD for Rack & Pinion
+        if (violinStatusTag) {
+          violinStatusTag.textContent = 'STAGE 01: SALVAGED RACK & PINION GEAR';
+        }
+        if (violinPercentBadge) {
+          violinPercentBadge.textContent = `GEAR ROTATION: ${Math.round(rackPhaseP * 100)}%`;
+        }
+        if (violinPotValue) {
+          violinPotValue.textContent = `${potResistance} kΩ (SLIDING)`;
+        }
+        if (violinAudioValue) {
+          violinAudioValue.textContent = 'MECHANICAL INPUT';
+        }
+
+      } else if (subProgress < 0.52) {
+        // === TRANSITION GAP: Rack & Pinion fades out, Violin prepares to enter (Zero overlap) ===
+        const t = (subProgress - 0.48) / 0.04; // 0 to 1
+        const easeOut = t * t * (3 - 2 * t);
+
+        if (salvagePinionGear) {
+          salvagePinionGear.style.opacity = (1 - easeOut).toFixed(2);
+          salvagePinionGear.style.transform = `rotate(${1080 + t * 90}deg) scale(${(1 - easeOut * 0.2).toFixed(2)})`;
+        }
+        if (salvageLinearRack) {
+          salvageLinearRack.style.opacity = (1 - easeOut).toFixed(2);
+        }
+
+        if (salvagedViolinBody) {
+          salvagedViolinBody.style.opacity = '0';
+          salvagedViolinBody.style.visibility = 'hidden';
+        }
+
+        if (violinStatusTag) {
+          violinStatusTag.textContent = 'TRANSITION: TRANSFORMING TO VIOLIN';
+        }
+
+      } else {
+        // === PHASE 2: VIOLIN ALONE IN CENTER (0.52 -> 1.00) ===
+        const violinPhaseP = (subProgress - 0.52) / 0.48; // 0 to 1
+        const easeIn = Math.min(violinPhaseP / 0.25, 1);
+        const smoothViolinP = easeIn * easeIn * (3 - 2 * easeIn);
+
+        // Rack & Pinion strictly hidden
+        if (salvagePinionGear) {
+          salvagePinionGear.style.opacity = '0';
+          salvagePinionGear.style.transform = 'scale(0.5)';
+        }
+        if (salvageLinearRack) {
+          salvageLinearRack.style.opacity = '0';
+        }
+
+        // Violin Body alone in center!
+        if (salvagedViolinBody) {
+          salvagedViolinBody.style.visibility = 'visible';
+          salvagedViolinBody.style.opacity = smoothViolinP.toFixed(3);
+          const vScale = 0.82 + (0.18 * smoothViolinP);
+          const vY = (1 - smoothViolinP) * 80;
+          salvagedViolinBody.style.transform = `translate(-50%, calc(-50% + ${vY.toFixed(1)}px)) scale(${vScale.toFixed(3)})`;
+        }
+
+        // Telemetry HUD for Violin
+        const freq = Math.round(220 + violinPhaseP * 660);
+        if (violinStatusTag) {
+          violinStatusTag.textContent = 'STAGE 02: ABSOLUTE VIOLIN SYNTHESIZER';
+        }
+        if (violinPercentBadge) {
+          violinPercentBadge.textContent = 'SYNTH ASSEMBLED';
+        }
+        if (violinPotValue) {
+          violinPotValue.textContent = '10.0 kΩ (BOW ENGAGED)';
+        }
+        if (violinAudioValue) {
+          violinAudioValue.textContent = `${freq} Hz (AUDIO SYNTH)`;
+        }
+      }
+    }
+    // 3. TORCH: Off at first, changing colors as you scroll, till it reaches pure bright white at scroll end
+    else if (projectKey === 'torch' && torchOverlayLayer) {
+      torchOverlayLayer.style.visibility = opacity > 0.01 ? 'visible' : 'hidden';
+      torchOverlayLayer.style.opacity = opacity.toFixed(3);
+      torchOverlayLayer.style.transform = `translate(-50%, -50%) scale(${scale.toFixed(3)})`;
+      torchOverlayLayer.style.pointerEvents = opacity > 0.5 ? 'auto' : 'none';
+
+      // subProgress:
+      // 0.00 -> 0.12: Torch is OFF (no beam, black emitter, rocker switch in off position)
+      // 0.12 -> 0.85: Torch clicks ON, cycling through vibrant rainbow hues (Red -> Orange -> Yellow -> Green -> Cyan -> Blue -> Purple -> Magenta)
+      // 0.85 -> 1.00: Transitions smoothly to intense brilliant PURE WHITE BEAM (#FFFFFF, 6500K daylight white)
+      if (subProgress <= 0.12) {
+        // OFF STATE
+        if (torchBeamCone) torchBeamCone.style.opacity = '0';
+        if (torchSwitchRocker) torchSwitchRocker.classList.remove('switched-on');
+        if (emitterGlow) emitterGlow.style.opacity = '0';
+        if (emitterGlow) emitterGlow.style.background = '#000000';
+        if (torchStatusTag) torchStatusTag.textContent = 'BEAM STATE: POWER OFF';
+        if (torchKelvinBadge) torchKelvinBadge.textContent = '0 LUMENS // OFF';
+        if (torchColorName) torchColorName.textContent = 'BLACK // OFF';
+        if (torchHexValue) torchHexValue.textContent = '#000000';
+        if (torchWavelength) torchWavelength.textContent = '0 nm (DARK)';
+      } else if (subProgress < 0.85) {
+        // COLOR CYCLING SPECTRUM
+        if (torchSwitchRocker) torchSwitchRocker.classList.add('switched-on');
+        const colorProgress = (subProgress - 0.12) / 0.73; // 0 to 1
+        const hue = Math.round(colorProgress * 360);
+        const colorRgb = `hsl(${hue}, 100%, 55%)`;
+        const glowColor = `hsla(${hue}, 100%, 60%, 0.85)`;
+        const beamColor = `radial-gradient(ellipse at 15% 50%, hsla(${hue}, 100%, 65%, 0.95) 0%, hsla(${hue}, 100%, 55%, 0.7) 40%, hsla(${hue}, 100%, 45%, 0.15) 80%, transparent 100%)`;
+
+        if (torchBeamCone) {
+          torchBeamCone.style.opacity = '1';
+          torchBeamCone.style.background = beamColor;
+          torchBeamCone.style.filter = `drop-shadow(0 0 45px hsla(${hue}, 100%, 50%, 0.6))`;
+        }
+        if (emitterGlow) {
+          emitterGlow.style.opacity = '1';
+          emitterGlow.style.background = glowColor;
+          emitterGlow.style.boxShadow = `0 0 35px 12px hsla(${hue}, 100%, 60%, 0.9)`;
+        }
+
+        const colorNames = [
+          'NEON RED', 'ORANGE FLAME', 'AMBER GOLD', 'LIME GREEN', 'EMERALD JADE',
+          'CYAN BEACON', 'SKY BLUE', 'ROYAL INDIGO', 'VIOLET PULSE', 'DEEP MAGENTA'
+        ];
+        const nameIdx = Math.min(Math.floor(colorProgress * colorNames.length), colorNames.length - 1);
+        const lumens = Math.round(150 + colorProgress * 650);
+        const approxNm = Math.round(700 - colorProgress * 300);
+
+        if (torchStatusTag) torchStatusTag.textContent = 'BEAM STATE: RGB CYCLING SPECTRUM';
+        if (torchKelvinBadge) torchKelvinBadge.textContent = `${lumens} LUMENS // ACTIVE`;
+        if (torchColorName) torchColorName.textContent = colorNames[nameIdx];
+        if (torchHexValue) torchHexValue.textContent = colorRgb;
+        if (torchWavelength) torchWavelength.textContent = `${approxNm} nm SPECTRUM`;
+      } else {
+        // 0.85 -> 1.00: REACHES WHITE AT SCROLL END!
+        if (torchSwitchRocker) torchSwitchRocker.classList.add('switched-on');
+        const whiteProgress = (subProgress - 0.85) / 0.15; // 0 to 1
+        const whiteBeam = `radial-gradient(ellipse at 15% 50%, rgba(255, 255, 255, 0.98) 0%, rgba(240, 248, 255, 0.85) 45%, rgba(225, 240, 255, 0.25) 85%, transparent 100%)`;
+
+        if (torchBeamCone) {
+          torchBeamCone.style.opacity = '1';
+          torchBeamCone.style.background = whiteBeam;
+          torchBeamCone.style.filter = `drop-shadow(0 0 65px rgba(255, 255, 255, 0.9))`;
+        }
+        if (emitterGlow) {
+          emitterGlow.style.opacity = '1';
+          emitterGlow.style.background = '#ffffff';
+          emitterGlow.style.boxShadow = '0 0 50px 18px rgba(255, 255, 255, 1)';
+        }
+
+        if (torchStatusTag) torchStatusTag.textContent = 'BEAM STATE: MAXIMUM WHITE OUTPUT';
+        if (torchKelvinBadge) torchKelvinBadge.textContent = '1200 LUMENS // 6500K';
+        if (torchColorName) torchColorName.textContent = 'PURE DAYLIGHT WHITE';
+        if (torchHexValue) torchHexValue.textContent = '#FFFFFF';
+        if (torchWavelength) torchWavelength.textContent = 'ALL WAVELENGTHS (WHITE)';
+      }
+    }
+  }
+
+  // ==========================================================================
   // Zero-Overlap 4-Stage Scroll Experience:
   // Stage 1 (0.00 -> 0.16): "samayam ethrayai" editorial typography alone.
-  // Stage 2 (0.16 -> 0.42): Authentic Kerala Clock ALONE in center (Only It).
+  // Stage 2 (0.16 -> 0.42): Active Project ALONE in center (Only It).
   // Stage 3 (0.42 -> 0.70): Authentic TV Remote ALONE in center (Only It).
   // Stage 4 (0.70 -> 1.00): Scrapped & Broken Retro TV ALONE in center (Only It).
   // ==========================================================================
@@ -591,7 +850,7 @@
     const progress = Math.min(Math.max(scrollTop / maxScroll, 0), 1);
 
     // ------------------------------------------------------------------------
-    // STAGE 1: Hero Typography alone (0.00 to 0.16)
+    // STAGE 1: Hero Typography & Selector (0.00 to 0.16)
     // ------------------------------------------------------------------------
     if (progress <= 0.16) {
       // 1. Text Layer
@@ -603,11 +862,8 @@
       heroTextContainer.style.transform = `translate(-50%, calc(-50% + ${textY.toFixed(1)}px)) scale(${1 - textP * 0.05})`;
       heroTextContainer.style.pointerEvents = textOpacity < 0.2 ? 'none' : 'auto';
 
-      // 2. Clock: Hidden
-      clockOverlayLayer.style.opacity = '0';
-      clockOverlayLayer.style.visibility = 'hidden';
-      clockOverlayLayer.style.pointerEvents = 'none';
-      clockOverlayLayer.style.transform = 'translate(-50%, -50%) scale(0.75)';
+      // 2. Stage 2 Layers (Clock, Violin, Torch): All Hidden
+      hideAllStage2Layers();
 
       // 3. Remote: Hidden
       remoteOverlayLayer.style.opacity = '0';
@@ -624,63 +880,85 @@
       tvOverlayLayer.classList.remove('active-interact');
     }
     // ------------------------------------------------------------------------
-    // STAGE 2: Clock alone in center (0.16 to 0.42)
+    // STAGE 2: Active Project ALONE in center
+    // - If Clock: 0.16 -> 0.42
+    // - If Violin or Torch (No Remote): 0.16 -> 0.70 (extended full animation pattern like clock + remote)
     // ------------------------------------------------------------------------
-    else if (progress <= 0.42) {
+    // ------------------------------------------------------------------------
+    // STAGE 2: Active Project ALONE in center
+    // - If Clock: 0.16 -> 0.42 (then proceeds to Remote & Retro TV)
+    // - If Violin or Torch: 0.16 -> 0.98 (NO TV, NO Remote, stays in white canvas)
+    // ------------------------------------------------------------------------
+    else if (state.activeProject !== 'clock' || progress <= 0.42) {
       // Text: Hidden
       heroTextContainer.style.opacity = '0';
       heroTextContainer.style.visibility = 'hidden';
       heroTextContainer.style.pointerEvents = 'none';
 
-      // Clock: Only It in Center!
-      let clockOpacity = 1;
-      let clockScale = 1.0;
-
-      if (progress < 0.24) {
-        const pIn = (progress - 0.16) / 0.08;
-        const easeIn = pIn * pIn * (3 - 2 * pIn);
-        clockOpacity = easeIn;
-        clockScale = 0.75 + (0.25 * easeIn);
-      } else if (progress > 0.35) {
-        const pOut = (progress - 0.35) / 0.07;
-        const easeOut = pOut * pOut * (3 - 2 * pOut);
-        clockOpacity = 1 - easeOut;
-        clockScale = 1.0 - (0.25 * easeOut);
-      }
-
-      clockOverlayLayer.style.visibility = clockOpacity > 0.01 ? 'visible' : 'hidden';
-      clockOverlayLayer.style.opacity = clockOpacity.toFixed(3);
-      clockOverlayLayer.style.transform = `translate(-50%, -50%) scale(${clockScale.toFixed(3)})`;
-      clockOverlayLayer.style.pointerEvents = clockOpacity > 0.5 ? 'auto' : 'none';
-
-      // Remote: Hidden
+      // Remote: Hidden (Only clock uses remote)
       remoteOverlayLayer.style.opacity = '0';
       remoteOverlayLayer.style.visibility = 'hidden';
       remoteOverlayLayer.style.pointerEvents = 'none';
       remoteOverlayLayer.style.transform = 'translate(-50%, calc(-50% + 180px)) scale(0.65)';
       remoteOverlayLayer.classList.remove('active-interact');
 
-      // TV: Hidden
+      // TV: Strictly Hidden for Violin & Torch (and before clock remote)
       tvOverlayLayer.style.opacity = '0';
       tvOverlayLayer.style.visibility = 'hidden';
       tvOverlayLayer.style.pointerEvents = 'none';
       tvOverlayLayer.style.transform = 'translate(-50%, calc(-50% + 220px)) scale(0.68)';
       tvOverlayLayer.classList.remove('active-interact');
+
+      // Calculate smooth in/out opacity and scale for Stage 2
+      let stage2Opacity = 1;
+      let stage2Scale = 1.0;
+      let stage2Progress = 0;
+
+      if (state.activeProject === 'clock') {
+        // Clock timing (0.16 -> 0.42)
+        if (progress < 0.24) {
+          const pIn = (progress - 0.16) / 0.08;
+          const easeIn = pIn * pIn * (3 - 2 * pIn);
+          stage2Opacity = easeIn;
+          stage2Scale = 0.75 + (0.25 * easeIn);
+        } else if (progress > 0.35) {
+          const pOut = (progress - 0.35) / 0.07;
+          const easeOut = pOut * pOut * (3 - 2 * pOut);
+          stage2Opacity = 1 - easeOut;
+          stage2Scale = 1.0 - (0.25 * easeOut);
+        }
+        stage2Progress = Math.min(Math.max((progress - 0.16) / 0.26, 0), 1);
+      } else {
+        // Violin & Torch: Full scroll experience on clean white background (0.16 -> 0.98, zero TV)
+        if (progress < 0.24) {
+          const pIn = (progress - 0.16) / 0.08;
+          const easeIn = pIn * pIn * (3 - 2 * pIn);
+          stage2Opacity = easeIn;
+          stage2Scale = 0.8 + (0.2 * easeIn);
+        } else if (progress > 0.88) {
+          const pOut = (progress - 0.88) / 0.10;
+          const easeOut = pOut * pOut * (3 - 2 * pOut);
+          stage2Opacity = 1 - easeOut;
+          stage2Scale = 1.0 - (0.15 * easeOut);
+        }
+        // Sub-progress scales over the entire comfortable scroll path
+        stage2Progress = Math.min(Math.max((progress - 0.16) / 0.72, 0), 1);
+      }
+
+      // Render the active project stage
+      renderActiveStage2(state.activeProject, stage2Opacity, stage2Scale, stage2Progress);
     }
     // ------------------------------------------------------------------------
-    // STAGE 3: Physical Remote alone in center (0.42 to 0.70)
+    // STAGE 3: Physical Remote (ONLY for Clock project, 0.42 to 0.70)
     // ------------------------------------------------------------------------
-    else if (progress <= 0.70) {
+    else if (state.activeProject === 'clock' && progress <= 0.70) {
       // Text: Hidden
       heroTextContainer.style.opacity = '0';
       heroTextContainer.style.visibility = 'hidden';
       heroTextContainer.style.pointerEvents = 'none';
 
-      // Clock: Hidden
-      clockOverlayLayer.style.opacity = '0';
-      clockOverlayLayer.style.visibility = 'hidden';
-      clockOverlayLayer.style.pointerEvents = 'none';
-      clockOverlayLayer.style.transform = 'translate(-50%, -50%) scale(0.75)';
+      // Stage 2: Hidden
+      hideAllStage2Layers();
 
       // Remote: Only It in Center!
       let remoteOpacity = 1;
@@ -720,19 +998,16 @@
       tvOverlayLayer.classList.remove('active-interact');
     }
     // ------------------------------------------------------------------------
-    // STAGE 4: Scrapped / Broken TV alone in center (0.70 to 1.00)
+    // STAGE 4: Retro TV choice selector (ONLY for Clock project, 0.70 to 1.00)
     // ------------------------------------------------------------------------
-    else {
+    else if (state.activeProject === 'clock') {
       // Text: Hidden
       heroTextContainer.style.opacity = '0';
       heroTextContainer.style.visibility = 'hidden';
       heroTextContainer.style.pointerEvents = 'none';
 
-      // Clock: Hidden
-      clockOverlayLayer.style.opacity = '0';
-      clockOverlayLayer.style.visibility = 'hidden';
-      clockOverlayLayer.style.pointerEvents = 'none';
-      clockOverlayLayer.style.transform = 'translate(-50%, -50%) scale(0.75)';
+      // Stage 2: Hidden
+      hideAllStage2Layers();
 
       // Remote: Hidden
       remoteOverlayLayer.style.opacity = '0';
@@ -764,6 +1039,15 @@
       } else {
         tvOverlayLayer.classList.remove('active-interact');
       }
+    } else {
+      // Catch-all safety for Violin / Torch past 0.98
+      hideAllStage2Layers();
+      tvOverlayLayer.style.opacity = '0';
+      tvOverlayLayer.style.visibility = 'hidden';
+      tvOverlayLayer.style.pointerEvents = 'none';
+      remoteOverlayLayer.style.opacity = '0';
+      remoteOverlayLayer.style.visibility = 'hidden';
+      remoteOverlayLayer.style.pointerEvents = 'none';
     }
   }
 
@@ -1374,6 +1658,87 @@
     remoteVoiceBtn.addEventListener('click', startVoiceAccess);
   }
 
+  // ==========================================================================
+  // Parallel Trio Switcher in Stage 1 Starting Animation
+  // ==========================================================================
+  const tabClockBtn = document.getElementById('tabClockBtn');
+  const tabViolinBtn = document.getElementById('tabViolinBtn');
+  const tabTorchBtn = document.getElementById('tabTorchBtn');
+  const panelClock = document.getElementById('panelClock');
+  const panelViolin = document.getElementById('panelViolin');
+  const panelTorch = document.getElementById('panelTorch');
+
+  const tabButtons = [tabClockBtn, tabViolinBtn, tabTorchBtn].filter(Boolean);
+  const panelElements = {
+    clock: panelClock,
+    violin: panelViolin,
+    torch: panelTorch
+  };
+
+  let heroTrioIndex = 0;
+  const heroTrioKeys = ['clock', 'violin', 'torch'];
+  let heroTrioTimer = null;
+  let userInteractedWithTabs = false;
+
+  function switchHeroParallelTab(targetKey, isManual = false) {
+    if (isManual) {
+      userInteractedWithTabs = true;
+      if (heroTrioTimer) clearInterval(heroTrioTimer);
+    }
+
+    state.activeProject = targetKey;
+
+    tabButtons.forEach(btn => {
+      const isTarget = btn.getAttribute('data-target') === targetKey;
+      btn.classList.toggle('active', isTarget);
+      btn.setAttribute('aria-selected', isTarget ? 'true' : 'false');
+    });
+
+    Object.keys(panelElements).forEach(k => {
+      const panel = panelElements[k];
+      if (panel) {
+        if (k === targetKey) {
+          panel.classList.add('active');
+        } else {
+          panel.classList.remove('active');
+        }
+      }
+    });
+
+    if (scrollCta) {
+      const ctaLabels = {
+        clock: 'scroll to clock',
+        violin: 'scroll to violin',
+        torch: 'scroll to rgb light'
+      };
+      const labelSpan = scrollCta.querySelector('span');
+      if (labelSpan) {
+        labelSpan.textContent = ctaLabels[targetKey] || 'scroll down';
+      }
+    }
+
+    heroTrioIndex = heroTrioKeys.indexOf(targetKey);
+    onScroll(); // Re-render Stage 2 immediately if scrolled down
+  }
+
+  tabButtons.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const target = btn.getAttribute('data-target');
+      playRemoteClickSound();
+      switchHeroParallelTab(target, true);
+    });
+  });
+
+  // Soft auto-cycle tabs every 6 seconds if user hasn't manually selected one and is at the top of the page
+  heroTrioTimer = setInterval(() => {
+    if (userInteractedWithTabs) return;
+    const scrollPos = window.scrollY || window.pageYOffset;
+    if (scrollPos < 100) {
+      heroTrioIndex = (heroTrioIndex + 1) % heroTrioKeys.length;
+      switchHeroParallelTab(heroTrioKeys[heroTrioIndex], false);
+    }
+  }, 6000);
+
   // Keyboard Navigation: Up/Down arrow keys change channel, Space or Enter speaks
   window.addEventListener('keydown', (e) => {
     if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
@@ -1393,6 +1758,107 @@
       startVoiceAccess();
     } else if (e.key === 'Escape') {
       closeVoiceBanner();
+    }
+  });
+
+  // ==========================================================================
+  // Dynamic Project Links Renderer (Reads from localStorage scraphack_custom_links)
+  // ==========================================================================
+  const LINKS_STORAGE_KEY = 'scraphack_custom_links';
+  const DEFAULT_PROJECT_LINKS = [
+    {
+      id: 'default-clock-repo',
+      title: 'Clock GitHub Repository',
+      url: 'https://github.com/nvaneed/scrap_hackthon',
+      category: 'clock',
+      description: 'samayam ethrayai: firmware and web socket control for the quartz clock.'
+    },
+    {
+      id: 'default-violin-repo',
+      title: 'Absolute Violin Repository',
+      url: 'https://github.com/Lunarmist-byte/absoluteviolin',
+      category: 'violin',
+      description: 'Salvaged rack and pinion gear paired with a rotary potentiometer.'
+    },
+    {
+      id: 'default-torch-repo',
+      title: 'Absolute Torch Firmware',
+      url: 'https://github.com/christy-basil-anil/absolute-torch/blob/main/absolute_torch.ino',
+      category: 'torch',
+      description: 'ESP32 captive portal and rainbow RGB lighting code.'
+    },
+    {
+      id: 'default-tinkerhub',
+      title: 'TinkerHub Foundation',
+      url: 'https://tinkerhub.org',
+      category: 'general',
+      description: 'Official TinkerHub website and maker community.'
+    }
+  ];
+
+  function renderProjectLinks() {
+    const grid = document.getElementById('projectLinksGrid');
+    if (!grid) return;
+
+    let links = DEFAULT_PROJECT_LINKS;
+    try {
+      const raw = localStorage.getItem(LINKS_STORAGE_KEY);
+      if (raw) {
+        links = JSON.parse(raw);
+      } else {
+        localStorage.setItem(LINKS_STORAGE_KEY, JSON.stringify(DEFAULT_PROJECT_LINKS));
+      }
+    } catch (e) {
+      links = DEFAULT_PROJECT_LINKS;
+    }
+
+    if (!links || links.length === 0) {
+      grid.innerHTML = '<div class="no-links-msg">No links added yet.</div>';
+      return;
+    }
+
+    grid.innerHTML = links.map(link => {
+      const cat = (link.category || 'general').toLowerCase();
+      let badgeLabel = 'PROJECT';
+      if (cat === 'clock') badgeLabel = 'CLOCK';
+      else if (cat === 'violin') badgeLabel = 'VIOLIN';
+      else if (cat === 'torch') badgeLabel = 'RGB TORCH';
+      else badgeLabel = 'GENERAL';
+
+      return `
+        <a href="${escapeHtmlStr(link.url)}" target="_blank" rel="noopener noreferrer" class="link-card link-cat-${cat}">
+          <div class="link-card-header">
+            <span class="link-badge badge-${cat}">${badgeLabel}</span>
+            <span class="link-external-icon">
+              <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+            </span>
+          </div>
+          <h3 class="link-card-title">${escapeHtmlStr(link.title)}</h3>
+          ${link.description ? `<p class="link-card-desc">${escapeHtmlStr(link.description)}</p>` : ''}
+          <div class="link-card-url">${escapeHtmlStr(link.url.replace(/^https?:\/\//, ''))}</div>
+        </a>
+      `;
+    }).join('');
+  }
+
+  function escapeHtmlStr(str) {
+    if (!str) return '';
+    return str.replace(/[&<>"']/g, (m) => ({
+      '&': '&amp;',
+      '<': '&lt;',
+      '>': '&gt;',
+      '"': '&quot;',
+      "'": '&#39;'
+    }[m]));
+  }
+
+  // Render on load
+  renderProjectLinks();
+
+  // Listen to storage changes in case admin updates links in another tab
+  window.addEventListener('storage', (e) => {
+    if (e.key === LINKS_STORAGE_KEY) {
+      renderProjectLinks();
     }
   });
 

@@ -71,38 +71,39 @@
     // Get all photos sorted by createdAt (newest first or chronological)
     async getAllPhotos() {
       const db = await initDB();
-      let rawList = [];
-
-      if (!db) {
-        rawList = getLocalStoragePhotos();
-      } else {
-        rawList = await new Promise((resolve) => {
+      let dbPhotos = [];
+      if (db) {
+        dbPhotos = await new Promise((resolve) => {
           try {
             const tx = db.transaction(STORE_NAME, 'readonly');
             const store = tx.objectStore(STORE_NAME);
             const req = store.getAll();
             req.onsuccess = () => resolve(req.result || []);
-            req.onerror = () => resolve(getLocalStoragePhotos());
+            req.onerror = () => resolve([]);
           } catch (e) {
-            resolve(getLocalStoragePhotos());
+            resolve([]);
           }
         });
       }
 
-      // Identify dummy/placeholder or unwanted photos:
-      // - The sunset heart photo ("Snapped Clock Hand Superglue Fix" / "Resurrected clock hand")
-      // - Scene 1 photo ("also remove the pic from scene 1")
-      // - Global showcase photos with sceneId === 'all' ("remove the global showcase")
+      const localPhotos = getLocalStoragePhotos();
+
+      // Merge both sources deduplicating by ID
+      const photoMap = new Map();
+      dbPhotos.forEach(p => { if (p && p.id) photoMap.set(p.id, p); });
+      localPhotos.forEach(p => { if (p && p.id && !photoMap.has(p.id)) photoMap.set(p.id, p); });
+
+      const combinedList = Array.from(photoMap.values());
+
+      // Only purge unwanted dummy sunset placeholder if it exists
       const toDelete = [];
       const cleanList = [];
 
-      for (const p of rawList) {
+      for (const p of combinedList) {
         const isSunsetPlaceholder = (p.title && p.title.toLowerCase().includes('superglue')) || 
                                    (p.caption && p.caption.toLowerCase().includes('resurrected clock hand'));
-        const isScene1 = (p.sceneId === 'scene-1');
-        const isGlobalAll = (p.sceneId === 'all');
 
-        if (isSunsetPlaceholder || isScene1 || isGlobalAll) {
+        if (isSunsetPlaceholder) {
           toDelete.push(p.id);
         } else {
           cleanList.push(p);
@@ -125,7 +126,7 @@
         } catch (e) {}
       }
 
-      cleanList.sort((a, b) => a.createdAt - b.createdAt);
+      cleanList.sort((a, b) => (a.createdAt || 0) - (b.createdAt || 0));
       return cleanList;
     },
 

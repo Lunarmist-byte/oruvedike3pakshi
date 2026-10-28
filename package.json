@@ -1,0 +1,17 @@
+{
+  "name": "samayamethrayi",
+  "version": "1.0.0",
+  "description": "ഒരു വെടിക്ക് മൂന്ന് പക്ഷി — TinkerHub Scraphack 2026 Trilogy",
+  "scripts": {
+    "start": "npx -y serve . -l 3000",
+    "dev": "npx -y serve . -l 3000"
+  },
+  "keywords": [
+    "scraphack",
+    "tinkerhub",
+    "arduino",
+    "hardware"
+  ],
+  "author": "",
+  "license": "ISC"
+}

@@ -440,73 +440,12 @@
             <div class="scene-body">
               ${contentHtml}
             </div>
-            
-            ${isFinalScene ? `
-              <!-- Final Scene Photo Carousel (for Final Scene) -->
-              <div class="final-scene-carousel-box" id="finalSceneCarouselBox" data-scene-id="${sceneKey}" style="display: none;">
-                <div class="final-carousel-head">
-                  <div class="final-carousel-badge-wrap">
-                    <span class="final-carousel-badge">PHOTO CAROUSEL</span>
-                    <span class="final-carousel-subbadge">Scene 10 · The Miracle Fix</span>
-                  </div>
-                  <div class="final-carousel-counter-pill" id="finalCarouselCounter" style="display: none;">
-                    <span id="finalSlideCurrent">1</span> / <span id="finalSlideTotal">1</span>
-                  </div>
-                </div>
 
-                <div class="final-carousel-viewport" id="finalCarouselViewport">
-                  <div class="final-carousel-track" id="finalCarouselTrack"></div>
-
-                  <button class="final-carousel-btn prev" id="finalPrevBtn" type="button" aria-label="Previous Photo" style="display: none;">
-                    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
-                  </button>
-                  <button class="final-carousel-btn next" id="finalNextBtn" type="button" aria-label="Next Photo" style="display: none;">
-                    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
-                  </button>
-
-                  <div class="final-carousel-caption" id="finalCarouselCaption" style="display: none;">
-                    <span id="finalCarouselCaptionText"></span>
-                  </div>
-                </div>
-
-                <div class="final-carousel-thumbs" id="finalCarouselThumbs" style="display: none;"></div>
-              </div>
-            ` : `
-              <!-- Standardized Image Dev for Scene with src that can be added -->
-              <div class="scene-image-dev" id="scene-image-dev-${idx + 1}" data-scene-id="${sceneKey}" style="${scene.image ? '' : 'display: none;'}">
-                <div class="scene-image-viewport" id="scene-img-viewport-${idx + 1}">
-                  <img 
-                    class="scene-image" 
-                    id="scene-img-${idx + 1}" 
-                    src="${scene.image || ''}" 
-                    alt="${scene.title}" 
-                    loading="lazy" 
-                    style="${scene.image ? '' : 'display: none;'}" 
-                  />
-                  <div class="scene-caption-overlay" id="scene-caption-${idx + 1}" style="${scene.image && scene.imageCaption ? '' : 'display: none;'}">
-                    <span class="scene-caption-text">${scene.imageCaption || ''}</span>
-                  </div>
-                </div>
-              </div>
-            `}
+            <!-- Unified Scene Media Zone (Photos & Carousels beneath scene) -->
+            <div class="scene-media-zone" id="scene-media-zone-${idx + 1}" data-scene-id="${sceneKey}" style="display: none;"></div>
           </article>
         `;
       }).join('');
-
-      // Attach click-to-zoom listeners on scene images
-      data.scenes.forEach((scene, idx) => {
-        const img = document.getElementById(`scene-img-${idx + 1}`);
-        if (img) {
-          img.addEventListener('click', () => {
-            if (img.src && img.src !== window.location.href && !img.src.endsWith('/')) {
-              openLightbox({
-                dataUrl: img.src,
-                caption: scene.imageCaption || scene.title || `Scene ${idx + 1}`
-              });
-            }
-          });
-        }
-      });
     }
 
     // Render crew
@@ -680,218 +619,276 @@
   }
 
   // ==========================================================================
-  // Standardized Photo Gallery & Carousel Engine
+  // Standardized Scene Media & Photo Gallery Engine
   // ==========================================================================
   let activePhotos = [];
-  let currentSlideIndex = 0;
+  const sceneCarouselsState = {};
+
+  function escapeHtml(str) {
+    if (!str) return '';
+    return String(str).replace(/[&<>"']/g, (m) => ({
+      '&': '&amp;',
+      '<': '&lt;',
+      '>': '&gt;',
+      '"': '&quot;',
+      "'": '&#39;'
+    }[m]));
+  }
 
   async function initPhotoGallery() {
     if (!window.PhotoStore) return;
     try {
-      // User explicitly requested: "also remove the pic from scene 1"
-      if (typeof PhotoStore.deletePhotosByScene === 'function') {
-        await PhotoStore.deletePhotosByScene('scene-1');
-      }
       activePhotos = await PhotoStore.getAllPhotos();
-      renderSceneCarousels(activePhotos);
-      initFinalSceneCarousel(activePhotos);
+      renderSceneMedia(activePhotos);
     } catch (e) {
       console.warn('Error loading photos from PhotoStore:', e);
     }
   }
 
-  // Render Scene-Specific Images from PhotoStore (Admin Uploads)
-  function renderSceneCarousels(photos) {
-    if (!photos) return;
-    for (let i = 1; i <= 10; i++) {
+  // Render photos beneath every scene (Single Card or Full Carousel)
+  function renderSceneMedia(storedPhotos) {
+    const data = STORY_DATA[currentLang];
+    if (!data || !data.scenes) return;
+
+    for (let i = 1; i <= data.scenes.length; i++) {
+      const idx = i - 1;
+      const scene = data.scenes[idx];
       const sceneKey = `scene-${i}`;
-      const imgDev = document.getElementById(`scene-image-dev-${i}`);
-      const imgEl = document.getElementById(`scene-img-${i}`);
-      const captionOverlay = document.getElementById(`scene-caption-${i}`);
+      const zone = document.getElementById(`scene-media-zone-${i}`);
+      if (!zone) continue;
 
-      if (!imgEl || !imgDev) continue;
+      // Collect all photos for this scene
+      const scenePhotos = [];
 
-      // User requested to remove pic from scene 1
-      if (i === 1) {
-        imgDev.style.display = 'none';
+      // 1. Predefined in STORY_DATA
+      if (scene.image && scene.image.trim()) {
+        scenePhotos.push({
+          id: `static_img_${i}`,
+          dataUrl: scene.image.trim(),
+          title: scene.title || '',
+          caption: scene.imageCaption || scene.title || ''
+        });
+      }
+      if (Array.isArray(scene.carouselImages)) {
+        scene.carouselImages.forEach((item, cIdx) => {
+          if (typeof item === 'string' && item.trim()) {
+            scenePhotos.push({
+              id: `static_carousel_${i}_${cIdx}`,
+              dataUrl: item.trim(),
+              title: '',
+              caption: `Scene ${i} Photo ${cIdx + 1}`
+            });
+          } else if (item && (item.src || item.dataUrl)) {
+            scenePhotos.push({
+              id: `static_carousel_${i}_${cIdx}`,
+              dataUrl: item.src || item.dataUrl,
+              title: item.title || '',
+              caption: item.caption || `Scene ${i} Photo ${cIdx + 1}`
+            });
+          }
+        });
+      }
+
+      // 2. Photos uploaded via PhotoStore targeting this scene
+      if (Array.isArray(storedPhotos)) {
+        const matchingUploads = storedPhotos.filter(p => p.sceneId === sceneKey);
+        matchingUploads.forEach(p => {
+          scenePhotos.push({
+            id: p.id,
+            dataUrl: p.dataUrl,
+            title: p.title || '',
+            caption: p.caption || p.title || `Scene ${i} Photo`
+          });
+        });
+      }
+
+      // If no photos for this scene, keep zone empty and hidden
+      if (scenePhotos.length === 0) {
+        zone.style.display = 'none';
+        zone.innerHTML = '';
         continue;
       }
 
-      const scenePhotos = photos.filter(p => p.sceneId === sceneKey);
-      if (scenePhotos.length > 0) {
-        const photo = scenePhotos[0];
-        imgEl.src = photo.dataUrl;
-        imgEl.style.display = 'block';
-        imgDev.style.display = 'block';
+      zone.style.display = 'block';
 
-        if (captionOverlay) {
-          const capText = captionOverlay.querySelector('.scene-caption-text');
-          if (capText && (photo.caption || photo.title)) {
-            capText.textContent = photo.caption || photo.title || '';
-            captionOverlay.style.display = 'block';
-          } else {
-            captionOverlay.style.display = 'none';
-          }
+      // SINGLE PHOTO: Render clean featured photo card
+      if (scenePhotos.length === 1) {
+        const photo = scenePhotos[0];
+        zone.innerHTML = `
+          <div class="scene-single-photo-card" data-scene-id="${sceneKey}">
+            <div class="scene-photo-viewport" tabindex="0" role="button" aria-label="View photo in full size">
+              <img class="scene-photo-img" src="${photo.dataUrl}" alt="${escapeHtml(photo.title || photo.caption || scene.title)}" loading="lazy" />
+              <div class="scene-photo-badge-row">
+                <span class="scene-photo-pill">${scene.badge}</span>
+              </div>
+              ${(photo.caption || photo.title) ? `
+                <div class="scene-photo-caption-overlay">
+                  ${photo.title ? `<strong class="scene-photo-caption-title">${escapeHtml(photo.title)}</strong>` : ''}
+                  <span class="scene-photo-caption-text">${escapeHtml(photo.caption || photo.title)}</span>
+                </div>
+              ` : ''}
+              <div class="scene-photo-zoom-hint" title="Click to view full size">
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line><line x1="11" y1="8" x2="11" y2="14"></line><line x1="8" y1="11" x2="14" y2="11"></line></svg>
+              </div>
+            </div>
+          </div>
+        `;
+
+        const vp = zone.querySelector('.scene-photo-viewport');
+        if (vp) {
+          vp.addEventListener('click', () => openLightbox(photo));
+          vp.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+              e.preventDefault();
+              openLightbox(photo);
+            }
+          });
+        }
+      } else {
+        // MULTIPLE PHOTOS: Render responsive interactive carousel
+        sceneCarouselsState[i] = {
+          photos: scenePhotos,
+          currentIndex: 0
+        };
+
+        zone.innerHTML = `
+          <div class="scene-carousel-card" id="scene-carousel-${i}" data-scene-id="${sceneKey}">
+            <div class="scene-carousel-header">
+              <div class="carousel-badge-group">
+                <span class="scene-carousel-badge">PHOTO GALLERY</span>
+                <span class="scene-carousel-scene-label">${scene.badge}</span>
+              </div>
+              <div class="scene-carousel-counter" id="carousel-counter-${i}">
+                <span class="current-slide">1</span> / <span class="total-slides">${scenePhotos.length}</span>
+              </div>
+            </div>
+
+            <div class="scene-carousel-viewport" id="carousel-viewport-${i}">
+              <div class="scene-carousel-track" id="carousel-track-${i}">
+                ${scenePhotos.map((p, pIdx) => `
+                  <div class="scene-carousel-slide ${pIdx === 0 ? 'active' : ''}" data-slide-index="${pIdx}">
+                    <img src="${p.dataUrl}" alt="${escapeHtml(p.title || p.caption || `Scene ${i} Photo ${pIdx + 1}`)}" loading="lazy" />
+                    <div class="scene-photo-zoom-hint" title="Click to view full size">
+                      <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line><line x1="11" y1="8" x2="11" y2="14"></line><line x1="8" y1="11" x2="14" y2="11"></line></svg>
+                    </div>
+                  </div>
+                `).join('')}
+              </div>
+
+              <button class="scene-carousel-nav-btn prev" type="button" aria-label="Previous photo" data-carousel-prev="${i}">
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+              </button>
+              <button class="scene-carousel-nav-btn next" type="button" aria-label="Next photo" data-carousel-next="${i}">
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+              </button>
+
+              <div class="scene-carousel-caption" id="carousel-caption-${i}">
+                <span class="caption-text">${escapeHtml(scenePhotos[0].caption || scenePhotos[0].title || '')}</span>
+              </div>
+            </div>
+
+            <div class="scene-carousel-thumbs" id="carousel-thumbs-${i}">
+              ${scenePhotos.map((p, pIdx) => `
+                <button type="button" class="scene-carousel-thumb ${pIdx === 0 ? 'active' : ''}" data-thumb-scene="${i}" data-thumb-index="${pIdx}" aria-label="Go to photo ${pIdx + 1}">
+                  <img src="${p.dataUrl}" alt="Thumbnail ${pIdx + 1}" loading="lazy" />
+                </button>
+              `).join('')}
+            </div>
+          </div>
+        `;
+
+        // Attach listeners for carousel controls
+        const prevBtn = zone.querySelector(`[data-carousel-prev="${i}"]`);
+        const nextBtn = zone.querySelector(`[data-carousel-next="${i}"]`);
+
+        if (prevBtn) {
+          prevBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            playUiClick();
+            stepSceneCarousel(i, -1);
+          });
         }
 
-        imgEl.onclick = () => openLightbox(photo);
+        if (nextBtn) {
+          nextBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            playUiClick();
+            stepSceneCarousel(i, 1);
+          });
+        }
+
+        // Thumbnail buttons
+        const thumbBtns = zone.querySelectorAll(`[data-thumb-scene="${i}"]`);
+        thumbBtns.forEach(btn => {
+          btn.addEventListener('click', () => {
+            const targetIdx = parseInt(btn.getAttribute('data-thumb-index'), 10);
+            playUiClick();
+            goToSceneSlide(i, targetIdx);
+          });
+        });
+
+        // Click on slide image to zoom in lightbox
+        const slideImgs = zone.querySelectorAll('.scene-carousel-slide img');
+        slideImgs.forEach((img, sIdx) => {
+          img.addEventListener('click', () => {
+            openLightbox(scenePhotos[sIdx]);
+          });
+        });
       }
     }
   }
 
-  // ==========================================================================
-  // Final Scene Photo Carousel Engine (Scene 10)
-  // ==========================================================================
-  let finalScenePhotos = [];
-  let currentFinalSlideIndex = 0;
-
-  function initFinalSceneCarousel(storedPhotos) {
-    const finalBox = document.getElementById('finalSceneCarouselBox');
-    const track = document.getElementById('finalCarouselTrack');
-    const counterPill = document.getElementById('finalCarouselCounter');
-    const prevBtn = document.getElementById('finalPrevBtn');
-    const nextBtn = document.getElementById('finalNextBtn');
-    const thumbsRow = document.getElementById('finalCarouselThumbs');
-    const captionBar = document.getElementById('finalCarouselCaption');
-
-    if (!track) return;
-
-    finalScenePhotos = [];
-
-    // 1. Photos from STORY_DATA for Scene 10
-    const finalSceneData = STORY_DATA[currentLang].scenes[9];
-    if (finalSceneData) {
-      if (finalSceneData.carouselImages && Array.isArray(finalSceneData.carouselImages)) {
-        finalSceneData.carouselImages.forEach((imgItem, idx) => {
-          if (typeof imgItem === 'string' && imgItem.trim()) {
-            finalScenePhotos.push({
-              dataUrl: imgItem,
-              caption: `Scene 10 Photo ${idx + 1}`
-            });
-          } else if (imgItem && (imgItem.src || imgItem.dataUrl)) {
-            finalScenePhotos.push({
-              dataUrl: imgItem.src || imgItem.dataUrl,
-              caption: imgItem.caption || `Scene 10 Photo ${idx + 1}`
-            });
-          }
-        });
-      }
-      if (finalSceneData.image && finalSceneData.image.trim()) {
-        finalScenePhotos.unshift({
-          dataUrl: finalSceneData.image,
-          caption: finalSceneData.imageCaption || finalSceneData.title
-        });
-      }
-    }
-
-    // 2. Photos from PhotoStore targeting scene-10
-    if (storedPhotos && Array.isArray(storedPhotos)) {
-      const scene10Uploaded = storedPhotos.filter(p => p.sceneId === 'scene-10');
-      scene10Uploaded.forEach(p => {
-        finalScenePhotos.push(p);
-      });
-    }
-
-    if (finalScenePhotos.length === 0) {
-      if (finalBox) finalBox.style.display = 'none';
-      track.innerHTML = '';
-      if (counterPill) counterPill.style.display = 'none';
-      if (prevBtn) prevBtn.style.display = 'none';
-      if (nextBtn) nextBtn.style.display = 'none';
-      if (thumbsRow) thumbsRow.style.display = 'none';
-      if (captionBar) captionBar.style.display = 'none';
-      return;
-    }
-
-    if (finalBox) finalBox.style.display = 'block';
-    if (counterPill) counterPill.style.display = 'inline-flex';
-    if (prevBtn) prevBtn.style.display = finalScenePhotos.length > 1 ? 'flex' : 'none';
-    if (nextBtn) nextBtn.style.display = finalScenePhotos.length > 1 ? 'flex' : 'none';
-    if (thumbsRow) thumbsRow.style.display = finalScenePhotos.length > 1 ? 'flex' : 'none';
-    if (captionBar) captionBar.style.display = 'flex';
-
-    // Render slides with standardized 16:9 images
-    track.innerHTML = finalScenePhotos.map((photo, i) => `
-      <div class="final-carousel-slide ${i === 0 ? 'active' : ''}" data-final-slide="${i}">
-        <img src="${photo.dataUrl}" alt="${photo.caption || 'Scene 10 Photo'}" loading="lazy" />
-      </div>
-    `).join('');
-
-    // Render thumbnails
-    if (thumbsRow && finalScenePhotos.length > 1) {
-      thumbsRow.innerHTML = finalScenePhotos.map((photo, i) => `
-        <button type="button" class="final-carousel-thumb ${i === 0 ? 'active' : ''}" data-final-thumb="${i}" aria-label="Go to photo ${i + 1}">
-          <img src="${photo.dataUrl}" alt="Thumbnail ${i + 1}" loading="lazy" />
-        </button>
-      `).join('');
-
-      thumbsRow.querySelectorAll('[data-final-thumb]').forEach(btn => {
-        btn.addEventListener('click', () => {
-          const idx = parseInt(btn.getAttribute('data-final-thumb'), 10);
-          goToFinalSlide(idx);
-        });
-      });
-    }
-
-    // Attach click listener to zoom lightbox
-    track.querySelectorAll('.final-carousel-slide img').forEach((img, i) => {
-      img.addEventListener('click', () => {
-        openLightbox(finalScenePhotos[i]);
-      });
-    });
-
-    goToFinalSlide(0);
-
-    if (prevBtn) {
-      prevBtn.onclick = () => {
-        playUiClick();
-        goToFinalSlide(currentFinalSlideIndex - 1);
-      };
-    }
-    if (nextBtn) {
-      nextBtn.onclick = () => {
-        playUiClick();
-        goToFinalSlide(currentFinalSlideIndex + 1);
-      };
-    }
+  function stepSceneCarousel(sceneNum, direction) {
+    const st = sceneCarouselsState[sceneNum];
+    if (!st || !st.photos || st.photos.length <= 1) return;
+    let nextIdx = st.currentIndex + direction;
+    if (nextIdx < 0) nextIdx = st.photos.length - 1;
+    if (nextIdx >= st.photos.length) nextIdx = 0;
+    goToSceneSlide(sceneNum, nextIdx);
   }
 
-  function goToFinalSlide(index) {
-    if (!finalScenePhotos || finalScenePhotos.length === 0) return;
-    if (index < 0) index = finalScenePhotos.length - 1;
-    if (index >= finalScenePhotos.length) index = 0;
-    currentFinalSlideIndex = index;
+  function goToSceneSlide(sceneNum, slideIdx) {
+    const st = sceneCarouselsState[sceneNum];
+    if (!st || !st.photos || st.photos.length <= 1) return;
+    if (slideIdx < 0) slideIdx = st.photos.length - 1;
+    if (slideIdx >= st.photos.length) slideIdx = 0;
+    st.currentIndex = slideIdx;
 
-    const track = document.getElementById('finalCarouselTrack');
-    const currentEl = document.getElementById('finalSlideCurrent');
-    const totalEl = document.getElementById('finalSlideTotal');
-    const captionText = document.getElementById('finalCarouselCaptionText');
-    const thumbsRow = document.getElementById('finalCarouselThumbs');
+    const track = document.getElementById(`carousel-track-${sceneNum}`);
+    const counter = document.getElementById(`carousel-counter-${sceneNum}`);
+    const captionEl = document.getElementById(`carousel-caption-${sceneNum}`);
+    const thumbsRow = document.getElementById(`carousel-thumbs-${sceneNum}`);
 
     if (track) {
-      const slides = track.querySelectorAll('.final-carousel-slide');
+      const slides = track.querySelectorAll('.scene-carousel-slide');
       slides.forEach((s, idx) => {
-        s.classList.toggle('active', idx === currentFinalSlideIndex);
+        s.classList.toggle('active', idx === slideIdx);
       });
+    }
+
+    if (counter) {
+      const curEl = counter.querySelector('.current-slide');
+      if (curEl) curEl.textContent = slideIdx + 1;
+    }
+
+    if (captionEl) {
+      const capSpan = captionEl.querySelector('.caption-text');
+      const photo = st.photos[slideIdx];
+      if (capSpan && photo) {
+        capSpan.textContent = photo.caption || photo.title || '';
+        captionEl.style.display = (photo.caption || photo.title) ? 'flex' : 'none';
+      }
     }
 
     if (thumbsRow) {
-      const thumbs = thumbsRow.querySelectorAll('.final-carousel-thumb');
+      const thumbs = thumbsRow.querySelectorAll('.scene-carousel-thumb');
       thumbs.forEach((t, idx) => {
-        const isActive = idx === currentFinalSlideIndex;
+        const isActive = (idx === slideIdx);
         t.classList.toggle('active', isActive);
         if (isActive) {
           t.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
         }
       });
-    }
-
-    if (currentEl) currentEl.textContent = currentFinalSlideIndex + 1;
-    if (totalEl) totalEl.textContent = finalScenePhotos.length;
-
-    if (captionText) {
-      const p = finalScenePhotos[currentFinalSlideIndex];
-      captionText.textContent = p.caption || p.title || 'Scene 10 The Miracle Fix Photo';
     }
   }
 
@@ -922,8 +919,6 @@
   window.addEventListener('keydown', (e) => {
     if (photoLightboxModal && photoLightboxModal.style.display !== 'none') {
       if (e.key === 'Escape') closeLightbox();
-      if (e.key === 'ArrowLeft') goToSlide(currentSlideIndex - 1);
-      if (e.key === 'ArrowRight') goToSlide(currentSlideIndex + 1);
     }
   });
 

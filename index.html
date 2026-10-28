@@ -3,27 +3,44 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>samayam ethrayai</title>
-  <meta name="description" content="What time is it? An authentic Kerala quartz wall clock and physical TV remote with world flag buttons, inspired by TinkerHub.">
+  <title>ഒരു വെടിക്ക് മൂന്ന് പക്ഷി</title>
+  <meta name="description" content="ഒരു വെടിക്ക് മൂന്ന് പക്ഷി: 3 Scrap Hardware Builds from TinkerHub Scraphack 2026.">
 
   <!-- Google Fonts: Space Grotesk, Plus Jakarta Sans, Instrument Serif -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700;800&display=swap" rel="stylesheet">
 
-  <link rel="stylesheet" href="style.css?v=20">
+  <link rel="stylesheet" href="style.css?v=23">
 </head>
 <body>
 
   <!-- Minimalist Top Bar -->
   <header class="top-nav" id="topNav">
     <div class="nav-inner">
-      <a href="#" class="brand-logo" id="brandLogo">
-        <span class="logo-text">samayam.</span>
-        <span class="logo-malayalam">സമയം എത്രയായി?</span>
+      <a href="#" class="brand-logo" id="brandLogo" title="ഒരു വെടിക്ക് മൂന്ന് പക്ഷി">
+        <span class="logo-main-title">ഒരു വെടിക്ക് മൂന്ന് പക്ഷി</span>
       </a>
 
       <div class="nav-right">
+        <!-- Vlogs Page Link -->
+        <a href="vlogs.html" class="nav-vlogs-link" id="navVlogsLink" title="Watch Instagram Reels & Vlogs">
+          <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
+          <span>Vlogs</span>
+        </a>
+
+        <!-- Jump to 3 Projects Showcase -->
+        <a href="#trioShowcaseSection" class="nav-trio-link" id="navTrioLink" title="View all 3 Scraphack Projects">
+          <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg>
+          <span>3 Projects</span>
+        </a>
+
+        <!-- Quick Jump to Community Links -->
+        <a href="#linksSection" class="nav-links-link" id="navLinksLink" title="View Links & Repositories">
+          <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+          <span>Links</span>
+        </a>
+
         <div class="live-pill" id="livePill">
           <span id="navLiveTime">--:--:--</span>
         </div>
@@ -37,29 +54,100 @@
     </div>
   </header>
 
-  <!-- UNIFIED SCROLL STORY TRACK: Text -> Clock -> Remote -->
+  <!-- UNIFIED SCROLL STORY TRACK: Text -> Clock -> Remote -> TV -->
   <div class="scroll-story-track" id="scrollStoryTrack">
     <div class="sticky-story-viewport" id="stickyViewport">
       
-      <!-- STAGE 1: "samayam ethrayai" Hero Layer at Beginning -->
+      <!-- STAGE 1: Parallel Trio Hero Animation Layer at Beginning -->
       <div class="hero-text-container" id="heroTextContainer">
-        <h1 class="hero-heading" id="heroHeading">
-          <span class="word-samayam">samayam</span>
-          <span class="word-ethrayai">ethrayai</span>
-        </h1>
-        <div class="hero-malayalam-subtitle" id="heroMalayalam">സമയം എത്രയായി?</div>
         
-        <button class="scroll-cta" id="scrollCta" type="button" aria-label="Scroll down">
-          <span>scroll down</span>
-          <svg class="scroll-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-            <line x1="12" y1="5" x2="12" y2="19"></line>
-            <polyline points="19 12 12 19 5 12"></polyline>
-          </svg>
-        </button>
+        <!-- Main Site Heading: ഒരു വെടിക്ക് മൂന്ന് പക്ഷി -->
+        <h1 class="hero-main-banner-title" id="heroMainBannerTitle">
+          ഒരു വെടിക്ക് മൂന്ന് പക്ഷി
+        </h1>
+        <p class="hero-main-subtext">TinkerHub Scraphack 2026 · 3 Scrap Hardware Builds</p>
+
+        <!-- Parallel Projects Switcher Strip / Badge -->
+        <div class="hero-parallel-tabs" id="heroParallelTabs" role="tablist" aria-label="Scraphack 2026 Trilogy">
+          <button class="parallel-tab-btn active" id="tabClockBtn" data-target="clock" role="tab" aria-selected="true" type="button">
+            <span class="tab-indicator-dot dot-clock"></span>
+            <span class="tab-label">01 · Clock</span>
+            <span class="tab-sub">Side Title</span>
+          </button>
+          <button class="parallel-tab-btn" id="tabViolinBtn" data-target="violin" role="tab" aria-selected="false" type="button">
+            <span class="tab-indicator-dot dot-violin"></span>
+            <span class="tab-label">02 · Violin</span>
+            <span class="tab-sub">Side Title</span>
+          </button>
+          <button class="parallel-tab-btn" id="tabTorchBtn" data-target="torch" role="tab" aria-selected="false" type="button">
+            <span class="tab-indicator-dot dot-torch"></span>
+            <span class="tab-label">03 · RGB Light</span>
+            <span class="tab-sub">Side Title</span>
+          </button>
+        </div>
+
+        <!-- 3 Parallel Dynamic Cards / Panels -->
+        <div class="hero-parallel-panels">
+          
+          <!-- Panel 1: Clock (Side Title) -->
+          <div class="hero-panel-content active" id="panelClock">
+            <div class="panel-eyebrow">BUILD 01 · SIDE TITLE</div>
+            <h2 class="hero-side-heading" id="heroHeading">
+              <span class="side-title-name">Clock</span>
+            </h2>
+            <div class="hero-malayalam-subtitle" id="heroMalayalam">സമയം എത്രയായി?</div>
+            <div class="hero-mini-meta">
+              <span class="meta-tag">Glued Hands</span>
+              <span class="meta-tag">Web API Controlled</span>
+              <span class="meta-tag">36 World Zones</span>
+            </div>
+          </div>
+
+          <!-- Panel 2: Absolute Violin (Side Title) -->
+          <div class="hero-panel-content" id="panelViolin">
+            <div class="panel-eyebrow">BUILD 02 · SIDE TITLE</div>
+            <h2 class="hero-side-heading hero-heading-violin">
+              <span class="side-title-name">Absolute Violin</span>
+            </h2>
+            <div class="hero-malayalam-subtitle">പൊട്ടൻഷ്യോമീറ്റർ വയലിൻ</div>
+            <div class="hero-mini-meta">
+              <span class="meta-tag">Salvaged Rack & Pinion</span>
+              <span class="meta-tag">Rotary Potentiometer</span>
+              <span class="meta-tag">Bluetooth Speaker</span>
+            </div>
+          </div>
+
+          <!-- Panel 3: Absolute Torch / RGB Light (Side Title) -->
+          <div class="hero-panel-content" id="panelTorch">
+            <div class="panel-eyebrow">BUILD 03 · SIDE TITLE</div>
+            <h2 class="hero-side-heading hero-heading-torch">
+              <span class="side-title-name">RGB Light Torch</span>
+            </h2>
+            <div class="hero-malayalam-subtitle">റെയിൻബോ RGB ടോർച്ച്</div>
+            <div class="hero-mini-meta">
+              <span class="meta-tag">ESP32 Wi-Fi</span>
+              <span class="meta-tag">Rainbow RGB LED</span>
+              <span class="meta-tag">Captive Portal</span>
+            </div>
+          </div>
+
+        </div> <!-- End hero-parallel-panels -->
+
+        <!-- Quick Jump / Scroll CTA -->
+        <div class="hero-action-row">
+          <button class="scroll-cta" id="scrollCta" type="button" aria-label="Scroll down to Clock & Remote">
+            <span>scroll to experience</span>
+            <svg class="scroll-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="12" y1="5" x2="12" y2="19"></line>
+              <polyline points="19 12 12 19 5 12"></polyline>
+            </svg>
+          </button>
+        </div>
+
       </div>
 
-      <!-- STAGE 2: Big Authentic Wall Clock Layer -->
-      <div class="clock-overlay-layer" id="clockOverlayLayer">
+      <!-- STAGE 2A: Big Authentic Wall Clock Layer -->
+      <div class="clock-overlay-layer stage2-layer" id="clockOverlayLayer">
         <div class="authentic-wall-clock" id="wallClockEl" role="img" aria-label="Authentic Kerala Quartz Wall Clock">
           <div class="clock-frame">
             <div class="clock-dial">
@@ -98,6 +186,218 @@
             </div>
           </div>
           <div class="clock-shadow"></div>
+        </div>
+      </div>
+
+      <!-- STAGE 2B: Interactive Morphing Violin Stage (Rack & Pinion Rotating to Become a Violin) -->
+      <div class="violin-overlay-layer stage2-layer" id="violinOverlayLayer" role="region" aria-label="Absolute Violin Transformation">
+        <div class="morphing-violin-chassis" id="violinChassis">
+          
+          <!-- Top Telemetry Tag -->
+          <div class="morph-badge-row">
+            <span class="morph-status-tag" id="violinStatusTag">STAGE: SALVAGED RACK & PINION</span>
+            <span class="morph-percent-badge" id="violinPercentBadge">GEAR ROTATION 0%</span>
+          </div>
+
+          <!-- The Mechanical Transformation Rig -->
+          <div class="violin-rig-stage">
+            
+            <!-- Pinion Gear Salvage Unit (Rotates with scroll) -->
+            <div class="salvage-pinion-gear" id="salvagePinionGear">
+              <div class="gear-teeth-ring">
+                <span class="gear-tooth t-1"></span>
+                <span class="gear-tooth t-2"></span>
+                <span class="gear-tooth t-3"></span>
+                <span class="gear-tooth t-4"></span>
+                <span class="gear-tooth t-5"></span>
+                <span class="gear-tooth t-6"></span>
+                <span class="gear-tooth t-7"></span>
+                <span class="gear-tooth t-8"></span>
+                <span class="gear-tooth t-9"></span>
+                <span class="gear-tooth t-10"></span>
+                <span class="gear-tooth t-11"></span>
+                <span class="gear-tooth t-12"></span>
+              </div>
+              <div class="gear-spokes">
+                <div class="gear-spoke-line line-h"></div>
+                <div class="gear-spoke-line line-v"></div>
+                <div class="gear-spoke-line line-d1"></div>
+                <div class="gear-spoke-line line-d2"></div>
+              </div>
+              <div class="potentiometer-shaft" id="potShaft">
+                <div class="pot-wiper"></div>
+                <span class="pot-label">10kΩ POT</span>
+              </div>
+            </div>
+
+            <!-- Linear Rack Slider (Tracks linearly as pinion rotates) -->
+            <div class="salvage-linear-rack" id="salvageLinearRack">
+              <div class="rack-teeth-bar">
+                <span class="rack-notch"></span><span class="rack-notch"></span><span class="rack-notch"></span><span class="rack-notch"></span>
+                <span class="rack-notch"></span><span class="rack-notch"></span><span class="rack-notch"></span><span class="rack-notch"></span>
+                <span class="rack-notch"></span><span class="rack-notch"></span><span class="rack-notch"></span><span class="rack-notch"></span>
+                <span class="rack-notch"></span><span class="rack-notch"></span><span class="rack-notch"></span><span class="rack-notch"></span>
+              </div>
+              <div class="bow-hair-line" id="violinBowHair"></div>
+            </div>
+
+            <!-- Morphing Violin Silhouette & Body (Blooms & Assembles) -->
+            <div class="salvaged-violin-body" id="salvagedViolinBody">
+              
+              <!-- Violin Upper & Lower Bouts (Salvaged Wood / Scrap Metal Construction) -->
+              <svg class="violin-body-svg" viewBox="0 0 320 540" fill="none" preserveAspectRatio="xMidYMid meet">
+                <!-- Violin Wooden Body Contours -->
+                <path class="violin-contour" d="M160 50 C120 50, 75 90, 75 160 C75 220, 105 245, 115 260 C90 280, 55 330, 55 410 C55 490, 105 520, 160 520 C215 520, 265 490, 265 410 C265 330, 230 280, 205 260 C215 245, 245 220, 245 160 C245 90, 200 50, 160 50 Z" 
+                      fill="url(#violinWoodGrad)" stroke="#d97706" stroke-width="4" stroke-linejoin="round"/>
+                
+                <!-- Authentic F-Holes -->
+                <path class="violin-f-hole f-left" d="M125 210 C120 230, 105 240, 108 260 C111 278, 126 295, 122 315 C118 335, 108 340, 112 355" stroke="#1c1917" stroke-width="5" stroke-linecap="round"/>
+                <circle cx="125" cy="210" r="4.5" fill="#1c1917"/>
+                <circle cx="112" cy="355" r="5" fill="#1c1917"/>
+                
+                <path class="violin-f-hole f-right" d="M195 210 C200 230, 215 240, 212 260 C209 278, 194 295, 198 315 C202 335, 212 340, 208 355" stroke="#1c1917" stroke-width="5" stroke-linecap="round"/>
+                <circle cx="195" cy="210" r="4.5" fill="#1c1917"/>
+                <circle cx="208" cy="355" r="5" fill="#1c1917"/>
+
+                <!-- Violin Neck & Fingerboard -->
+                <rect x="146" y="2" width="28" height="230" rx="3" fill="#1c1917" stroke="#44403c" stroke-width="2"/>
+                
+                <!-- Violin Bridge -->
+                <path d="M135 305 Q160 300 185 305 L182 322 Q160 318 138 322 Z" fill="#fde68a" stroke="#78350f" stroke-width="2"/>
+
+                <!-- Tailpiece & Tuners -->
+                <polygon points="144,450 176,450 166,515 154,515" fill="#1c1917" stroke="#44403c" stroke-width="2"/>
+                <circle cx="150" cy="460" r="2.5" fill="#f59e0b"/>
+                <circle cx="157" cy="460" r="2.5" fill="#f59e0b"/>
+                <circle cx="163" cy="460" r="2.5" fill="#f59e0b"/>
+                <circle cx="170" cy="460" r="2.5" fill="#f59e0b"/>
+
+                <!-- 4 Resonant Metal Strings -->
+                <line x1="150" y1="15" x2="150" y2="455" stroke="#e2e8f0" stroke-width="2" class="v-string str-1"/>
+                <line x1="156" y1="15" x2="156" y2="455" stroke="#cbd5e1" stroke-width="1.8" class="v-string str-2"/>
+                <line x1="164" y1="15" x2="164" y2="455" stroke="#cbd5e1" stroke-width="1.5" class="v-string str-3"/>
+                <line x1="170" y1="15" x2="170" y2="455" stroke="#f1f5f9" stroke-width="1.2" class="v-string str-4"/>
+
+                <!-- Gradients -->
+                <defs>
+                  <linearGradient id="violinWoodGrad" x1="0" y1="0" x2="1" y2="1">
+                    <stop offset="0%" stop-color="#451a03"/>
+                    <stop offset="45%" stop-color="#78350f"/>
+                    <stop offset="70%" stop-color="#b45309"/>
+                    <stop offset="100%" stop-color="#451a03"/>
+                  </linearGradient>
+                </defs>
+              </svg>
+
+              <!-- Salvaged Bluetooth Audio Circuit connected to Violin -->
+              <div class="salvaged-bt-circuit" id="salvagedBtCircuit">
+                <span class="circuit-wire wire-red"></span>
+                <span class="circuit-wire wire-black"></span>
+                <span class="bt-module-chip">
+                  <span class="bt-chip-name">BT-AUDIO 5.0</span>
+                  <span class="bt-freq-tag" id="btFreqTag">440 Hz · A4 NOTE</span>
+                </span>
+              </div>
+
+            </div>
+
+          </div>
+
+          <!-- Bottom Telemetry HUD Bar -->
+          <div class="violin-hud-bottom">
+            <div class="hud-item">
+              <span class="hud-label">MECHANISM</span>
+              <span class="hud-value" id="violinMechValue">GEAR RATIO 1:4.8</span>
+            </div>
+            <div class="hud-item">
+              <span class="hud-label">POTENTIOMETER</span>
+              <span class="hud-value" id="violinPotValue">0.0 kΩ (IDLE)</span>
+            </div>
+            <div class="hud-item">
+              <span class="hud-label">AUDIO STATUS</span>
+              <span class="hud-value" id="violinAudioValue">SYNTH STANDBY</span>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- STAGE 2C: Interactive RGB Light Stage (Torch Off -> Cycling Colors -> White at Scroll End) -->
+      <div class="torch-overlay-layer stage2-layer" id="torchOverlayLayer" role="region" aria-label="Absolute Torch Color Spectrum Cycle">
+        <div class="torch-spectrum-chassis" id="torchChassis">
+          
+          <!-- Top Beam Telemetry Tag -->
+          <div class="torch-badge-row">
+            <span class="torch-status-tag" id="torchStatusTag">BEAM STATE: POWER OFF</span>
+            <span class="torch-kelvin-badge" id="torchKelvinBadge">0 LUMENS // OFF</span>
+          </div>
+
+          <!-- The Physical Torch & Dynamic Beam Projection Stage -->
+          <div class="torch-viewport-stage" id="torchViewportStage">
+            
+            <!-- Dynamic Giant Light Projection Beam -->
+            <div class="torch-beam-cone" id="torchBeamCone">
+              <div class="beam-light-core" id="beamLightCore"></div>
+              <div class="beam-dust-particles" id="beamDustParticles">
+                <span></span><span></span><span></span><span></span><span></span><span></span>
+              </div>
+            </div>
+
+            <!-- The Authentic Salvaged Hardware Torch Body -->
+            <div class="hardware-torch-unit" id="hardwareTorchUnit">
+              
+              <!-- Lens Bezel & Reflector Cup -->
+              <div class="torch-reflector-head">
+                <div class="torch-lens-glass">
+                  <div class="torch-led-emitter" id="torchLedEmitter">
+                    <div class="emitter-core" id="emitterCore"></div>
+                    <div class="emitter-glow" id="emitterGlow"></div>
+                  </div>
+                </div>
+                <div class="torch-bezel-rim"></div>
+              </div>
+
+              <!-- Main Metal Ribbed Torch Barrel -->
+              <div class="torch-barrel">
+                <div class="torch-ribs">
+                  <span></span><span></span><span></span><span></span><span></span><span></span>
+                </div>
+                <!-- Mechanical Rocker Toggle Switch on Torch Handle -->
+                <div class="torch-rocker-housing">
+                  <span class="switch-slot"></span>
+                  <div class="torch-switch-rocker" id="torchSwitchRocker"></div>
+                </div>
+                <!-- ESP32 Label on Barrel -->
+                <div class="torch-stencil">
+                  <span class="stencil-txt">ESP32 · CAPTIVE PORTAL</span>
+                </div>
+              </div>
+
+              <!-- Tail Cap & Lanyard Ring -->
+              <div class="torch-tail-cap">
+                <div class="lanyard-loop"></div>
+              </div>
+
+            </div>
+
+          </div>
+
+          <!-- Bottom Color Slider / Telemetry Bar -->
+          <div class="torch-hud-bottom">
+            <div class="hud-item">
+              <span class="hud-label">BEAM COLOR</span>
+              <span class="hud-value" id="torchColorName">BLACK // OFF</span>
+            </div>
+            <div class="hud-item">
+              <span class="hud-label">HEX VALUE</span>
+              <span class="hud-value" id="torchHexValue">#000000</span>
+            </div>
+            <div class="hud-item">
+              <span class="hud-label">WAVELENGTH</span>
+              <span class="hud-value" id="torchWavelength">0 nm (DARK)</span>
+            </div>
+          </div>
+
         </div>
       </div>
 
@@ -398,15 +698,194 @@
     </div>
   </div>
 
+  <!-- =======================================================================
+       TRIO SHOWCASE: All 3 Scraphack Projects in Short Form
+       ======================================================================= -->
+  <section class="trio-showcase-section" id="trioShowcaseSection" aria-label="All Three Scraphack Projects">
+    <div class="trio-container">
+      
+      <div class="trio-header">
+        <div class="trio-badge">
+          <span class="trio-badge-dot"></span>
+          <span>TINKERHUB SCRAPHACK 2026</span>
+        </div>
+        <h2 class="trio-title">The Three Scrap Builds</h2>
+        <p class="trio-subtitle">
+          What actually came out of the junk pile after burnt motors, broken clock needles, and endless tea breaks.
+        </p>
+      </div>
+
+      <div class="trio-grid">
+        
+        <!-- Card 1: Vintage Clock -->
+        <article class="trio-card card-clock">
+          <div class="trio-card-top">
+            <span class="trio-card-num">01</span>
+            <span class="trio-pill pill-clock">MAIN BUILD</span>
+          </div>
+
+          <div class="trio-visual visual-clock">
+            <!-- Mini interactive dial visual -->
+            <div class="mini-clock-dial">
+              <div class="mini-hand mini-hour"></div>
+              <div class="mini-hand mini-minute"></div>
+              <div class="mini-center"></div>
+            </div>
+          </div>
+
+          <h3 class="trio-card-title">samayam ethrayai</h3>
+          <p class="trio-card-malayalam">സമയം എത്രയായി? · വിന്റേജ് ക്വാർട്സ് ക്ലോക്ക്</p>
+          <p class="trio-card-desc">
+            The clock hands snapped halfway through and had to be superglued back together. When the TV remote's IR sensor refused to cooperate, we shifted to a web interface to rotate the hands across world time zones.
+          </p>
+
+          <div class="trio-spec-tags">
+            <span class="spec-tag">Glued Hands</span>
+            <span class="spec-tag">Web Controls</span>
+            <span class="spec-tag">World Time</span>
+          </div>
+
+          <div class="trio-card-actions">
+            <a href="story.html" class="trio-btn btn-primary">Read Clock Story &rarr;</a>
+            <a href="https://github.com/nvaneed/scrap_hackthon" target="_blank" rel="noopener noreferrer" class="trio-btn btn-ghost" title="Clock GitHub Repository">
+              <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg>
+              <span>GitHub</span>
+            </a>
+          </div>
+        </article>
+
+        <!-- Card 2: Absolute Violin -->
+        <article class="trio-card card-violin">
+          <div class="trio-card-top">
+            <span class="trio-card-num">02</span>
+            <span class="trio-pill pill-violin">SIDE BUILD</span>
+          </div>
+
+          <div class="trio-visual visual-violin">
+            <!-- Mini rack & pinion gear animation visual -->
+            <div class="mini-gear-rig">
+              <div class="mini-pinion-gear">
+                <span></span><span></span><span></span><span></span>
+              </div>
+              <div class="mini-rack-track">
+                <i></i><i></i><i></i><i></i><i></i><i></i>
+              </div>
+            </div>
+          </div>
+
+          <h3 class="trio-card-title">Absolute Violin</h3>
+          <p class="trio-card-malayalam">പൊട്ടൻഷ്യോമീറ്റർ റാക്ക് & പിനിയൻ വയലിൻ</p>
+          <p class="trio-card-desc">
+            Navaneeth revived a broken Bluetooth speaker from the scrap shop while Amal hooked a spare gear to a potentiometer. Sliding the gear rack turns the knob like a bow, producing weird electronic violin notes.
+          </p>
+
+          <div class="trio-spec-tags">
+            <span class="spec-tag">Rack & Pinion</span>
+            <span class="spec-tag">Potentiometer</span>
+            <span class="spec-tag">Scrap Speaker</span>
+          </div>
+
+          <div class="trio-card-actions">
+            <a href="story.html#scene-8" class="trio-btn btn-primary">Violin Story &rarr;</a>
+            <a href="https://github.com/Lunarmist-byte/absoluteviolin" target="_blank" rel="noopener noreferrer" class="trio-btn btn-ghost" title="Violin GitHub Repository">
+              <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg>
+              <span>GitHub</span>
+            </a>
+          </div>
+        </article>
+
+        <!-- Card 3: Absolute Torch / RGB Light -->
+        <article class="trio-card card-torch">
+          <div class="trio-card-top">
+            <span class="trio-card-num">03</span>
+            <span class="trio-pill pill-torch">SIDE BUILD</span>
+          </div>
+
+          <div class="trio-visual visual-torch">
+            <!-- Mini RGB flashlight beam visual -->
+            <div class="mini-torch-housing">
+              <div class="mini-torch-body"></div>
+              <div class="mini-rgb-beam"></div>
+            </div>
+          </div>
+
+          <h3 class="trio-card-title">Absolute Torch</h3>
+          <p class="trio-card-malayalam">റെയിൻബോ RGB LED സ്മാർട്ട് ടോർച്ച്</p>
+          <p class="trio-card-desc">
+            Christy ripped the burnt LED out of an old household torch while waiting for a working motor, wired up an RGB module with an ESP32, and built a captive portal so anyone could connect their phone and change the beam color.
+          </p>
+
+          <div class="trio-spec-tags">
+            <span class="spec-tag">ESP32</span>
+            <span class="spec-tag">RGB LED</span>
+            <span class="spec-tag">Phone Wi-Fi Portal</span>
+          </div>
+
+          <div class="trio-card-actions">
+            <a href="story.html#scene-8" class="trio-btn btn-primary">Torch Story &rarr;</a>
+            <a href="https://github.com/christy-basil-anil/absolute-torch/blob/main/absolute_torch.ino" target="_blank" rel="noopener noreferrer" class="trio-btn btn-ghost" title="Torch GitHub Code">
+              <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg>
+              <span>Code</span>
+            </a>
+          </div>
+        </article>
+
+      </div> <!-- End trio-grid -->
+
+      <!-- Bottom Vlogs Banner -->
+      <div class="trio-vlogs-cta-banner">
+        <div class="banner-left">
+          <span class="banner-pill">VIDEOS & REELS</span>
+          <h3 class="banner-title">Behind the Scenes & Vlogs</h3>
+          <p class="banner-desc">Instagram reels, late-night fixes, and footage from the hackathon floor.</p>
+        </div>
+        <div class="banner-right">
+          <a href="vlogs.html" class="vlogs-cta-btn">
+            <span>Explore Instagram Vlogs</span>
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+          </a>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- DYNAMIC PROJECT LINKS SECTION -->
+  <section class="site-links-section" id="linksSection">
+    <div class="section-container">
+      <div class="links-section-head">
+        <div class="header-tag-row">
+          <span class="section-pill">COMMUNITY & SOURCE</span>
+        </div>
+        <h2 class="section-title">Links & Repositories</h2>
+        <p class="section-subtitle">
+          Explore the open source code, hardware firmware, and community builds for the trilogy.
+        </p>
+      </div>
+
+      <!-- Links Grid populated from localStorage (or defaults) -->
+      <div class="project-links-grid" id="projectLinksGrid">
+        <!-- Rendered dynamically via script.js -->
+      </div>
+
+      <div class="admin-link-prompt">
+        <a href="admin.html#linksManagerCard" class="admin-manage-link" title="Manage links in Admin">
+          <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
+          <span>Admin: Add or manage links</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
   <!-- Site Footer -->
   <footer class="site-footer">
     <div class="footer-inner">
       <p class="credit-text">
-        samayam ethrayai · Scraphack 2026 · TinkerHub
+        ഒരു വെടിക്ക് മൂന്ന് പക്ഷി · Scraphack 2026 · TinkerHub Space
       </p>
     </div>
   </footer>
 
-  <script src="script.js?v=20"></script>
+  <script src="script.js?v=22"></script>
 </body>
 </html>

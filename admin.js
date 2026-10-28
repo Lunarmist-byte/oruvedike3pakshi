@@ -382,9 +382,379 @@
   }
 
   // ==========================================================================
+  // PASSWORD AUTHENTICATION GATEWAY
+  // Password: scraphackspecialmention@0987654321
+  // ==========================================================================
+  const REQUIRED_ADMIN_PASS = 'scraphackspecialmention@0987654321';
+  const AUTH_STORAGE_KEY = 'scraphack_admin_authenticated';
+
+  const adminAuthOverlay = document.getElementById('adminAuthOverlay');
+  const adminAuthForm = document.getElementById('adminAuthForm');
+  const adminPasswordInput = document.getElementById('adminPasswordInput');
+  const togglePasswordVisibilityBtn = document.getElementById('togglePasswordVisibilityBtn');
+  const authErrorMsg = document.getElementById('authErrorMsg');
+  const adminLogoutBtn = document.getElementById('adminLogoutBtn');
+  const adminAuthBadge = document.getElementById('adminAuthBadge');
+
+  function checkAuthStatus() {
+    const isAuthed = sessionStorage.getItem(AUTH_STORAGE_KEY) === 'true';
+    if (!adminAuthOverlay) return;
+    if (isAuthed) {
+      adminAuthOverlay.classList.remove('active');
+      adminAuthOverlay.style.display = 'none';
+      if (adminAuthBadge) adminAuthBadge.textContent = 'ADMIN // AUTHENTICATED';
+    } else {
+      adminAuthOverlay.style.display = 'flex';
+      adminAuthOverlay.classList.add('active');
+      if (adminAuthBadge) adminAuthBadge.textContent = 'ADMIN // LOCKED';
+      if (adminPasswordInput) {
+        adminPasswordInput.value = '';
+        setTimeout(() => adminPasswordInput.focus(), 100);
+      }
+    }
+  }
+
+  if (adminAuthForm) {
+    adminAuthForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const entered = adminPasswordInput ? adminPasswordInput.value.trim() : '';
+      if (entered === REQUIRED_ADMIN_PASS) {
+        sessionStorage.setItem(AUTH_STORAGE_KEY, 'true');
+        if (authErrorMsg) authErrorMsg.style.display = 'none';
+        checkAuthStatus();
+      } else {
+        if (authErrorMsg) {
+          authErrorMsg.textContent = 'Incorrect password. Access denied.';
+          authErrorMsg.style.display = 'block';
+        }
+        if (adminPasswordInput) {
+          adminPasswordInput.select();
+        }
+      }
+    });
+  }
+
+  if (togglePasswordVisibilityBtn && adminPasswordInput) {
+    togglePasswordVisibilityBtn.addEventListener('click', () => {
+      const isPass = adminPasswordInput.getAttribute('type') === 'password';
+      adminPasswordInput.setAttribute('type', isPass ? 'text' : 'password');
+    });
+  }
+
+  if (adminLogoutBtn) {
+    adminLogoutBtn.addEventListener('click', () => {
+      sessionStorage.removeItem(AUTH_STORAGE_KEY);
+      checkAuthStatus();
+    });
+  }
+
+  // ==========================================================================
+  // CUSTOM PROJECT LINKS MANAGER
+  // Persisted in localStorage: scraphack_custom_links
+  // ==========================================================================
+  const LINKS_STORAGE_KEY = 'scraphack_custom_links';
+  const DEFAULT_PROJECT_LINKS = [
+    {
+      id: 'default-clock-repo',
+      title: 'Clock GitHub Repository',
+      url: 'https://github.com/nvaneed/scrap_hackthon',
+      category: 'clock',
+      description: 'samayam ethrayai: firmware and web socket control for the quartz clock.'
+    },
+    {
+      id: 'default-violin-repo',
+      title: 'Absolute Violin Repository',
+      url: 'https://github.com/Lunarmist-byte/absoluteviolin',
+      category: 'violin',
+      description: 'Salvaged rack and pinion gear paired with a rotary potentiometer.'
+    },
+    {
+      id: 'default-torch-repo',
+      title: 'Absolute Torch Firmware',
+      url: 'https://github.com/christy-basil-anil/absolute-torch/blob/main/absolute_torch.ino',
+      category: 'torch',
+      description: 'ESP32 captive portal and rainbow RGB lighting code.'
+    },
+    {
+      id: 'default-tinkerhub',
+      title: 'TinkerHub Foundation',
+      url: 'https://tinkerhub.org',
+      category: 'general',
+      description: 'Official TinkerHub website and maker community.'
+    }
+  ];
+
+  function getStoredLinks() {
+    try {
+      const raw = localStorage.getItem(LINKS_STORAGE_KEY);
+      if (!raw) {
+        localStorage.setItem(LINKS_STORAGE_KEY, JSON.stringify(DEFAULT_PROJECT_LINKS));
+        return DEFAULT_PROJECT_LINKS;
+      }
+      return JSON.parse(raw);
+    } catch (e) {
+      console.warn('Could not read custom links, returning defaults', e);
+      return DEFAULT_PROJECT_LINKS;
+    }
+  }
+
+  function saveStoredLinks(links) {
+    localStorage.setItem(LINKS_STORAGE_KEY, JSON.stringify(links));
+    renderLinksList();
+  }
+
+  const addLinkForm = document.getElementById('addLinkForm');
+  const linkTitleInput = document.getElementById('linkTitleInput');
+  const linkUrlInput = document.getElementById('linkUrlInput');
+  const linkCategoryInput = document.getElementById('linkCategoryInput');
+  const linkDescInput = document.getElementById('linkDescInput');
+  const linkStatusMsg = document.getElementById('linkStatusMsg');
+  const linksAdminList = document.getElementById('linksAdminList');
+  const linksCountBadge = document.getElementById('linksCountBadge');
+
+  function renderLinksList() {
+    if (!linksAdminList) return;
+    const links = getStoredLinks();
+    if (linksCountBadge) {
+      linksCountBadge.textContent = `${links.length} Link${links.length === 1 ? '' : 's'}`;
+    }
+
+    if (links.length === 0) {
+      linksAdminList.innerHTML = '<div class="links-empty-notice">No custom links saved yet. Add one above!</div>';
+      return;
+    }
+
+    linksAdminList.innerHTML = links.map((link) => `
+      <div class="link-admin-item" data-id="${link.id}">
+        <div class="link-item-left">
+          <div class="link-item-meta">
+            <span class="link-cat-badge cat-${link.category || 'general'}">${(link.category || 'general').toUpperCase()}</span>
+            <span class="link-item-title">${escapeHtml(link.title)}</span>
+          </div>
+          <a href="${escapeHtml(link.url)}" target="_blank" rel="noopener noreferrer" class="link-item-url">
+            ${escapeHtml(link.url)}
+            <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+          </a>
+          ${link.description ? `<p class="link-item-desc">${escapeHtml(link.description)}</p>` : ''}
+        </div>
+        <div class="link-item-actions">
+          <button type="button" class="link-delete-btn" data-delete-id="${link.id}" title="Delete link">
+            <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+            <span>Delete</span>
+          </button>
+        </div>
+      </div>
+    `).join('');
+
+    // Attach delete listeners
+    linksAdminList.querySelectorAll('[data-delete-id]').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        const idToDelete = btn.getAttribute('data-delete-id');
+        if (confirm('Delete this link from the website?')) {
+          const current = getStoredLinks();
+          const updated = current.filter(l => l.id !== idToDelete);
+          saveStoredLinks(updated);
+        }
+      });
+    });
+  }
+
+  function escapeHtml(str) {
+    if (!str) return '';
+    return str.replace(/[&<>"']/g, (m) => ({
+      '&': '&amp;',
+      '<': '&lt;',
+      '>': '&gt;',
+      '"': '&quot;',
+      "'": '&#39;'
+    }[m]));
+  }
+
+  if (addLinkForm) {
+    addLinkForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const title = linkTitleInput ? linkTitleInput.value.trim() : '';
+      const url = linkUrlInput ? linkUrlInput.value.trim() : '';
+      const category = linkCategoryInput ? linkCategoryInput.value : 'general';
+      const description = linkDescInput ? linkDescInput.value.trim() : '';
+
+      if (!title || !url) return;
+
+      const newLink = {
+        id: 'link_' + Date.now() + '_' + Math.random().toString(36).substr(2, 5),
+        title,
+        url,
+        category,
+        description
+      };
+
+      const existing = getStoredLinks();
+      existing.unshift(newLink);
+      saveStoredLinks(existing);
+
+      // Reset form
+      addLinkForm.reset();
+      if (linkStatusMsg) {
+        linkStatusMsg.textContent = 'Link added successfully!';
+        linkStatusMsg.className = 'status-msg success';
+        linkStatusMsg.style.display = 'block';
+        setTimeout(() => { linkStatusMsg.style.display = 'none'; }, 3000);
+      }
+    });
+  }
+
+  // ==========================================================================
+  // INSTAGRAM VLOGS & REELS MANAGER
+  // Shared storage key with vlogs.js: scraphack_insta_vlogs_v1
+  // ==========================================================================
+  const VLOGS_STORAGE_KEY = 'scraphack_insta_vlogs_v1';
+  const DEFAULT_VLOGS = [
+    {
+      id: 'vlog_seed_1',
+      url: 'https://www.instagram.com/reel/C8rM1y4SL6e/',
+      title: 'Scraphack 2026 Kickoff & Hardware Junk Hunt',
+      category: 'bts',
+      creator: '@tinkerhub',
+      createdAt: Date.now() - 86400000 * 2
+    },
+    {
+      id: 'vlog_seed_2',
+      url: 'https://www.instagram.com/reel/C41oX4oI_5x/',
+      title: 'Resurrecting the Quartz Wall Clock Hands',
+      category: 'clock',
+      creator: '@amal',
+      createdAt: Date.now() - 86400000
+    },
+    {
+      id: 'vlog_seed_3',
+      url: 'https://www.instagram.com/reel/C32sP4xL_8y/',
+      title: 'Making Screeching Sounds on the Scrap Violin',
+      category: 'violin',
+      creator: '@navaneeth',
+      createdAt: Date.now() - 43200000
+    },
+    {
+      id: 'vlog_seed_4',
+      url: 'https://www.instagram.com/reel/C29wQ1_M77z/',
+      title: 'Captive Portal RGB LED Torch Beam Cycle',
+      category: 'torch',
+      creator: '@christy',
+      createdAt: Date.now() - 21600000
+    }
+  ];
+
+  function getStoredVlogs() {
+    try {
+      const raw = localStorage.getItem(VLOGS_STORAGE_KEY);
+      if (!raw) {
+        localStorage.setItem(VLOGS_STORAGE_KEY, JSON.stringify(DEFAULT_VLOGS));
+        return DEFAULT_VLOGS;
+      }
+      return JSON.parse(raw);
+    } catch (e) {
+      console.warn('LocalStorage error reading vlogs in admin:', e);
+      return DEFAULT_VLOGS;
+    }
+  }
+
+  function saveStoredVlogs(vlogs) {
+    localStorage.setItem(VLOGS_STORAGE_KEY, JSON.stringify(vlogs));
+    renderVlogsList();
+  }
+
+  const addVlogForm = document.getElementById('addVlogForm');
+  const vlogUrlInput = document.getElementById('vlogUrlInput');
+  const vlogTitleInput = document.getElementById('vlogTitleInput');
+  const vlogCategoryInput = document.getElementById('vlogCategoryInput');
+  const vlogCreatorInput = document.getElementById('vlogCreatorInput');
+  const vlogStatusMsg = document.getElementById('vlogStatusMsg');
+  const vlogsAdminList = document.getElementById('vlogsAdminList');
+  const vlogsCountBadge = document.getElementById('vlogsCountBadge');
+
+  function renderVlogsList() {
+    if (!vlogsAdminList) return;
+    const vlogs = getStoredVlogs();
+    if (vlogsCountBadge) {
+      vlogsCountBadge.textContent = `${vlogs.length} Reel${vlogs.length === 1 ? '' : 's'}`;
+    }
+
+    if (vlogs.length === 0) {
+      vlogsAdminList.innerHTML = '<div class="links-empty-notice">No Instagram vlogs stored yet. Add one above!</div>';
+      return;
+    }
+
+    vlogsAdminList.innerHTML = vlogs.map((vlog) => `
+      <div class="link-admin-item" data-vlog-id="${vlog.id}">
+        <div class="link-item-left">
+          <div class="link-item-meta">
+            <span class="link-item-title">${escapeHtml(vlog.title || 'Untitled Reel')}</span>
+            ${vlog.creator ? `<span style="font-size: 0.76rem; color: var(--ink-muted);">${escapeHtml(vlog.creator)}</span>` : ''}
+          </div>
+          <a href="${escapeHtml(vlog.url)}" target="_blank" rel="noopener noreferrer" class="link-item-url">
+            ${escapeHtml(vlog.url)}
+            <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+          </a>
+        </div>
+        <div class="link-item-actions">
+          <button type="button" class="link-delete-btn" data-delete-vlog-id="${vlog.id}" title="Delete vlog">
+            <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+            <span>Delete</span>
+          </button>
+        </div>
+      </div>
+    `).join('');
+
+    // Attach delete listeners
+    vlogsAdminList.querySelectorAll('[data-delete-vlog-id]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const idToDelete = btn.getAttribute('data-delete-vlog-id');
+        if (confirm('Delete this Instagram reel from the public vlogs page?')) {
+          const current = getStoredVlogs();
+          const updated = current.filter(v => v.id !== idToDelete);
+          saveStoredVlogs(updated);
+        }
+      });
+    });
+  }
+
+  if (addVlogForm) {
+    addVlogForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const rawUrl = vlogUrlInput ? vlogUrlInput.value.trim() : '';
+      const title = vlogTitleInput ? vlogTitleInput.value.trim() : '';
+      const creator = vlogCreatorInput ? vlogCreatorInput.value.trim() : '';
+
+      if (!rawUrl) return;
+
+      const newVlog = {
+        id: 'vlog_' + Date.now() + '_' + Math.random().toString(36).substr(2, 5),
+        url: rawUrl,
+        title: title || 'Scraphack 2026 Reel',
+        creator,
+        createdAt: Date.now()
+      };
+
+      const existing = getStoredVlogs();
+      existing.unshift(newVlog);
+      saveStoredVlogs(existing);
+
+      addVlogForm.reset();
+      if (vlogStatusMsg) {
+        vlogStatusMsg.textContent = 'Instagram vlog added to public page!';
+        vlogStatusMsg.className = 'status-msg success';
+        vlogStatusMsg.style.display = 'block';
+        setTimeout(() => { vlogStatusMsg.style.display = 'none'; }, 3000);
+      }
+    });
+  }
+
+  // ==========================================================================
   // Initialize on Load
   // ==========================================================================
   document.addEventListener('DOMContentLoaded', async () => {
+    // Check authentication first
+    checkAuthStatus();
+
     // If targeted from a specific scene link (e.g. admin.html?scene=scene-1)
     const urlParams = new URLSearchParams(window.location.search);
     const targetScene = urlParams.get('scene');
@@ -394,6 +764,8 @@
 
     updatePreview();
     await loadSavedPhotos();
+    renderLinksList();
+    renderVlogsList();
   });
 
 })();
